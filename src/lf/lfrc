@@ -1,0 +1,80 @@
+# Draw boxes around the "finders"
+set drawbox
+set incsearch
+
+# Show this information on files
+set info "size:time"
+
+# Make 'd' more like ranger by unmapping d and then remapping equivalent
+# commands
+map d
+map dd cut
+map dD delete -f
+
+# Rename but place cursor at the beginning of the filename
+cmd rename-insert &{{
+	if [ "$(echo "$fx" | wc -l)" -gt 1 ]; then
+		lf -remote "send $id echo You can't change more than one file name"
+		lf -remote "send $id unselect"
+	else
+		len="$(basename "$f" | wc -m)" # length of selected file/directory
+		for i in $(seq "$len"); do
+			pos="${pos}<left>" # how many times do I have to press <left> in order to get first char
+		done
+		lf -remote "send $id rename"
+		lf -remote "send $id push $pos"
+	fi
+}}
+
+# Rename but place the cursor right before the extension
+cmd rename-before-ext &{{
+	if [ "$(echo "$fx" | wc -l)" -gt 1 ]; then
+		lf -remote "send $id echo You can't change more than one file name"
+		lf -remote "send $id unselect"
+	else
+		if [ -d "$f" ]; then
+			lf -remote "send $id rename"
+		else
+			ext_len="$(echo ${f##*.} | wc -m)" # extention length
+			for i in $(seq "$ext_len"); do
+				pos="${pos}<left>"
+			done
+			lf -remote "send $id rename"
+			lf -remote "send $id push "$pos""
+		fi
+	fi
+}}
+
+map I rename-insert # at the very begging
+map A rename # at the very end
+map a rename-before-ext # right before the extention
+map r rename-before-ext # right before the extention
+
+
+# Cody, what the fuck are you doing?
+# Well future Cody, there are two scenarios I'm trying to satisfy
+# 1.) launch lf, hit enter, result: open file in neovim
+# 2.) launch neovim, <leader>m to open lf in float term, hit enter: open file
+#     in parent window
+#
+# To get 2.) to work you can just add `map <enter> open`. The issue is getting
+# 1.) to work. So I will look for OPENER being xdg-open (the default value) and
+# update it to be nvim. I don't understand how floatterm does it because using
+# the echo results don't appear but if you remap `map <enter>` to something
+# else it opens in the float term and not the parent. This is confusing but it
+# works.
+cmd open ${{
+    if [[ $OPENER = "xdg-open" ]]; then
+        OPENER="nvim"
+    fi
+    $OPENER $f
+}}
+map <enter> open
+
+# Custom goto maps
+map gh cd ~
+map gd cd ~/Downloads
+map ge cd /etc
+map gm cd /mnt/public
+
+map S $zsh

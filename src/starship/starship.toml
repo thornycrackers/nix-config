@@ -1,0 +1,56 @@
+format = """
+$shlvl\
+$kubernetes\
+$hostname\
+$directory\
+$vcsh\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$docker_context\
+$package\
+$cmake\
+$deno\
+$python\
+$nodejs\
+$red\
+$terraform\
+$nix_shell\
+$memory_usage\
+$aws\
+$gcloud\
+$openstack\
+$env_var\
+$custom\
+$line_break\
+$lua\
+$jobs\
+$battery\
+$time\
+$status\
+$shell\
+$character"""
+
+[git_branch]
+style = "bold white"
+format = "[$branch]($style) "
+
+[directory]
+truncate_to_repo = false
+
+[character]
+success_symbol = "[](bold cyan) "
+error_symbol = "[](bold red) "
+
+[python]
+style = "bold purple"
+format = '[${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+
+[nix_shell]
+format = '[$state( \($name\))]($style) '
+
+[hostname]
+ssh_only = true
+ssh_symbol = ""
