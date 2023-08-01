@@ -45,8 +45,30 @@
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "thorny";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [ ];
+    # Required for the docker rootless
+    subUidRanges = [
+      {
+        count = 1;
+        startUid = 1000;
+      }
+      {
+        count = 65534;
+        startUid = 100001;
+      }
+    ];
+    # Also required for the docker rootless
+    subGidRanges = [
+      {
+        count = 1;
+        startGid = 1000;
+      }
+      {
+        count = 65534;
+        startGid = 100001;
+      }
+    ];
   };
   programs.zsh.enable = true;
 
@@ -61,6 +83,9 @@
     wget
     curl
     git
+    openvpn
+    gnumake
+    docker-compose
   ];
 
   # Enable the OpenSSH daemon.
@@ -70,6 +95,13 @@
     extraConfig = ''
       AuthenticationMethods "publickey,password"
     '';
+  };
+
+  # Docker
+  virtualisation.docker.enable = true;
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
   };
 
   # This value determines the NixOS release from which the default
