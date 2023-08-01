@@ -17,6 +17,7 @@
   # zsh
   programs.zsh.enable = true;
   programs.zsh.initExtra = builtins.readFile ./src/zsh/zshrc;
+  home.file.".config/zsh/git.zsh".source = ./src/zsh/git.zsh;
 
   # tmux
   programs.tmux.enable = true;

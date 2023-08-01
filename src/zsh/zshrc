@@ -9,3 +9,5 @@ export VISUAL='nvim'
 export PAGER='less -S'
 export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
 
+source "$HOME/.config/zsh/git.zsh"
+
