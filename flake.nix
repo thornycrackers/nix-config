@@ -7,6 +7,10 @@
     neovimch.url = "git+https://git.codyhiar.com/config/nvim";
     home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    wrapper-manager = {
+      url = "github:viperML/wrapper-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
@@ -41,6 +45,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.thorny = import ./home.nix;
+            home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
       };

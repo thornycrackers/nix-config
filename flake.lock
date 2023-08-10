@@ -92,7 +92,8 @@
       "inputs": {
         "home-manager": "home-manager",
         "neovimch": "neovimch",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_2",
+        "wrapper-manager": "wrapper-manager"
       }
     },
     "systems": {
@@ -107,6 +108,26 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "wrapper-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1691515884,
+        "narHash": "sha256-NZfOc+wgxU9vxaKLYD6c45KFtAvqxRkXVgeIXNaCGY0=",
+        "owner": "viperML",
+        "repo": "wrapper-manager",
+        "rev": "751e1c318df20bbd4c1b74263ceac75b4b5e597d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "viperML",
+        "repo": "wrapper-manager",
         "type": "github"
       }
     }

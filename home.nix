@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   # Home Manager needs a bit of information about you and the
@@ -19,9 +19,16 @@
   programs.zsh.initExtra = builtins.readFile ./src/zsh/zshrc;
   home.file.".config/zsh/git.zsh".source = ./src/zsh/git.zsh;
 
-  # tmux
-  programs.tmux.enable = true;
-  xdg.configFile."tmux/tmux.conf".source = ./src/tmux/tmux.conf;
+  # Wrapper packages via wrapper-manager
+  # There's no hard or fast rules for when to use home manager vs wrapper manager.
+  # I guess the best heuristic is how much I want to customize in the tool?
+  home.packages = [
+    pkgs.fzf
+    (inputs.wrapper-manager.lib.build {
+      inherit pkgs;
+      modules = [ ./src/bat ./src/tmux ];
+    })
+  ];
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage

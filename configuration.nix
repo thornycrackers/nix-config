@@ -86,6 +86,7 @@
     openvpn
     gnumake
     docker-compose
+    btop
   ];
 
   # Enable the OpenSSH daemon.

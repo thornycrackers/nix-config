@@ -2,12 +2,48 @@
 alias nrs="sudo -i nixos-rebuild switch"
 alias nixc="nvim ~/nixos/configuration.nix"
 alias dod="cd ~/nixos"
+alias t='tmux'
+alias ta='tmux attach'
+alias n='nvim'
 
 # Environment Variables
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PAGER='less -S'
 export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
+# For some reason, docker client is expecting in a different location
+# (unix:///run/user/1000/docker.sock) but hardcode for now
+export DOCKER_HOST="unix:///run/docker.sock"
 
 source "$HOME/.config/zsh/git.zsh"
 
+# Jump to a project diredtory
+j() { # Jump to project code
+    PROJ=$(find "$HOME/Work" -mindepth 2 -maxdepth 2 -type d -name "$1")
+    if [[ -d "$PROJ/code" ]]; then
+        cd "$PROJ/code"
+    else
+        echo "$PROJ/code does not exist"
+    fi
+}
+
+# Launch a new tmux session around an existing project
+tlo() {
+    if [[ -z "$1" ]]; then
+        return
+    fi
+    local PROJS=($(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d))
+    local PROJ_NAME=''
+    local PROJ_DIR=''
+    for dir in "${PROJS[@]}"; do
+        if [[ $(basename "$dir") == "$1" ]]; then
+            PROJ_NAME=$(basename "$dir")
+            PROJ_DIR="$dir/code"
+            tmux new-session -c "${PROJ_DIR}" -s "${PROJ_NAME}"
+            return
+        fi
+    done
+    echo "Project '${1}' was not found"
+}
+
+cwh() { cat $(which $1) }
