@@ -11,6 +11,7 @@
       url = "github:viperML/wrapper-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
@@ -50,5 +51,13 @@
         ];
       };
 
-    };
+    } // (inputs.flake-utils.lib.eachDefaultSystem (system:
+      let pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        # testing exposing my tmux package
+        mytmux = inputs.wrapper-manager.lib.build {
+          inherit pkgs;
+          modules = [ ./my-module.nix ];
+        };
+      }));
 }
