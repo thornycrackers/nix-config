@@ -47,3 +47,10 @@ tlo() {
 }
 
 cwh() { cat $(which $1) }
+
+rmresult () {
+        TMP_STORE_PATH=$(readlink result)
+        rm -rf result
+        nix-store --delete "${TMP_STORE_PATH}"
+}
+

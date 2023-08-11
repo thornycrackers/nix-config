@@ -54,10 +54,13 @@
     } // (inputs.flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
-        # testing exposing my tmux package
-        mytmux = inputs.wrapper-manager.lib.build {
-          inherit pkgs;
-          modules = [ ./my-module.nix ];
+        packages = rec {
+          # testing exposing my tmux package
+          mytmux = inputs.wrapper-manager.lib.build {
+            inherit pkgs;
+            modules = [ ./src/tmux ];
+          };
+          default = mytmux;
         };
       }));
 }
