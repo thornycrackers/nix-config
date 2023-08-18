@@ -11,29 +11,36 @@
       url = "github:viperML/wrapper-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-      # My custom overlay. Make packages for the different available in the
-      # same place. Saves from having to pass imports into modules and manually
-      # import the packages
+      # https://ayats.org/blog/no-flake-utils/
+      # Why you don't need flake-utils.
+      forAllSystems = function:
+        nixpkgs.lib.genAttrs [ "x86_64-linux" ] (system:
+          function (import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+            overlays = [ my-custom-overlay ];
+          }));
+
       my-custom-overlay = final: prev: rec {
-        # Allow unstable packages to allow unfree packages
-        #unstable = import inputs.nixpkgs-unstable {
-        #  system = "${system}";
-        #  config.allowUnfree = true;
-        #};
         neovimch = inputs.neovimch.packages.${prev.system};
       };
 
     in {
+      packages = forAllSystems (pkgs: rec {
+        mytmux = inputs.wrapper-manager.lib.build {
+          inherit pkgs;
+          modules = [ ./src/tmux ];
+        };
+        default = mytmux;
+      });
+
       # Configuration for development machine
       nixosConfigurations.boston = nixpkgs.lib.nixosSystem {
-        inherit system;
+        system = "x86_64-linux";
         modules = [
           # Overlays-module makes "pkgs.unstable" available in configuration.nix
           # This makes my custom overlay available for others to use.
@@ -51,16 +58,5 @@
         ];
       };
 
-    } // (inputs.flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        packages = rec {
-          # testing exposing my tmux package
-          mytmux = inputs.wrapper-manager.lib.build {
-            inherit pkgs;
-            modules = [ ./src/tmux ];
-          };
-          default = mytmux;
-        };
-      }));
+    };
 }
