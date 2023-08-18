@@ -42,7 +42,7 @@
 
   # Define a user account.
   users.users.thorny = {
-    home = "/Users/codyhiar";
+    home = "/home/thorny";
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "thorny";
@@ -79,7 +79,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    neovimch.neovimCH
+    neovimchpkgs.neovimCH
     vim
     wget
     curl

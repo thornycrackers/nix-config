@@ -52,13 +52,13 @@
           # This makes my custom overlay available for others to use.
           ({ config, pkgs, ... }: { nixpkgs.overlays = [ my-custom-overlay ]; })
           # Configuration for the system
-          ./configuration.nix
+          ./hosts/boston/configuration.nix
           # Home manager stuff, user name needs sync with configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.thorny = import ./home.nix;
+            home-manager.users.thorny = import ./hosts/boston/home.nix;
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];

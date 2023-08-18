@@ -8,16 +8,16 @@
 
   # lf
   programs.lf.enable = true;
-  xdg.configFile."lf/lfrc".source = ./src/lf/lfrc;
+  xdg.configFile."lf/lfrc".source = ../../src/lf/lfrc;
 
   # starship
   programs.starship.enable = true;
-  xdg.configFile."starship.toml".source = ./src/starship/starship.toml;
+  xdg.configFile."starship.toml".source = ../../src/starship/starship.toml;
 
   # zsh
   programs.zsh.enable = true;
-  programs.zsh.initExtra = builtins.readFile ./src/zsh/zshrc;
-  home.file.".config/zsh/git.zsh".source = ./src/zsh/git.zsh;
+  programs.zsh.initExtra = builtins.readFile ../../src/zsh/zshrc;
+  home.file.".config/zsh/git.zsh".source = ../../src/zsh/git.zsh;
 
   # Wrapper packages via wrapper-manager
   # There's no hard or fast rules for when to use home manager vs wrapper manager.
@@ -26,7 +26,7 @@
     pkgs.fzf
     (inputs.wrapper-manager.lib.build {
       inherit pkgs;
-      modules = [ ./src/bat ./src/tmux ];
+      modules = [ ../../src/bat ../../src/tmux ];
     })
   ];
 
