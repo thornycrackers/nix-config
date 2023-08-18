@@ -26,7 +26,8 @@
       # https://ayats.org/blog/no-flake-utils/
       # Why you don't need flake-utils.
       forAllSystems = function:
-        nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" ] (system:
+        nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" ]
+        (system:
           function (import nixpkgs {
             inherit system;
             config.allowUnfree = true;
@@ -67,6 +68,20 @@
             home-manager.users.thorny = import ./hosts/boston/home.nix;
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
+        ];
+      };
+
+      # Configuration for temp aarch64vm
+      nixosConfigurations.aarch64vm = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        modules = [
+          # Overlays-module makes "pkgs.unstable" available in configuration.nix
+          # This makes my custom overlay available for others to use.
+          ({ config, pkgs, ... }: { nixpkgs.overlays = [ my-custom-overlay ]; })
+          # Configuration for the system
+          # This file doesn't exist in the repository. The script that
+          # provisions the VM generates the base config with `nixos-generate-config`
+          ./hosts/aarch64/configuration.nix
         ];
       };
 
