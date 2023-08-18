@@ -42,6 +42,7 @@
 
   # Define a user account.
   users.users.thorny = {
+    home = "/Users/codyhiar";
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "thorny";

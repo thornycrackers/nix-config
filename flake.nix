@@ -5,12 +5,18 @@
     nixpkgs.url = "nixpkgs/nixos-23.05";
     # Flake for my neovim setup
     neovimch.url = "git+https://git.codyhiar.com/config/nvim";
+    neovimch.inputs.nixpkgs.follows = "nixpkgs";
+    # Home manager for dotfiles
     home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    # Wrapper manager for wrapping applications
     wrapper-manager = {
       url = "github:viperML/wrapper-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Darwin for macbook
+    darwin.url = "github:lnl7/nix-darwin/master";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
@@ -18,7 +24,7 @@
       # https://ayats.org/blog/no-flake-utils/
       # Why you don't need flake-utils.
       forAllSystems = function:
-        nixpkgs.lib.genAttrs [ "x86_64-linux" ] (system:
+        nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" ] (system:
           function (import nixpkgs {
             inherit system;
             config.allowUnfree = true;
@@ -26,7 +32,7 @@
           }));
 
       my-custom-overlay = final: prev: rec {
-        neovimch = inputs.neovimch.packages.${prev.system};
+        neovimchpkgs = inputs.neovimch.packages.${prev.system};
       };
 
     in {
@@ -57,6 +63,27 @@
           }
         ];
       };
+
+      # Darwin config for macbook
+      darwinConfigurations."Codys-MacBook-Pro" =
+        inputs.darwin.lib.darwinSystem {
+          system = "x86_64-darwin";
+          modules = [
+            # Overlays-module makes "pkgs.unstable" available in configuration.nix
+            # This makes my custom overlay available for others to use.
+            ({ config, pkgs, ... }: {
+              nixpkgs.overlays = [ my-custom-overlay ];
+            })
+            ./hosts/macbook/darwin-configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.codyhiar = import ./hosts/macbook/home.nix;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+            }
+          ];
+        };
 
     };
 }
