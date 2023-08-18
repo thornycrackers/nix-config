@@ -1,5 +1,4 @@
 # Aliases
-alias nrs="sudo -i nixos-rebuild switch"
 alias nixc="nvim ~/nixos/configuration.nix"
 alias dod="cd ~/nixos"
 alias t='tmux'
@@ -48,9 +47,20 @@ tlo() {
 
 cwh() { cat $(which $1) }
 
-rmresult () {
+rmresult() {
         TMP_STORE_PATH=$(readlink result)
         rm -rf result
         nix-store --delete "${TMP_STORE_PATH}"
 }
 
+nrs() {
+    if [[ $(uname -s) == "Linux" ]]; then
+        sudo -i nixos-rebuild switch
+    elif [[ $(uname -s) == "Darwin" ]]; then
+        darwin-rebuild switch --flake ~/.nixpkgs
+    else
+        echo "unknown platform"
+    fi
+
+
+}

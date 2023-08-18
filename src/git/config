@@ -1,0 +1,43 @@
+[user]
+    name = Cody Hiar
+    email = cody@hiar.ca
+[color]
+    ui = true
+[core]
+    editor = nvim
+    pager = delta --24-bit-color always
+    abbrev = 7
+[delta]
+    syntax-theme = gruvbox-dark
+    plus-style = syntax "#00350030"
+    minus-style = syntax "#35000030"
+    line-numbers = true
+    side-by-side = true
+[alias]
+    lg = log --topo-order --all --graph --date=local --pretty=format:'%C(green)%h%C(reset) %><(55,trunc)%s%C(red)%d%C(reset) %C(blue)[%an]%C(reset) %C(yellow)%ad%C(reset)%n'
+    sw = show --pretty='format:' --name-only
+    st = status
+[rebase]
+    autostash = true
+[pull]
+    rebase = true
+[rerere]
+    enabled = true
+[gpg]
+    program = gpg
+[init]
+    defaultBranch = master
+[interactive]
+    diffFilter = delta --color-only
+[merge]
+    conflictstyle = diff3
+    tool = nvim
+[diff]
+    colorMoved = default
+# define command which will be used when "nvim" is set as a merge tool
+[mergetool "nvim"]
+    cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
+# automatically launch merge tool without displaying a prompt
+[mergetool]
+    prompt = false
+
