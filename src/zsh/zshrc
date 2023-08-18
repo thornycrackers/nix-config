@@ -61,6 +61,4 @@ nrs() {
     else
         echo "unknown platform"
     fi
-
-
 }

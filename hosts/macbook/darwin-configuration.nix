@@ -1,10 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, wrapper-manager, ... }:
 
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     neovimchpkgs.neovimCH
+    unstable.gitAndTools.delta
     btop
     htop
     # Need up to date ncurses or colors inside of tmux get wonky
@@ -12,6 +13,13 @@
     ncurses
     openvpn
     wget
+    # Packages that won't install inside home.nix
+    lf
+    fzf
+    (wrapper-manager.lib.build {
+      inherit pkgs;
+      modules = [ ../../src/bat ../../src/tmux ];
+    })
   ];
   nix = {
     package = pkgs.nixFlakes;
@@ -37,6 +45,9 @@
       # builders-use-substitutes = true
     '';
   };
+
+  # https://github.com/nix-community/home-manager/issues/4026
+  users.users.codyhiar.home = "/Users/codyhiar";
 
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix

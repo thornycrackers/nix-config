@@ -3,6 +3,8 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-23.05";
+    # Unstable for select packages
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     # Flake for my neovim setup
     neovimch.url = "git+https://git.codyhiar.com/config/nvim";
     neovimch.inputs.nixpkgs.follows = "nixpkgs";
@@ -32,6 +34,10 @@
           }));
 
       my-custom-overlay = final: prev: rec {
+        unstable = import inputs.nixpkgs-unstable {
+          system = "${prev.system}";
+          config.allowUnfree = true;
+        };
         neovimchpkgs = inputs.neovimch.packages.${prev.system};
       };
 
@@ -68,6 +74,7 @@
       darwinConfigurations."Codys-MacBook-Pro" =
         inputs.darwin.lib.darwinSystem {
           system = "x86_64-darwin";
+          specialArgs = with inputs; { inherit wrapper-manager; };
           modules = [
             # Overlays-module makes "pkgs.unstable" available in configuration.nix
             # This makes my custom overlay available for others to use.

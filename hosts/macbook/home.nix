@@ -3,7 +3,7 @@
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
-  home.homeDirectory = pkgs.lib.mkForce "/Users/codyhiar";
+  home.homeDirectory = "/Users/codyhiar";
 
   # lf
   programs.lf.enable = true;
@@ -21,16 +21,10 @@
   # git config
   xdg.configFile."git/config".source = ../../src/git/config;
 
-  # Wrapper packages via wrapper-manager
-  # There's no hard or fast rules for when to use home manager vs wrapper manager.
-  # I guess the best heuristic is how much I want to customize in the tool?
-  home.packages = [
-    pkgs.fzf
-    (inputs.wrapper-manager.lib.build {
-      inherit pkgs;
-      modules = [ ../../src/bat ../../src/tmux ];
-    })
-  ];
+  # NOTE: On darwin the home.packages doesn't seem to link properly. Not sure
+  # why but I just add packages into darwin-configuration.nix instead. I leave
+  # this note as a reminder.
+  # home.packages = [ ];
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
