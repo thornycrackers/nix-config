@@ -18,6 +18,9 @@
   programs.zsh.initExtra = builtins.readFile ../../src/zsh/zshrc;
   home.file.".config/zsh/git.zsh".source = ../../src/zsh/git.zsh;
 
+  # git config
+  xdg.configFile."git/config".source = ../../src/git/config;
+
   # Wrapper packages via wrapper-manager
   # There's no hard or fast rules for when to use home manager vs wrapper manager.
   # I guess the best heuristic is how much I want to customize in the tool?
