@@ -81,7 +81,15 @@
           # Configuration for the system
           # This file doesn't exist in the repository. The script that
           # provisions the VM generates the base config with `nixos-generate-config`
-          ./hosts/aarch64/configuration.nix
+          ./hosts/aarch64vm/configuration.nix
+          ./hosts/aarch64vm/extra-configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.root = import ./hosts/aarch64vm/home.nix;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+          }
         ];
       };
 
