@@ -66,7 +66,11 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.thorny = import ./hosts/shared/home-linux.nix;
-            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              username = "thorny";
+              homedirectory = "/home/thorny";
+            };
           }
         ];
       };

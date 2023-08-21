@@ -1,10 +1,10 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, username, homedirectory, ... }:
 
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
-  home.username = "root";
-  home.homeDirectory = "/root";
+  home.username = "${username}";
+  home.homeDirectory = "${homedirectory}";
 
   # lf
   programs.lf.enable = true;
