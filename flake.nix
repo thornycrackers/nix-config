@@ -91,7 +91,11 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.root = import ./hosts/shared/home-linux.nix;
-            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              username = "root";
+              homedirectory = "/root";
+            };
           }
         ];
       };
