@@ -65,7 +65,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.thorny = import ./hosts/boston/home.nix;
+            home-manager.users.thorny = import ./hosts/shared/home-linux.nix;
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
@@ -86,7 +86,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.root = import ./hosts/aarch64vm/home.nix;
+            home-manager.users.root = import ./hosts/shared/home-linux.nix;
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
