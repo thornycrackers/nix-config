@@ -9,6 +9,11 @@
     gitAndTools.delta
     fzf
     vim
+    neovimchpkgs.neovimCH
+    gnumake
+    docker-compose
+    btop
+    htop
   ];
   users.users.root = {
     shell = pkgs.zsh;
