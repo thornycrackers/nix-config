@@ -122,5 +122,28 @@
           ];
         };
 
+      # Darwin config for macbook-work
+      darwinConfigurations."Codys-MacBook-Pro-Work" =
+        inputs.darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = with inputs; { inherit wrapper-manager; };
+          modules = [
+            # Overlays-module makes "pkgs.unstable" available in configuration.nix
+            # This makes my custom overlay available for others to use.
+            ({ config, pkgs, ... }: {
+              nixpkgs.overlays = [ my-custom-overlay ];
+            })
+            ./hosts/macbook-work/darwin-configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.codyhiar =
+                import ./hosts/macbook-work/home.nix;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+            }
+          ];
+        };
+
     };
 }

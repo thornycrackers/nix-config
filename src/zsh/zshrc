@@ -1,5 +1,4 @@
 # Aliases
-alias nixc="nvim ~/nixos/configuration.nix"
 alias dod="cd ~/nixos"
 alias t='tmux'
 alias ta='tmux attach'
@@ -60,5 +59,13 @@ nrs() {
         darwin-rebuild switch --flake ~/.nixpkgs
     else
         echo "unknown platform"
+    fi
+}
+
+nixc() {
+    if [[ $(hostname) == "Codys-MacBook-Pro-Work.local" ]]; then
+        nvim ~/.nixpkgs/hosts/macbook-work/darwin-configuration.nix
+    else
+        echo "unknown host"
     fi
 }
