@@ -81,6 +81,7 @@
     gnumake
     docker-compose
     btop
+    fzf
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

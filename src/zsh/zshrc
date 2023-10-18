@@ -3,6 +3,7 @@ alias dod="cd ~/nixos"
 alias t='tmux'
 alias ta='tmux attach'
 alias n='nvim'
+alias inc='nvim ~/.nixpkgs/src/zsh/zshrc'
 
 # Environment Variables
 export EDITOR='nvim'
@@ -65,6 +66,8 @@ nrs() {
 nixc() {
     if [[ $(hostname) == "Codys-MacBook-Pro-Work.local" ]]; then
         nvim ~/.nixpkgs/hosts/macbook-work/darwin-configuration.nix
+    elif [[ $(hostname) == "enigma" ]]; then
+        nvim ~/.nixpkgs/hosts/enigma/configuration.nix
     else
         echo "unknown host"
     fi
