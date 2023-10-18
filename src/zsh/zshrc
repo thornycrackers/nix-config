@@ -9,6 +9,9 @@ alias inc='nvim ~/.nixpkgs/src/zsh/zshrc'
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PAGER='less -S'
+# I get issues all the time with kitty and remote hosts that don't understand
+# it. Default to this, customize when needed
+export TERM='xterm-256color'
 export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
 # For some reason, docker client is expecting in a different location
 # (unix:///run/user/1000/docker.sock) but hardcode for now

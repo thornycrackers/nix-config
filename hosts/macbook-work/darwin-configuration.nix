@@ -5,6 +5,7 @@
   nix = {
     extraOptions = ''
       experimental-features = nix-command flakes
+      extra-trusted-users = codyhiar
     '';
   };
 
@@ -31,17 +32,21 @@
       inherit pkgs;
       modules = [ ../../src/bat ../../src/tmux ];
     })
-    # Gui Apps
-    kitty
-    karabiner-elements
-    slack
   ];
 
   # Let nix run homebrew. This won't install homebrew visit:
   # https://brew.sh/ to get install info.
   homebrew = {
     enable = true;
-    casks = [ "google-chrome" "zoom" ];
+    casks = [
+      "google-chrome"
+      "zoom"
+      "karabiner-elements"
+      "slack"
+      "kitty"
+      "rectangle"
+      "utm"
+    ];
     onActivation.cleanup = "zap";
   };
 
