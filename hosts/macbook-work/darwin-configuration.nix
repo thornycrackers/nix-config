@@ -28,6 +28,11 @@
     # Packages that won't install inside home.nix
     lf
     fzf
+    nixos-rebuild
+    docker-compose
+    lazydocker
+    lazygit
+    ack
     (wrapper-manager.lib.build {
       inherit pkgs;
       modules = [ ../../src/bat ../../src/tmux ];
@@ -46,7 +51,10 @@
       "kitty"
       "rectangle"
       "utm"
+      "font-dejavu-sans-mono-nerd-font"
+      "docker"
     ];
+    taps = [ "homebrew/cask-fonts" ];
     onActivation.cleanup = "zap";
   };
 
