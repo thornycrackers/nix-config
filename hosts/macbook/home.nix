@@ -21,6 +21,19 @@
   # git config
   xdg.configFile."git/config".source = ../../src/git/config;
 
+  # kitty config
+  xdg.configFile."kitty/kitty.conf".source = ../../src/kitty/kitty.conf;
+
+  # tridactyl config
+  xdg.configFile."tridactyl/tridactylrc".source =
+    ../../src/tridactyl/tridactylrc;
+
+  # karabiner configs
+  xdg.configFile."karabiner" = {
+    source = ../../src/karabiner;
+    recursive = true;
+  };
+
   # NOTE: On darwin the home.packages doesn't seem to link properly. Not sure
   # why but I just add packages into darwin-configuration.nix instead. I leave
   # this note as a reminder.
