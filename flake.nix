@@ -25,14 +25,18 @@
     let
       # https://ayats.org/blog/no-flake-utils/
       # Why you don't need flake-utils.
-      forAllSystems = function:
-        nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" ]
-        (system:
-          function (import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-            overlays = [ my-custom-overlay ];
-          }));
+      # https://xeiaso.net/blog/nix-flakes-1-2022-02-21/
+      supportedSystems =
+        [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
+
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+
+      nixpkgsFor = forAllSystems (system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [ my-custom-overlay ];
+        });
 
       my-custom-overlay = final: prev: rec {
         unstable = import inputs.nixpkgs-unstable {
@@ -43,12 +47,20 @@
       };
 
     in {
-      packages = forAllSystems (pkgs: rec {
-        mytmux = inputs.wrapper-manager.lib.build {
-          inherit pkgs;
-          modules = [ ./src/tmux ];
+      packages = forAllSystems (system:
+        let pkgs = nixpkgsFor.${system};
+        in {
+          mytmux = inputs.wrapper-manager.lib.build {
+            inherit pkgs;
+            modules = [ ./src/tmux ];
+          };
+        });
+
+      apps = forAllSystems (system: {
+        mytmux = {
+          type = "app";
+          program = "${self.packages.${system}.mytmux}/bin/tmux";
         };
-        default = mytmux;
       });
 
       # Configuration for development machine
