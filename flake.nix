@@ -154,7 +154,8 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.codyhiar = import ./hosts/macbook/home.nix;
+            home-manager.users.codyhiar =
+              import ./hosts/shared/home-macbooks.nix;
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
