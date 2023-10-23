@@ -161,26 +161,28 @@
       };
 
       # Darwin config for macbookwork
-      darwinConfigurations."Codys-MacBook-Pro-Work" =
-        inputs.darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          specialArgs = with inputs; { inherit wrapper-manager; };
-          modules = [
-            # Overlays-module makes "pkgs.unstable" available in configuration.nix
-            # This makes my custom overlay available for others to use.
-            ({ config, pkgs, ... }: {
-              nixpkgs.overlays = [ my-custom-overlay ];
-            })
-            ./hosts/macbookwork/darwin-configuration.nix
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.codyhiar = import ./hosts/macbookwork/home.nix;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-            }
-          ];
-        };
+      darwinConfigurations."Codys-MacBook-Pro-Work" = let
+        system = "aarch64-darwin";
+        flakePkgs = self.packages."${system}";
+      in inputs.darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = with inputs; { inherit wrapper-manager flakePkgs; };
+        modules = [
+          # Overlays-module makes "pkgs.unstable" available in configuration.nix
+          # This makes my custom overlay available for others to use.
+          ({ config, pkgs, ... }: { nixpkgs.overlays = [ my-custom-overlay ]; })
+          ./hosts/macbookwork/darwin-configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.codyhiar =
+              import ./hosts/shared/home-macbooks.nix;
+
+            home-manager.extraSpecialArgs = { inherit inputs; };
+          }
+        ];
+      };
 
     };
 }
