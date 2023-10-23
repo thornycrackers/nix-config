@@ -5,9 +5,6 @@
     nixpkgs.url = "nixpkgs/nixos-23.05";
     # Unstable for select packages
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
-    # Flake for my neovim setup
-    neovimch.url = "git+https://git.codyhiar.com/config/nvim";
-    neovimch.inputs.nixpkgs.follows = "nixpkgs";
     # Home manager for dotfiles
     home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
