@@ -35,7 +35,7 @@
           overlays = [ my-custom-overlay ];
         });
 
-      my-custom-overlay = final: prev: rec {
+      my-custom-overlay = final: prev: {
         unstable = import inputs.nixpkgs-unstable {
           system = "${prev.system}";
           config.allowUnfree = true;

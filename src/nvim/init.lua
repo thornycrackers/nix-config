@@ -224,7 +224,7 @@ end
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
 -- local servers = { 'pyls', 'rust_analyzer', 'tsserver' }
-local servers = { 'jedi_language_server', 'bashls', 'terraformls', 'ansiblels' }
+local servers = { 'jedi_language_server', 'bashls', 'terraformls', 'ansiblels', 'nil_ls' }
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
