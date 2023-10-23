@@ -54,12 +54,17 @@
             inherit pkgs;
             modules = [ ./src/tmux ];
           };
+          myneovim = pkgs.callPackage ./src/nvim/myneovim.nix { inherit pkgs; };
         });
 
       apps = forAllSystems (system: {
         mytmux = {
           type = "app";
           program = "${self.packages.${system}.mytmux}/bin/tmux";
+        };
+        myneovim = {
+          type = "app";
+          program = "${self.packages.${system}.myneovim}/bin/nvim";
         };
       });
 
@@ -137,9 +142,12 @@
       };
 
       # Darwin config for macbook
-      darwinConfigurations."Codys-MBP" = inputs.darwin.lib.darwinSystem {
+      darwinConfigurations."Codys-MacBook-Pro" = let
         system = "x86_64-darwin";
-        specialArgs = with inputs; { inherit wrapper-manager; };
+        flakePkgs = self.packages."${system}";
+      in inputs.darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = with inputs; { inherit wrapper-manager flakePkgs; };
         modules = [
           # Overlays-module makes "pkgs.unstable" available in configuration.nix
           # This makes my custom overlay available for others to use.

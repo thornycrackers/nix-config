@@ -73,7 +73,7 @@ nixc() {
         nvim ~/.nixpkgs/hosts/macbook-work/darwin-configuration.nix
     elif [[ $(hostname) == "enigma" ]]; then
         nvim ~/.nixpkgs/hosts/enigma/configuration.nix
-    elif [[ $(hostname) == "Codys-MBP.lan" ]]; then
+    elif [[ $(hostname) == "Codys-MacBook-Pro.local" ]]; then
         nvim ~/.nixpkgs/hosts/macbook/darwin-configuration.nix
     else
         echo "unknown host"

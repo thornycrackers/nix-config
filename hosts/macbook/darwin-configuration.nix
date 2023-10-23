@@ -1,4 +1,4 @@
-{ config, pkgs, wrapper-manager, ... }:
+{ config, pkgs, wrapper-manager, flakePkgs, ... }:
 
 {
   nix = {
@@ -11,7 +11,7 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    neovimchpkgs.neovimCH
+    flakePkgs.myneovim
     unstable.gitAndTools.delta
     btop
     htop
