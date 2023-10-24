@@ -13,6 +13,7 @@
   environment.systemPackages = with pkgs; [
     flakePkgs.myneovim
     unstable.gitAndTools.delta
+    ack
     btop
     htop
     # Need up to date ncurses or colors inside of tmux get wonky

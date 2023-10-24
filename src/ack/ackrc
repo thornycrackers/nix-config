@@ -1,0 +1,14 @@
+--sort-files
+
+# Always color, even if piping to a another program
+--color
+
+# Ignore directories
+--ignore-dir=.vimcache/
+--ignore-dir=migrations/
+--ignore-dir=.mypy_cache/
+--ignore-dir=.venv/
+
+# Ignore .map files
+--ignore-file=is:tags
+--type-set=minmap=.map

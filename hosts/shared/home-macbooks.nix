@@ -34,6 +34,9 @@
     recursive = true;
   };
 
+  # ack config
+  home.file.".ackrc".source = ../../src/ack/ackrc;
+
   # NOTE: On darwin the home.packages doesn't seem to link properly. Not sure
   # why but I just add packages into darwin-configuration.nix instead. I leave
   # this note as a reminder.
