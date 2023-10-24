@@ -1,0 +1,5 @@
+#compdef projects_listing
+
+local -a options
+options=$(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d | xargs -n1 basename)
+_alternative "args:projects:($options)"

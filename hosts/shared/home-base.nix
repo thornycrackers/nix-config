@@ -37,6 +37,12 @@
           sha256 = "149zh2rm59blr2q458a5irkfh82y3dwdich60s9670kl3cl5h2m1";
         };
       }
+      # I create this plugin so that all my autocompletes are added to the zsh
+      # fpath and I can use custom autocompletes in my functions
+      {
+        name = "myautocompletes";
+        src = ../../src/zsh/autocompletes;
+      }
     ];
   };
   home.file.".config/zsh/git.zsh".source = ../../src/zsh/git.zsh;

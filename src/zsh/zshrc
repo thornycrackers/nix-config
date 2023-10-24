@@ -81,3 +81,7 @@ nixc() {
         echo "unknown host"
     fi
 }
+
+# Custom autocompletes
+compdef j=projects_listing
+compdef tlo=projects_listing
