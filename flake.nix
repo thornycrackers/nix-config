@@ -46,6 +46,13 @@
 
     in {
 
+      # Used for ci linting
+      devShells = forAllSystems (system:
+        let pkgs = nixpkgsFor.${system};
+        in {
+          default = pkgs.mkShell { buildInputs = with pkgs; [ alejandra ]; };
+        });
+
       # Create packages out of my wrapped applications.
       packages = forAllSystems (system:
         let pkgs = nixpkgsFor.${system};

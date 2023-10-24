@@ -13,7 +13,5 @@ jobs:
         uses: DeterminateSystems/flake-checker-action@v4 # This action
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v3
-      - name: Build tmux package
-        run: nix build .#mytmux
-      - name: Build neovim package
-        run: nix build .#myneovim
+      - name: Lint nix files
+        run: nix develop --command alejandra --check .

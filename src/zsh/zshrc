@@ -8,6 +8,9 @@ alias dod="cd ~/.nixpkgs"
 alias lg="lazygit"
 alias s="ssh"
 alias ldo='lazydocker'
+alias nd="nix develop -c $SHELL"
+alias ..="cd ../"
+alias ...="cd ../.."
 
 # Environment Variables
 export EDITOR='nvim'
