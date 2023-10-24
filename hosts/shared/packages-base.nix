@@ -1,12 +1,16 @@
 pkgs:
 with pkgs; [
   ack
-  lazygit
   btop
+  curl
+  docker-compose
+  git
+  gitAndTools.delta
+  gnumake
   htop
+  lazydocker
+  lazygit
   lf
   wget
-  curl
-  unstable.gitAndTools.delta
 ]
 

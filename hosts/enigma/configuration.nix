@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ pkgs, flakePkgs, ... }:
 
 {
   imports = [ # Include the results of the hardware scan.
@@ -42,7 +42,6 @@
     shell = pkgs.zsh;
     description = "thorny";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [ ];
     # Required for the docker rootless
     subUidRanges = [
       {
@@ -73,20 +72,12 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    neovimchpkgs.neovimCH
-    curl
-    git
-    gitAndTools.delta
-    openvpn
-    gnumake
-    docker-compose
-    btop
-    fzf
-    fzf
-    lazydocker
-    wget
-  ];
+  environment.systemPackages = with pkgs;
+    let
+      basePackages = import ../../hosts/shared/packages-base.nix pkgs;
+      parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
+      localPackages = [ flakePkgs.myneovim ];
+    in lib.mkMerge [ basePackages parselyPackages localPackages ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

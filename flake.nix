@@ -90,8 +90,12 @@
       };
 
       # Configuration for development machine
-      nixosConfigurations.enigma = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.enigma = let
         system = "aarch64-linux";
+        flakePkgs = self.packages."${system}";
+      in nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit flakePkgs; };
         modules = [
           # Overlays-module makes "pkgs.unstable" available in configuration.nix
           # This makes my custom overlay available for others to use.
