@@ -35,15 +35,18 @@
           overlays = [ my-custom-overlay ];
         });
 
+      # Add unstable packages as an overlay so that they are available in the
+      # configs as `pkgs.unstable.<package-name>`
       my-custom-overlay = final: prev: {
         unstable = import inputs.nixpkgs-unstable {
           system = "${prev.system}";
           config.allowUnfree = true;
         };
-        neovimchpkgs = inputs.neovimch.packages.${prev.system};
       };
 
     in {
+
+      # Create packages out of my wrapped applications.
       packages = forAllSystems (system:
         let pkgs = nixpkgsFor.${system};
         in {
@@ -54,6 +57,10 @@
           myneovim = pkgs.callPackage ./src/nvim/myneovim.nix { inherit pkgs; };
         });
 
+      # Expose my wrapped applications. If you clone this repository you can run:
+      # nix run .#mytmux
+      # nix run .#myneovim
+      # To test them out
       apps = forAllSystems (system: {
         mytmux = {
           type = "app";
@@ -183,7 +190,6 @@
             home-manager.useUserPackages = true;
             home-manager.users.codyhiar =
               import ./hosts/shared/home-macbooks.nix;
-
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
