@@ -6,6 +6,7 @@ alias n='nvim'
 alias inc='nvim ~/.nixpkgs/src/zsh/zshrc'
 alias incc='source ~/.zshrc'
 alias dod="cd ~/.nixpkgs"
+alias lg="lazygit"
 
 # Environment Variables
 export EDITOR='nvim'

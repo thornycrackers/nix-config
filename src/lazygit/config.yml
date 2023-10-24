@@ -1,0 +1,15 @@
+gui:
+  sidePanelWidth: 0.25
+  mainPanelSplitMode: 'horizontal'
+os:
+  editCommand: 'nvim'
+  editCommandTemplate: '{{editor}} +{{line}} -- {{filename}}'
+promptToReturnFromSubprocess: false
+
+git:
+  autoFetch: false
+  branchLogCmd: "git log --color=always --topo-order --graph --date=local --pretty=format:'%C(green)%h%C(reset) %><(55,trunc)%s%C(red)%d%C(reset) %C(blue)[%an]%C(reset) %C(yellow)%ad%C(reset)%n' {{branchName}} --"
+  allBranchesLogCmd: "git log --color=always --all --topo-order --graph --date=local --pretty=format:'%C(green)%h%C(reset) %><(55,trunc)%s%C(red)%d%C(reset) %C(blue)[%an]%C(reset) %C(yellow)%ad%C(reset)%n' {{branchName}} --"
+  paging:
+    colorArg: always
+    pager: delta --24-bit-color always --paging=never

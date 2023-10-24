@@ -14,6 +14,7 @@
     flakePkgs.myneovim
     unstable.gitAndTools.delta
     ack
+    lazygit
     btop
     htop
     # Need up to date ncurses or colors inside of tmux get wonky
