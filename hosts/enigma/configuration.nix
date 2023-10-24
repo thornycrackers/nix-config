@@ -77,10 +77,15 @@
     neovimchpkgs.neovimCH
     curl
     git
+    gitAndTools.delta
     openvpn
     gnumake
     docker-compose
     btop
+    fzf
+    fzf
+    lazydocker
+    wget
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

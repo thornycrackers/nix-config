@@ -10,6 +10,9 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
+  # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#_set_vm_max_map_count_to_at_least_262144
+  boot.kernel.sysctl = { "vm.max_map_count" = 262144;};
+
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/ebb8f86b-1be2-4422-aa20-dc77ab928121";

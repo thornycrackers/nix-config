@@ -7,6 +7,7 @@ alias incc='source ~/.zshrc'
 alias dod="cd ~/.nixpkgs"
 alias lg="lazygit"
 alias s="ssh"
+alias ldo='lazydocker'
 
 # Environment Variables
 export EDITOR='nvim'
