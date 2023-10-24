@@ -1,4 +1,4 @@
-{ config, pkgs, wrapper-manager, flakePkgs, ... }:
+{ pkgs, wrapper-manager, flakePkgs, ... }:
 
 {
   nix = {
