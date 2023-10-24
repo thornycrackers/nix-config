@@ -1,0 +1,2 @@
+pkgs: with pkgs; [ openvpn ]
+
