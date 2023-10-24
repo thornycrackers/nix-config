@@ -1,32 +1,16 @@
 { config, pkgs, inputs, username, homedirectory, ... }:
 
 {
+  imports = [ ./home-base.nix ];
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "${username}";
   home.homeDirectory = "${homedirectory}";
 
-  # lf
-  programs.lf.enable = true;
-  xdg.configFile."lf/lfrc".source = ../../src/lf/lfrc;
-
-  # starship
-  programs.starship.enable = true;
-  xdg.configFile."starship.toml".source = ../../src/starship/starship.toml;
-
-  # zsh
-  programs.zsh.enable = true;
-  programs.zsh.initExtra = builtins.readFile ../../src/zsh/zshrc;
-  home.file.".config/zsh/git.zsh".source = ../../src/zsh/git.zsh;
-
-  # git config
-  xdg.configFile."git/config".source = ../../src/git/config;
-
   # Wrapper packages via wrapper-manager
   # There's no hard or fast rules for when to use home manager vs wrapper manager.
   # I guess the best heuristic is how much I want to customize in the tool?
   home.packages = [
-    pkgs.fzf
     (inputs.wrapper-manager.lib.build {
       inherit pkgs;
       modules = [ ../../src/bat ../../src/tmux ];

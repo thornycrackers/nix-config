@@ -1,25 +1,10 @@
 { config, pkgs, inputs, ... }:
 
 {
+  imports = [ ./home-base.nix ];
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.homeDirectory = "/Users/codyhiar";
-
-  # lf
-  programs.lf.enable = true;
-  xdg.configFile."lf/lfrc".source = ../../src/lf/lfrc;
-
-  # starship
-  programs.starship.enable = true;
-  xdg.configFile."starship.toml".source = ../../src/starship/starship.toml;
-
-  # zsh
-  programs.zsh.enable = true;
-  programs.zsh.initExtra = builtins.readFile ../../src/zsh/zshrc;
-  home.file.".config/zsh/git.zsh".source = ../../src/zsh/git.zsh;
-
-  # git config
-  xdg.configFile."git/config".source = ../../src/git/config;
 
   # kitty config
   xdg.configFile."kitty/kitty.conf".source = ../../src/kitty/kitty.conf;
@@ -33,12 +18,6 @@
     source = ../../src/karabiner;
     recursive = true;
   };
-
-  # ack config
-  home.file.".ackrc".source = ../../src/ack/ackrc;
-
-  # lazgit config
-  xdg.configFile."lazygit/config.yml".source = ../../src/lazygit/config.yml;
 
   # NOTE: On darwin the home.packages doesn't seem to link properly. Not sure
   # why but I just add packages into darwin-configuration.nix instead. I leave

@@ -5,7 +5,6 @@ with pkgs; [
   btop
   htop
   lf
-  fzf
   wget
   curl
   unstable.gitAndTools.delta

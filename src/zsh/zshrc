@@ -7,6 +7,7 @@ alias inc='nvim ~/.nixpkgs/src/zsh/zshrc'
 alias incc='source ~/.zshrc'
 alias dod="cd ~/.nixpkgs"
 alias lg="lazygit"
+alias s="ssh"
 
 # Environment Variables
 export EDITOR='nvim'
@@ -21,6 +22,11 @@ export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
 export DOCKER_HOST="unix:///run/docker.sock"
 
 source "$HOME/.config/zsh/git.zsh"
+
+# https://github.com/zsh-users/zsh-history-substring-search
+zmodload zsh/terminfo
+bindkey "^[[A" history-substring-search-up
+bindkey "^[[B" history-substring-search-down
 
 # Jump to a project diredtory
 j() { # Jump to project code
