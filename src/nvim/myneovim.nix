@@ -9,7 +9,8 @@ let
         lua << EOF
         ${pkgs.lib.readFile ./init.lua}
         EOF
-        " lua doesn't like the special characters
+        " lua doesn't like the special characters in this map
+        nnoremap <leader>pl vipJV:s/\v[.!?:] */\0\r/g<cr>k:noh<cr>
         let g:languagetool_server_command = '${pkgs.languagetool}/bin/languagetool-http-server'
       '';
       packages.myPlugins = with pkgs.vimPlugins; {
