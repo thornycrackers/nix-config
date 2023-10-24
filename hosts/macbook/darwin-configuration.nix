@@ -41,7 +41,10 @@
       "kitty"
       "rectangle"
       "utm"
+      "font-dejavu-sans-mono-nerd-font"
+      "docker"
     ];
+    taps = [ "homebrew/cask-fonts" ];
     onActivation.cleanup = "zap";
     masApps = { "Logic Pro" = 634148309; };
   };

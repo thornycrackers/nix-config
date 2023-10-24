@@ -41,8 +41,8 @@ format = "[$branch]($style) "
 truncate_to_repo = false
 
 [character]
-success_symbol = "[](bold cyan) "
-error_symbol = "[](bold red) "
+success_symbol = "[󰘧](bold cyan) "
+error_symbol = "[󰘧](bold red) "
 
 [python]
 style = "bold purple"
