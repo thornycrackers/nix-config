@@ -33,6 +33,11 @@ source "$HOME/.config/zsh/git.zsh"
 # Load keychain on startup
 eval $(keychain --eval --quiet id_rsa)
 
+# Use vim to edit longer commands
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey "^X^E" edit-command-line
+
 # Jump to a project diredtory
 j() { # Jump to project code
     PROJ=$(find "$HOME/Work" -mindepth 2 -maxdepth 2 -type d -name "$1")
