@@ -15,30 +15,24 @@
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; [
-    flakePkgs.myneovim
-    unstable.gitAndTools.delta
-    git
-    btop
-    htop
-    # Need up to date ncurses or colors inside of tmux get wonky
-    coreutils
-    ncurses
-    openvpn
-    wget
-    # Packages that won't install inside home.nix
-    lf
-    fzf
-    nixos-rebuild
-    docker-compose
-    lazydocker
-    lazygit
-    ack
-    (wrapper-manager.lib.build {
-      inherit pkgs;
-      modules = [../../src/bat ../../src/tmux];
-    })
-  ];
+  environment.systemPackages = with pkgs; let
+    basePackages = import ../../hosts/shared/packages-base.nix pkgs;
+    darwinPackages = import ../../hosts/shared/packages-darwin.nix pkgs;
+    parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
+    localPackages = [
+      flakePkgs.myneovim
+      (wrapper-manager.lib.build {
+        inherit pkgs;
+        modules = [../../src/bat ../../src/tmux];
+      })
+    ];
+  in
+    lib.mkMerge [
+      basePackages
+      darwinPackages
+      parselyPackages
+      localPackages
+    ];
 
   # Let nix run homebrew. This won't install homebrew visit:
   # https://brew.sh/ to get install info.

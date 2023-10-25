@@ -27,7 +27,11 @@ export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
 # (unix:///run/user/1000/docker.sock) but hardcode for now
 export DOCKER_HOST="unix:///run/docker.sock"
 
+# Additional includes
 source "$HOME/.config/zsh/git.zsh"
+
+# Load keychain on startup
+eval $(keychain --eval --quiet id_rsa)
 
 # Jump to a project diredtory
 j() { # Jump to project code
@@ -78,7 +82,7 @@ nrs() {
 
 nixc() {
     if [[ $(hostname) == "Codys-MacBook-Pro-Work.local" ]]; then
-        nvim ~/.nixpkgs/hosts/macbook-work/darwin-configuration.nix
+        nvim ~/.nixpkgs/hosts/macbookwork/darwin-configuration.nix
     elif [[ $(hostname) == "enigma" ]]; then
         nvim ~/.nixpkgs/hosts/enigma/configuration.nix
     elif [[ $(hostname) == "Codys-MacBook-Pro.local" ]]; then

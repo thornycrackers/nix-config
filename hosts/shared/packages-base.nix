@@ -8,8 +8,10 @@ with pkgs; [
   gitAndTools.delta
   gnumake
   htop
+  keychain
   lazydocker
   lazygit
+  nixos-rebuild
   lf
   wget
 ]
