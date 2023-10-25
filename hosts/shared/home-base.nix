@@ -42,6 +42,11 @@
         name = "myautocompletes";
         src = ../../src/zsh/autocompletes;
       }
+      # I create this plugin so that all my custom shell binaries are on the path
+      {
+        name = "mybin";
+        src = ../../src/zsh/bin;
+      }
     ];
   };
   home.file.".config/zsh/git.zsh".source = ../../src/zsh/git.zsh;

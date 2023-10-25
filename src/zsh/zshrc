@@ -97,6 +97,19 @@ jp() { # Jump to project code in parsely
     cd "$PROJ"
 }
 
+# A lazy command that will wait for me to press enter and then rebuild the my nix config.
+# Makes reloads much faster, usually just runs in a tmux pane.
+rebuildr() {
+    while true; do
+        echo -n "Press enter to continue"
+        read -r REPLY
+        if [[ $REPLY == "q" ]]; then
+            break
+        fi
+        nrs
+    done
+}
+
 # Custom autocompletes
 compdef j=projects_listing
 compdef jp=projects_listing_engineering
