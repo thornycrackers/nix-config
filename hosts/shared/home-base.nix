@@ -46,6 +46,13 @@
   };
   home.file.".config/zsh/git.zsh".source = ../../src/zsh/git.zsh;
 
+  # colors for ls
+  programs.dircolors = {
+    enable = true;
+    enableZshIntegration = true;
+    extraConfig = builtins.readFile ../../src/zsh/ls_colors;
+  };
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;

@@ -11,6 +11,7 @@ alias ldo='lazydocker'
 alias nd="nix develop -c $SHELL"
 alias ..="cd ../"
 alias ...="cd ../.."
+alias ls="ls --color=tty"
 
 # Environment Variables
 export EDITOR='nvim'

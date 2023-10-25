@@ -50,8 +50,9 @@
     # Used for ci linting
     devShells = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
+      nvimPackages = import ./src/nvim/packages.nix pkgs;
     in {
-      default = pkgs.mkShell {buildInputs = with pkgs; [alejandra];};
+      default = pkgs.mkShell {buildInputs = nvimPackages;};
     });
 
     # Create packages out of my wrapped applications.

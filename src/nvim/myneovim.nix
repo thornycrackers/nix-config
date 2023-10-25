@@ -64,34 +64,12 @@ in
     name = "neovim";
     paths = [neovimOverride];
     buildInputs = [pkgs.makeWrapper];
-    postBuild = with pkgs; ''
+    postBuild = with pkgs; let
+      nvimPackages = import ./packages.nix pkgs;
+    in ''
       rm $out/bin/nvim
       BINPATH=${
-        lib.makeBinPath [
-          ctags
-          gcc
-          nodejs
-          (pkgs.python3Packages.callPackage ./nix/nvimpython.nix {
-            flake8-isort =
-              pkgs.python3Packages.callPackage ./nix/flake8-isort.nix {};
-          })
-          (pkgs.callPackage ./nix/vale.nix {})
-          pyright
-          tree-sitter
-          nodePackages.bash-language-server
-          shellcheck
-          hadolint
-          languagetool
-          lf
-          terraform-ls
-          ansible-language-server
-          ansible-lint
-          ansible
-          go
-          gotools
-          nil
-          alejandra
-        ]
+        lib.makeBinPath nvimPackages
       }
       makeWrapper ${neovimOverride}/bin/nvim $out/bin/nvim --prefix PATH : $BINPATH
     '';
