@@ -46,6 +46,7 @@ let
           vim-oscyank
           ack-vim
           (pkgs.callPackage ./nix/vim-angry-reviewer.nix { })
+          (pkgs.callPackage ./nix/vim-hmts.nix { })
           LanguageTool-nvim
           camelcasemotion
           vim-table-mode
