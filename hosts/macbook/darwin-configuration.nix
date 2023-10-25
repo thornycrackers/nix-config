@@ -1,6 +1,9 @@
-{ pkgs, wrapper-manager, flakePkgs, ... }:
-
 {
+  pkgs,
+  wrapper-manager,
+  flakePkgs,
+  ...
+}: {
   nix = {
     extraOptions = ''
       experimental-features = nix-command flakes
@@ -10,19 +13,19 @@
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs;
-    let
-      basePackages = import ../../hosts/shared/packages-base.nix pkgs;
-      darwinPackages = import ../../hosts/shared/packages-darwin.nix pkgs;
-      parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
-      localPackages = [
-        flakePkgs.myneovim
-        (wrapper-manager.lib.build {
-          inherit pkgs;
-          modules = [ ../../src/bat ../../src/tmux ];
-        })
-      ];
-    in lib.mkMerge [
+  environment.systemPackages = with pkgs; let
+    basePackages = import ../../hosts/shared/packages-base.nix pkgs;
+    darwinPackages = import ../../hosts/shared/packages-darwin.nix pkgs;
+    parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
+    localPackages = [
+      flakePkgs.myneovim
+      (wrapper-manager.lib.build {
+        inherit pkgs;
+        modules = [../../src/bat ../../src/tmux];
+      })
+    ];
+  in
+    lib.mkMerge [
       basePackages
       darwinPackages
       parselyPackages
@@ -44,9 +47,9 @@
       "font-dejavu-sans-mono-nerd-font"
       "docker"
     ];
-    taps = [ "homebrew/cask-fonts" ];
+    taps = ["homebrew/cask-fonts"];
     onActivation.cleanup = "zap";
-    masApps = { "Logic Pro" = 634148309; };
+    masApps = {"Logic Pro" = 634148309;};
   };
 
   # https://github.com/nix-community/home-manager/issues/4026

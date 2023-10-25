@@ -1,2 +1,1 @@
-pkgs: with pkgs; [ openvpn ]
-
+pkgs: with pkgs; [openvpn]

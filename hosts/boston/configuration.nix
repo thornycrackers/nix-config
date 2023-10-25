@@ -1,10 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, ... }:
-
-{
+{pkgs, ...}: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -46,8 +43,7 @@
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "thorny";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [ ];
+    extraGroups = ["networkmanager" "wheel" "docker"];
     # Required for the docker rootless
     subUidRanges = [
       {
@@ -93,7 +89,7 @@
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
-    ports = [ 2200 ];
+    ports = [2200];
     extraConfig = ''
       AuthenticationMethods "publickey,password"
     '';
@@ -113,5 +109,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
 }

@@ -1,6 +1,8 @@
-{ python3, flake8-isort }:
+{
+  python3,
+  flake8-isort,
+}:
 # I want neovim to have a base install for python linting so I create this custom python
-
 let
   nvimpython-packages = python-packages:
     with python-packages; [
@@ -11,4 +13,5 @@ let
       black
     ];
   nvimpython = python3.withPackages nvimpython-packages;
-in nvimpython
+in
+  nvimpython

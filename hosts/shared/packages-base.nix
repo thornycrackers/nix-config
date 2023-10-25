@@ -13,4 +13,3 @@ with pkgs; [
   lf
   wget
 ]
-

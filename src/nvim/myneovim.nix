@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{pkgs, ...}:
 # I keep this in a file simply to keep the top level flake a bit cleaner to read.
 # Defines my neovim with it's config file, vim plugins, and all packages (such as language servers and linters)
 let
@@ -45,8 +45,8 @@ let
           goyo-vim
           vim-oscyank
           ack-vim
-          (pkgs.callPackage ./nix/vim-angry-reviewer.nix { })
-          (pkgs.callPackage ./nix/vim-hmts.nix { })
+          (pkgs.callPackage ./nix/vim-angry-reviewer.nix {})
+          (pkgs.callPackage ./nix/vim-hmts.nix {})
           LanguageTool-nvim
           camelcasemotion
           vim-table-mode
@@ -59,39 +59,40 @@ let
       };
     };
   };
-in pkgs.symlinkJoin {
-  name = "neovim";
-  paths = [ neovimOverride ];
-  buildInputs = [ pkgs.makeWrapper ];
-  postBuild = with pkgs; ''
-    rm $out/bin/nvim
-    BINPATH=${
-      lib.makeBinPath [
-        ctags
-        gcc
-        nodejs
-        (pkgs.python3Packages.callPackage ./nix/nvimpython.nix {
-          flake8-isort =
-            pkgs.python3Packages.callPackage ./nix/flake8-isort.nix { };
-        })
-        (pkgs.callPackage ./nix/vale.nix { })
-        pyright
-        tree-sitter
-        nodePackages.bash-language-server
-        shellcheck
-        hadolint
-        nixfmt
-        languagetool
-        lf
-        terraform-ls
-        ansible-language-server
-        ansible-lint
-        ansible
-        go
-        gotools
-        nil
-      ]
-    }
-    makeWrapper ${neovimOverride}/bin/nvim $out/bin/nvim --prefix PATH : $BINPATH
-  '';
-}
+in
+  pkgs.symlinkJoin {
+    name = "neovim";
+    paths = [neovimOverride];
+    buildInputs = [pkgs.makeWrapper];
+    postBuild = with pkgs; ''
+      rm $out/bin/nvim
+      BINPATH=${
+        lib.makeBinPath [
+          ctags
+          gcc
+          nodejs
+          (pkgs.python3Packages.callPackage ./nix/nvimpython.nix {
+            flake8-isort =
+              pkgs.python3Packages.callPackage ./nix/flake8-isort.nix {};
+          })
+          (pkgs.callPackage ./nix/vale.nix {})
+          pyright
+          tree-sitter
+          nodePackages.bash-language-server
+          shellcheck
+          hadolint
+          languagetool
+          lf
+          terraform-ls
+          ansible-language-server
+          ansible-lint
+          ansible
+          go
+          gotools
+          nil
+          alejandra
+        ]
+      }
+      makeWrapper ${neovimOverride}/bin/nvim $out/bin/nvim --prefix PATH : $BINPATH
+    '';
+  }

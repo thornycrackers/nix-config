@@ -1,5 +1,7 @@
-{ vimUtils, fetchFromGitHub }:
-
+{
+  vimUtils,
+  fetchFromGitHub,
+}:
 vimUtils.buildVimPluginFrom2Nix {
   pname = "vim-angry-reviewer";
   version = "2022-06-13";

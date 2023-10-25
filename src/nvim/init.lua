@@ -381,7 +381,7 @@ vim.g.ale_fixers = {
     sh = { "shfmt", },
     python = { "isort", "black" },
     terraform = { "terraform" },
-    nix = { "nixfmt" },
+    nix = { "alejandra" },
 }
 
 -- osc-yank

@@ -5,4 +5,3 @@ with pkgs; [
   # Need up to date ncurses or colors inside of tmux get wonky.
   ncurses
 ]
-

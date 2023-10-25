@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+{pkgs, ...}:
 # Home manager configs that are common to all setups
 {
   # lf

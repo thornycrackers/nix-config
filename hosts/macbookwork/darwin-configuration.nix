@@ -1,7 +1,9 @@
-{ config, pkgs, wrapper-manager, flakePkgs, ... }:
-
 {
-
+  pkgs,
+  wrapper-manager,
+  flakePkgs,
+  ...
+}: {
   nix = {
     extraOptions = ''
       experimental-features = nix-command flakes
@@ -35,7 +37,7 @@
     ack
     (wrapper-manager.lib.build {
       inherit pkgs;
-      modules = [ ../../src/bat ../../src/tmux ];
+      modules = [../../src/bat ../../src/tmux];
     })
   ];
 
@@ -54,7 +56,7 @@
       "font-dejavu-sans-mono-nerd-font"
       "docker"
     ];
-    taps = [ "homebrew/cask-fonts" ];
+    taps = ["homebrew/cask-fonts"];
     onActivation.cleanup = "zap";
   };
 
