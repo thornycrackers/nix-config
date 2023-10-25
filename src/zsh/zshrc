@@ -12,6 +12,8 @@ alias nd="nix develop -c $SHELL"
 alias ..="cd ../"
 alias ...="cd ../.."
 alias ls="ls --color=tty"
+alias mcu="make clean && make up"
+alias me="make enter"
 
 # Environment Variables
 export EDITOR='nvim'
@@ -86,6 +88,13 @@ nixc() {
     fi
 }
 
+jp() { # Jump to project code in parsely
+    PROJ=$(find "$HOME/Work/parsely/engineering/code" -mindepth 1 -maxdepth 1 -type d -name "$1")
+    cd "$PROJ"
+}
+
 # Custom autocompletes
 compdef j=projects_listing
+compdef jp=projects_listing_engineering
 compdef tlo=projects_listing
+

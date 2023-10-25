@@ -7,7 +7,6 @@
   nix = {
     extraOptions = ''
       experimental-features = nix-command flakes
-      extra-trusted-users = codyhiar
     '';
   };
 
