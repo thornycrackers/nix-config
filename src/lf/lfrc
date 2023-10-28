@@ -26,8 +26,8 @@ cmd rename-insert &{{
 	fi
 }}
 
-# Rename but place the cursor right before the extension
-cmd rename-before-ext &{{
+# Rename but place the cursor at the end
+cmd rename-after-ext &{{
 	if [ "$(echo "$fx" | wc -l)" -gt 1 ]; then
 		lf -remote "send $id echo You can't change more than one file name"
 		lf -remote "send $id unselect"
@@ -37,7 +37,7 @@ cmd rename-before-ext &{{
 		else
 			ext_len="$(echo ${f##*.} | wc -m)" # extention length
 			for i in $(seq "$ext_len"); do
-				pos="${pos}<left>"
+				pos="${pos}<right>"
 			done
 			lf -remote "send $id rename"
 			lf -remote "send $id push "$pos""
@@ -45,10 +45,9 @@ cmd rename-before-ext &{{
 	fi
 }}
 
-map I rename-insert # at the very begging
-map A rename # at the very end
-map a rename-before-ext # right before the extention
-map r rename-before-ext # right before the extention
+map i rename-insert # at the very begging
+map A rename-after-ext # at the very end
+map a rename # right before the extention
 
 
 # Cody, what the fuck are you doing?
