@@ -11,7 +11,7 @@ with pkgs; [
   keychain
   lazydocker
   lazygit
-  nixos-rebuild
   lf
+  nixos-rebuild
   wget
 ]
