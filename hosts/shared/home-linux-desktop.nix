@@ -34,6 +34,23 @@
     theme = "gruvbox-dark";
   };
 
+  # I like the a very small amount of opacity
+  services.picom = {
+    enable = true;
+    opacityRules = [
+      "95:name = 'zsh'"
+      "95:class_g = 'floating'"
+      "95:class_g = 'emacs'"
+      # Below hides windows in i3's tabbed mode. That way if I have my terminal over say, a browser,
+      # I will see my desktop background and not the browser.
+      "0:_NET_WM_STATE@[0]:32a = '_NET_WM_STATE_HIDDEN'"
+      "0:_NET_WM_STATE@[1]:32a = '_NET_WM_STATE_HIDDEN'"
+      "0:_NET_WM_STATE@[2]:32a = '_NET_WM_STATE_HIDDEN'"
+      "0:_NET_WM_STATE@[3]:32a = '_NET_WM_STATE_HIDDEN'"
+      "0:_NET_WM_STATE@[4]:32a = '_NET_WM_STATE_HIDDEN'"
+    ];
+  };
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
