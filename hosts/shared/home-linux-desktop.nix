@@ -24,6 +24,16 @@
   # TODO: This is just "whatever" for now, clean it up later
   xdg.configFile."i3/config".source = ../../src/i3/config;
 
+  # Let home manager manage rofi.
+  programs.rofi = {
+    enable = true;
+    pass = {
+      enable = true;
+      extraConfig = "help_color=\"#FA6607\"";
+    };
+    theme = "gruvbox-dark";
+  };
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards

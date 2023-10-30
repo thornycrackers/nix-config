@@ -32,7 +32,7 @@
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "thorny";
-    extraGroups = ["networkmanager" "wheel" "docker"];
+    extraGroups = ["networkmanager" "jackaudio" "wheel" "docker"];
     # Required for the docker rootless
     subUidRanges = [
       {
@@ -67,7 +67,6 @@
     localPackages = [flakePkgs.myneovim];
     # TODO: At some point these should be broken out like the above
     desktopPackages = [
-      rofi
       kitty
       # Desktop xfce things
       xfce.xfce4-panel
@@ -76,6 +75,12 @@
       nitrogen
       # GUI Apps
       firefox-devedition-bin
+      spotify
+      slack
+      # Sound
+      qjackctl
+
+      (pass.withExtensions (ext: with ext; [pass-otp]))
     ];
   in
     lib.mkMerge [basePackages parselyPackages localPackages desktopPackages];
@@ -103,13 +108,25 @@
       };
     };
     openssh = {enable = true;};
+    # Enable pipewire to take care of everything
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      jack.enable = true;
+    };
   };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  # gtk2 is the most reliable out all the other flavors that I've tried so far
+  # so I stick with it
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryFlavor = "gtk2";
+    enableSSHSupport = true;
+  };
+
+  # Enable docker
   virtualisation.docker.enable = true;
   virtualisation.docker.rootless = {
     enable = true;
