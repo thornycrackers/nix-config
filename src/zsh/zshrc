@@ -41,11 +41,11 @@ bindkey "^X^E" edit-command-line
 
 # Jump to a project diredtory
 j() { # Jump to project code
-    PROJ=$(find "$HOME/Work" -mindepth 2 -maxdepth 2 -type d -name "$1")
-    if [[ -d "$PROJ/code" ]]; then
-        cd "$PROJ/code"
+    proj=$(find "$HOME/Work" -mindepth 2 -maxdepth 2 -type d -name "$1")
+    if [[ -d "$proj/code" ]]; then
+        cd "$proj/code"
     else
-        echo "$PROJ/code does not exist"
+        echo "$proj/code does not exist"
     fi
 }
 
@@ -54,14 +54,14 @@ tlo() {
     if [[ -z "$1" ]]; then
         return
     fi
-    local PROJS=($(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d))
-    local PROJ_NAME=''
-    local PROJ_DIR=''
-    for dir in "${PROJS[@]}"; do
+    local projs=($(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d))
+    local proj_name=''
+    local proj_dir=''
+    for dir in "${projs[@]}"; do
         if [[ $(basename "$dir") == "$1" ]]; then
-            PROJ_NAME=$(basename "$dir")
-            PROJ_DIR="$dir/code"
-            tmux new-session -c "${PROJ_DIR}" -s "${PROJ_NAME}"
+            proj_name=$(basename "$dir")
+            proj_dir="$dir/code"
+            tmux new-session -c "${proj_dir}" -s "${proj_name}"
             return
         fi
     done
@@ -71,9 +71,9 @@ tlo() {
 cwh() { cat $(which $1) }
 
 rmresult() {
-        TMP_STORE_PATH=$(readlink result)
+        tmp_store_path=$(readlink result)
         rm -rf result
-        nix-store --delete "${TMP_STORE_PATH}"
+        nix-store --delete "${tmp_store_path}"
 }
 
 nrs() {
@@ -99,8 +99,8 @@ nixc() {
 }
 
 jp() { # Jump to project code in parsely
-    PROJ=$(find "$HOME/Work/parsely/engineering/code" -mindepth 1 -maxdepth 1 -type d -name "$1")
-    cd "$PROJ"
+    proj=$(find "$HOME/Work/parsely/engineering/code" -mindepth 1 -maxdepth 1 -type d -name "$1")
+    cd "$proj"
 }
 
 # A lazy command that will wait for me to press enter and then rebuild the my nix config.
@@ -108,13 +108,20 @@ jp() { # Jump to project code in parsely
 rebuildr() {
     while true; do
         echo -n "Press enter to continue"
-        read -r REPLY
-        if [[ $REPLY == "q" ]]; then
+        read -r reply
+        if [[ $reply == "q" ]]; then
             break
         fi
         nrs
     done
 }
+
+# Easy switcher for aws sso profiles
+paws() {
+    choice=$(cat ~/.aws/config | grep '\[profile' | awk '{ print $2 }' | tr -d ']' | fzf)
+    export AWS_PROFILE="$choice"
+}
+
 
 # Custom autocompletes
 compdef j=projects_listing
