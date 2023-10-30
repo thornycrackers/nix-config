@@ -51,6 +51,13 @@
     ];
   };
 
+  services.clipmenu = {
+    enable = true;
+  };
+
+  # kitty config
+  xdg.configFile."kitty/kitty.conf".source = ../../src/kitty/kitty.conf;
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards

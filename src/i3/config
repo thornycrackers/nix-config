@@ -9,6 +9,7 @@ floating_modifier $mod
 focus_wrapping workspace
 
 # App Launchers
+bindsym $mod+p exec "CM_LAUNCHER=rofi clipmenu"
 bindsym $mod+d exec "rofi -combi-modi window,drun,run -show combi -modi combi"
 bindsym $mod+Return exec kitty
 bindsym $mod+n exec kitty --class=floating
