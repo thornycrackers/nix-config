@@ -84,8 +84,10 @@
       nitrogen
       # GUI Apps
       firefox-devedition-bin
-      spotify
       slack
+      spotify
+      # Signal complains when it's out of date. Need to use unstable.
+      unstable.signal-desktop
       # Sound
       qjackctl
 
