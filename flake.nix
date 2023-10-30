@@ -47,12 +47,20 @@
       };
     };
   in {
-    # Used for ci linting
+    # Default is used by CI for linting
     devShells = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
       nvimPackages = import ./src/nvim/packages.nix pkgs;
     in {
       default = pkgs.mkShell {buildInputs = nvimPackages;};
+      python39 = pkgs.mkShell {
+        nativeBuildInputs = with pkgs; let
+          devpython =
+            pkgs.python39.withPackages
+            (packages: with packages; [virtualenv pip setuptools wheel]);
+        in [devpython postgresql];
+        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
+      };
     });
 
     # Create packages out of my wrapped applications.

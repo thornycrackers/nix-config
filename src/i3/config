@@ -4,6 +4,9 @@
 # Use "Windows" key as modifier
 set $mod Mod4
 
+# Use custom font
+font pango:DejaVuSansMono Nerd Font
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 focus_wrapping workspace

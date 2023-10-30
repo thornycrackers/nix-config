@@ -14,6 +14,7 @@ alias ...="cd ../.."
 alias ls="ls --color=tty"
 alias mcu="make clean && make up"
 alias me="make enter"
+alias lkj="nix develop $HOME/.nixpkgs#python39 -c $SHELL"
 
 # Environment Variables
 export EDITOR='nvim'
