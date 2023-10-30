@@ -90,6 +90,7 @@
       unstable.signal-desktop
       # Sound
       qjackctl
+      playerctl
 
       (pass.withExtensions (ext: with ext; [pass-otp]))
     ];

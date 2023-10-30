@@ -21,6 +21,7 @@ bindsym $mod+q kill
 bindsym $mod+f fullscreen toggle
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+o focus mode_toggle
+bindsym XF86AudioPlay exec "playerctl --player=spotify play-pause"
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 # exit i3 (logs you out of your X session)

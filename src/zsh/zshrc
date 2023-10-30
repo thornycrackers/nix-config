@@ -122,9 +122,7 @@ paws() {
     export AWS_PROFILE="$choice"
 }
 
-
 # Custom autocompletes
 compdef j=projects_listing
 compdef jp=projects_listing_engineering
 compdef tlo=projects_listing
-
