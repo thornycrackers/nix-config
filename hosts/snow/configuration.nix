@@ -88,7 +88,6 @@
       spotify
       # Signal complains when it's out of date. Need to use unstable.
       unstable.signal-desktop
-      (steam.override {extraLibraries = pkgs: [pkgs.pipewire];})
       # Sound
       qjackctl
       playerctl
@@ -142,6 +141,12 @@
     enable = true;
     pinentryFlavor = "gtk2";
     enableSSHSupport = true;
+  };
+
+  programs.steam = {
+    enable = true;
+    # Let pipewire handle the sound
+    package = pkgs.steam.override {extraLibraries = pkgs: [pkgs.pipewire];};
   };
 
   # Enable docker

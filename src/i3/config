@@ -49,6 +49,12 @@ bindsym $mod+Shift+j move down 50px
 bindsym $mod+Shift+k move up 50px
 bindsym $mod+Shift+l move right 50px
 
+# resize window
+bindsym $mod+Control+h "exec ~/.config/i3/scripts/grow.sh left"
+bindsym $mod+Control+j "exec ~/.config/i3/scripts/grow.sh down"
+bindsym $mod+Control+k "exec ~/.config/i3/scripts/grow.sh up"
+bindsym $mod+Control+l "exec ~/.config/i3/scripts/grow.sh right"
+
 # Create custom worspace names as symbols
 set $ws1 "1"
 set $ws2 "2"

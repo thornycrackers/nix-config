@@ -23,6 +23,10 @@
 
   # TODO: This is just "whatever" for now, clean it up later
   xdg.configFile."i3/config".source = ../../src/i3/config;
+  xdg.configFile."i3/scripts" = {
+    source = ../../src/i3/scripts;
+    recursive = true;
+  };
 
   # Let home manager manage rofi.
   programs.rofi = {
