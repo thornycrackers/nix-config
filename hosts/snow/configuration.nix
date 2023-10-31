@@ -88,6 +88,7 @@
       spotify
       # Signal complains when it's out of date. Need to use unstable.
       unstable.signal-desktop
+      (steam.override {extraLibraries = pkgs: [pkgs.pipewire];})
       # Sound
       qjackctl
       playerctl
@@ -97,37 +98,42 @@
   in
     lib.mkMerge [basePackages parselyPackages localPackages desktopPackages];
 
-  # Services
-  services = {
-    # Use i3 with xfce
-    xserver = {
-      enable = true;
-      #autorun = true;
-      displayManager = {defaultSession = "xfce+i3";};
-      windowManager = {
-        i3 = {
-          enable = true;
-          package = pkgs.i3-gaps;
-        };
-      };
-      desktopManager = {
-        xterm.enable = false;
-        xfce = {
-          enable = true;
-          noDesktop = true;
-          enableXfwm = false;
-        };
+  # Graphical settings. Use i3 to manage windows but xfce as a desktop manager.
+  services.xserver = {
+    enable = true;
+    displayManager = {defaultSession = "xfce+i3";};
+    windowManager = {
+      i3 = {
+        enable = true;
+        package = pkgs.i3-gaps;
       };
     };
-    openssh = {enable = true;};
-    # Enable pipewire to take care of everything
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      jack.enable = true;
+    desktopManager = {
+      xterm.enable = false;
+      xfce = {
+        enable = true;
+        noDesktop = true;
+        enableXfwm = false;
+      };
     };
+  };
+
+  # Enable ssh
+  services.openssh = {enable = true;};
+
+  # Enable pipewire to take care of everything
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
+
+  # Setup printing
+  services.printing = {
+    enable = true;
+    drivers = [pkgs.hplip];
   };
 
   # gtk2 is the most reliable out all the other flavors that I've tried so far
@@ -144,6 +150,12 @@
     enable = true;
     setSocketVariable = true;
   };
+
+  # When I shutdown the computer, docker takes forever and the default is 90s.
+  # I don't feel like waiting more than 10 seconds.
+  systemd.extraConfig = ''
+    DefaultTimeoutStopSec=10s
+  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

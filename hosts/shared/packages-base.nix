@@ -12,6 +12,7 @@ with pkgs; [
   lazydocker
   lazygit
   lf
+  neofetch
   nixos-rebuild
   wget
 ]

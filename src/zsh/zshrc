@@ -89,10 +89,10 @@ nrs() {
 nixc() {
     if [[ $(hostname) == "Codys-MacBook-Pro-Work.local" ]]; then
         nvim ~/.nixpkgs/hosts/macbookwork/darwin-configuration.nix
-    elif [[ $(hostname) == "enigma" ]]; then
-        nvim ~/.nixpkgs/hosts/enigma/configuration.nix
     elif [[ $(hostname) == "Codys-MacBook-Pro.local" ]]; then
         nvim ~/.nixpkgs/hosts/macbook/darwin-configuration.nix
+    elif [[ -f "$HOME/.nixpkgs/hosts/$(hostname)/configuration.nix" ]]; then
+        nvim "$HOME/.nixpkgs/hosts/$(hostname)/configuration.nix"
     else
         echo "unknown host"
     fi
