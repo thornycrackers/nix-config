@@ -91,7 +91,7 @@
       # Sound
       qjackctl
       playerctl
-
+      # Misc
       (pass.withExtensions (ext: with ext; [pass-otp]))
     ];
   in

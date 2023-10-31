@@ -12,9 +12,10 @@ alias nd="nix develop -c $SHELL"
 alias ..="cd ../"
 alias ...="cd ../.."
 alias ls="ls --color=tty"
-alias mcu="make clean && make up"
 alias me="make enter"
 alias lkj="nix develop $HOME/.nixpkgs#python39 -c $SHELL"
+alias vin="virtualenv .venv && source .venv/bin/activate"
+alias ns="nix-shell -p"
 
 # Environment Variables
 export EDITOR='nvim'
@@ -121,6 +122,32 @@ paws() {
     choice=$(cat ~/.aws/config | grep '\[profile' | awk '{ print $2 }' | tr -d ']' | fzf)
     export AWS_PROFILE="$choice"
 }
+
+# If I'm building containers and it it fails:
+# 1. I'm not generally watching docker build, I'm doing something else
+# 2. 90% of the time it's another project on port 8000
+# So we try to kill the container on port 8000 and try one more time
+mcu() {
+    make clean && make up
+    if [[ $? == "2" ]]; then
+        docker stop $(docker ps  | grep "0.0.0.0:8000->" | awk '{ print $1 }')
+    fi
+    make clean && make up
+}
+
+# lazy command for installing requirements
+pipr() {
+    if [[ -f "requirements-dev.txt" ]]; then
+        pip install -r requirements-dev.txt
+    elif [[ -f "requirements.txt" ]]; then
+        pip install -r requirements.txt
+    else
+        echo "no requirements files found"
+    fi
+}
+
+# Stop all docker containers
+dstop() { docker stop $(docker ps -a -q); }
 
 # Custom autocompletes
 compdef j=projects_listing
