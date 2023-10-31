@@ -131,8 +131,8 @@ mcu() {
     make clean && make up
     if [[ $? == "2" ]]; then
         docker stop $(docker ps  | grep "0.0.0.0:8000->" | awk '{ print $1 }')
+        make clean && make up
     fi
-    make clean && make up
 }
 
 # lazy command for installing requirements
