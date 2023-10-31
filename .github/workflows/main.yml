@@ -15,3 +15,5 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v3
       - name: Lint nix files
         run: nix develop --command alejandra --check .
+      - name: Lint bash files
+        run: find . -name "*.sh" -print0 | xargs -0 shellcheck --format=gcc
