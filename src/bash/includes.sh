@@ -9,12 +9,12 @@ alias dod="cd ~/.nixpkgs"
 alias lg="lazygit"
 alias s="ssh"
 alias ldo='lazydocker'
-#alias nd="nix develop -c $SHELL"
+alias nd="nix develop"
 alias ..="cd ../"
 alias ...="cd ../.."
 alias ls="ls --color=tty"
 alias me="make enter"
-#alias lkj="nix develop $HOME/.nixpkgs#python39 -c $SHELL"
+alias lkj='nix develop "$HOME"/.nixpkgs#python39'
 alias vin="virtualenv .venv && source .venv/bin/activate"
 alias ns="nix-shell -p"
 
