@@ -147,3 +147,20 @@ pipr() {
 
 # Stop all docker containers
 dstop() { docker stop "$(docker ps -a -q)"; }
+
+# Completions for jumping into projects
+function __projects_completion() {
+	local suggestions
+	suggestions=("$(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -n1 basename)")
+	mapfile -t COMPREPLY < <(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[COMP_CWORD]}")
+}
+complete -F __projects_completion j
+complete -F __projects_completion tlo
+
+# Completions for jumping around folders
+function __engineering_folders_completion() {
+	local suggestions
+	suggestions=("$(find "$HOME"/Work/parsely/engineering/code -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -n1 basename)")
+	mapfile -t COMPREPLY < <(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[COMP_CWORD]}")
+}
+complete -F __engineering_folders_completion jp

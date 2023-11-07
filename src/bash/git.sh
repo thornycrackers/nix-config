@@ -4,7 +4,6 @@
 # Git styles
 _git_log_medium_format='%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%w(80,1,2)%+B'
 _git_log_oneline_format='%C(green)%h%C(reset) %><(55,trunc)%s%C(red)%d%C(reset) %C(blue)[%an]%C(reset) %C(yellow)%ad%C(reset)%n'
-_git_log_brief_format='%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(reset)%n'
 _git_status_ignore_submodules='none'
 
 # Branch (b)
@@ -24,9 +23,9 @@ alias gfc='git clone'
 alias gft='git fetch origin tag --no-tags'
 alias gfta='git fetch origin "refs/tags/*:refs/tags/*"'
 # Log (l)
-alias gls='git log --topo-order --stat --pretty=format:${_git_log_medium_format}'
-alias gld='git log --topo-order --stat --patch --full-diff --pretty=format:${_git_log_medium_format}'
-alias glg='git log --topo-order --all --graph --date=local --pretty=format:${_git_log_oneline_format}'
+alias gls='git log --topo-order --stat --pretty=format:"$_git_log_medium_format}"'
+alias gld='git log --topo-order --stat --patch --full-diff --pretty=format:"$_git_log_medium_format"'
+alias glg='git log --topo-order --all --graph --date=local --pretty=format:"$_git_log_oneline_format"'
 alias glc='git shortlog --summary --numbered'
 # Rebase (r)
 alias gr='git rebase'
@@ -47,8 +46,8 @@ alias gsX='git-stash-clear-interactive'
 alias gsl='git stash list'
 alias gss='git stash save --include-untracked'
 # Working Copy (w)
-alias gws='git status --ignore-submodules=${_git_status_ignore_submodules} --short'
-alias gwS='git status --ignore-submodules=${_git_status_ignore_submodules}'
+alias gws='git status --ignore-submodules="$_git_status_ignore_submodules}" --short'
+alias gwS='git status --ignore-submodules="$_git_status_ignore_submodules}"'
 alias gwd='git diff --no-ext-diff'
 alias gwsd='git diff --cached'
 alias gwD='git diff --no-ext-diff --word-diff'
