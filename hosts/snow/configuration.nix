@@ -93,6 +93,7 @@
       playerctl
       # Misc
       (pass.withExtensions (ext: with ext; [pass-otp]))
+      xdotool
     ];
   in
     lib.mkMerge [basePackages parselyPackages localPackages desktopPackages];

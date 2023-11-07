@@ -72,9 +72,9 @@ tlo() {
 cwh() { cat $(which $1) }
 
 rmresult() {
-        tmp_store_path=$(readlink result)
-        rm -rf result
-        nix-store --delete "${tmp_store_path}"
+    tmp_store_path=$(readlink result)
+    rm -rf result
+    nix-store --delete "${tmp_store_path}"
 }
 
 nrs() {

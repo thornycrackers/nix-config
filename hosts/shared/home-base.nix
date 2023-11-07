@@ -14,6 +14,11 @@
     enable = true;
     enableCompletion = true;
     enableAutosuggestions = true;
+    # Every now and then I would be using tmux and hit either ctrl+A or ctrl+E
+    # and it would print ^A or ^E instead of jumping to the beginning or end of
+    # the line. I thought that emacs would be the default but setting it here
+    # explicitly to see if it fixes the issue
+    defaultKeymap = "emacs";
     initExtra = builtins.readFile ../../src/zsh/zshrc;
     plugins = with pkgs; [
       {
