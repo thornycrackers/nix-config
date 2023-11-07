@@ -1,5 +1,0 @@
-#compdef projects_listing_engineering
-
-local -a options
-options=$(find "$HOME"/Work/parsely/engineering/* -mindepth 1 -maxdepth 1 -type d | xargs -n1 basename | grep "^[^.]")
-_alternative "args:projects:($options)"

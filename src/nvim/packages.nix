@@ -12,6 +12,7 @@ with pkgs; [
   tree-sitter
   nodePackages.bash-language-server
   shellcheck
+  shfmt
   hadolint
   languagetool
   lf
