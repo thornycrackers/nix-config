@@ -13,7 +13,7 @@ focus_wrapping workspace
 
 # App Launchers
 bindsym $mod+p exec "CM_LAUNCHER=rofi clipmenu"
-bindsym $mod+d exec "rofi -combi-modi window,drun,run -show combi -modi combi"
+bindsym $mod+d exec ~/.config/bash/bin/myrofi
 bindsym $mod+Return exec kitty
 bindsym $mod+n exec kitty --class=floating
 bindsym $mod+t exec rofi-pass

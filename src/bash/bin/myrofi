@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Include my executable scripts in rofi
+PATH=$PATH:~/.config/bash/bin
+rofi -combi-modi window,drun,run -show combi -modi combi
