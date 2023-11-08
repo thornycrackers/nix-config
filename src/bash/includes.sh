@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# If I need and custom overides, make them here
+# With bash on darwin I needed /bin/stty to resolve first for instance.
+export PATH=~/.local/bin:$PATH
+
 [[ $- == *i* ]] && source "$(blesh-share)/ble.sh" --noattach
 
 # Aliases

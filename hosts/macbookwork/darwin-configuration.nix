@@ -53,14 +53,17 @@
     onActivation.cleanup = "zap";
   };
 
-  # https://github.com/nix-community/home-manager/issues/4026
-  users.users.codyhiar.home = "/Users/codyhiar";
+  users.users.codyhiar = {
+    # https://github.com/nix-community/home-manager/issues/4026
+    home = "/Users/codyhiar";
+    shell = pkgs.bashInteractive;
+  };
+  programs.bash.enable = true;
+  # I had to manually run `chsh` to get the shell to change.
+  environment.shells = [pkgs.bashInteractive];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-
-  # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true; # default shell on catalina
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
