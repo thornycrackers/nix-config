@@ -1,4 +1,4 @@
-{...}:
+{lib, ...}:
 # Home manager configs that are common to all setups
 {
   # lf
@@ -18,6 +18,9 @@
     enable = true;
     bashrcExtra = builtins.readFile ../../src/bash/includes.sh;
     enableCompletion = true;
+    initExtra = lib.mkAfter ''
+      [[ ''${BLE_VERSION-} ]] && ble-attach
+    '';
   };
 
   # colors for ls

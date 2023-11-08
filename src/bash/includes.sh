@@ -171,5 +171,3 @@ function __engineering_folders_completion() {
 	mapfile -t COMPREPLY < <(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[COMP_CWORD]}")
 }
 complete -F __engineering_folders_completion jp
-
-[[ ${BLE_VERSION-} ]] && ble-attach

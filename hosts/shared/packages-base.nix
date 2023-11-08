@@ -1,7 +1,8 @@
 pkgs:
 with pkgs; [
   ack
-  blesh
+  # I want 0.4 of blesh at a minimum
+  unstable.blesh
   btop
   curl
   docker-compose
