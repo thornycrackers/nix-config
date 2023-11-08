@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+[[ $- == *i* ]] && source "$(blesh-share)/ble.sh" --noattach
+
 # Aliases
 alias t='tmux'
 alias ta='tmux attach'
@@ -164,3 +167,5 @@ function __engineering_folders_completion() {
 	mapfile -t COMPREPLY < <(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[COMP_CWORD]}")
 }
 complete -F __engineering_folders_completion jp
+
+[[ ${BLE_VERSION-} ]] && ble-attach

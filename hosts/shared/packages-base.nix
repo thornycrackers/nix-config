@@ -1,6 +1,7 @@
 pkgs:
 with pkgs; [
   ack
+  blesh
   btop
   curl
   docker-compose
