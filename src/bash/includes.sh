@@ -4,6 +4,7 @@
 # With bash on darwin I needed /bin/stty to resolve first for instance.
 export PATH=~/.local/bin:$PATH
 
+# shellcheck disable=SC1091
 [[ $- == *i* ]] && source "$(blesh-share)/ble.sh" --noattach
 
 # Aliases
