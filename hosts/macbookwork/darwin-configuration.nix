@@ -48,6 +48,7 @@
       "utm"
       "font-dejavu-sans-mono-nerd-font"
       "docker"
+      "raycast"
     ];
     taps = ["homebrew/cask-fonts"];
     onActivation.cleanup = "zap";
