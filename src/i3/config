@@ -112,6 +112,9 @@ gaps outer 5
 # Only draw the border if there are multiple windows
 smart_borders on
 
+# Floating window
+for_window [class="st" class="floating"] floating enable, move position center
+
 # Note to self, after moving to xfce, things are stored in "Session and
 # Startup". But I like to keep a list here if I forget. Picom is now in home
 # manager:

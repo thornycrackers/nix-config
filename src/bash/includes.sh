@@ -3,6 +3,8 @@
 # If I need and custom overides, make them here
 # With bash on darwin I needed /bin/stty to resolve first for instance.
 export PATH=~/.local/bin:$PATH
+# Add my custom bash scripts to the path
+export PATH=$PATH:~/.config/bash/bin
 
 # shellcheck disable=SC1091
 [[ $- == *i* ]] && source "$(blesh-share)/ble.sh" --noattach

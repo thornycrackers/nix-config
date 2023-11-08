@@ -1,0 +1,51 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p xorg.xdpyinfo termdown
+#
+# shellcheck disable=SC1008
+#
+# Author: Cody Hiar
+# Date: 2022-05-13
+#
+# Description: Launch a kitty window with termdown and move it to the bottom
+# right corner of the screen
+#
+# Set options:
+#   e: Stop script if command fails
+#   u: Stop script if unset variable is referenced
+#   x: Debug, print commands as they are executed
+#   o pipefail:  If any command in a pipeline fails it all fails
+#
+# IFS: Internal Field Separator
+set -eo pipefail
+IFS=$'\n\t'
+
+traperr() {
+	echo "ERROR: ${BASH_SOURCE[1]} at about ${BASH_LINENO[0]}"
+}
+
+set -o errtrace
+trap traperr ERR
+
+get_screen_width() {
+	xdpyinfo | awk '/dimensions:/ { print $2 }' | awk -F'x' '{ print $1 }'
+}
+
+get_screen_height() {
+	xdpyinfo | awk '/dimensions:/ { print $2 }' | awk -F'x' '{ print $2 }'
+}
+
+TIME="$1"
+
+kitty --class=floating --title termdown-floating bash -c "sleep 0.2; termdown $TIME; exit" &
+sleep 0.2
+WINDOW_ID=$(xdotool search --name termdown-floating)
+WINDOW_BORDER=5
+WINDOW_WIDTH=800
+WINDOW_HEIGHT=300
+SCREEN_WIDTH=$(get_screen_width)
+SCREEN_HEIGHT=$(get_screen_height)
+X=$(("$SCREEN_WIDTH" - "$WINDOW_BORDER" - "$WINDOW_WIDTH"))
+Y=$(("$SCREEN_HEIGHT" - "$WINDOW_BORDER" - "$WINDOW_HEIGHT"))
+
+xdotool windowsize "$WINDOW_ID" "$WINDOW_WIDTH" "$WINDOW_HEIGHT"
+xdotool windowmove "$WINDOW_ID" "$X" "$Y"

@@ -23,6 +23,11 @@
     '';
   };
   home.file.".blerc".source = ../../src/blesh/blerc;
+  # Add my custom bash scripts
+  home.file.".config/bash/bin" = {
+    source = ../../src/bash/bin;
+    recursive = true;
+  };
 
   # colors for ls
   programs.dircolors = {
