@@ -47,7 +47,7 @@
   users.users.thorny = {
     home = "/home/thorny";
     isNormalUser = true;
-    shell = pkgs.zsh;
+    shell = pkgs.bash;
     description = "thorny";
     extraGroups = ["networkmanager" "wheel" "docker"];
     # Required for the docker rootless
@@ -73,8 +73,6 @@
       }
     ];
   };
-  programs.zsh.enable = true;
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
