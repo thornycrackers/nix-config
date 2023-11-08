@@ -22,6 +22,7 @@
       [[ ''${BLE_VERSION-} ]] && ble-attach
     '';
   };
+  home.file.".blerc".source = ../../src/blesh/blerc;
 
   # colors for ls
   programs.dircolors = {
