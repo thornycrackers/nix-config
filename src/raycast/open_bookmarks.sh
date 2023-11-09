@@ -2,7 +2,7 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title Open Bookmarks
+# @raycast.title asdf
 # @raycast.mode silent
 
 # ~/.bookmarks.csv is just a csv that looks like:
