@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-# terraform functions
+alias tf="terraform"
+alias tfi="terraform init"
+alias twl="terraform workspace list"
+alias tws="terraform workspace select"
+
 tfp() {
 	local _var_file
 	_var_file="$(terraform workspace show).tfvars"
