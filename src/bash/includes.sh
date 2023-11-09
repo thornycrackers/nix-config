@@ -43,6 +43,8 @@ export DOCKER_HOST="unix:///run/docker.sock"
 # Additional includes
 # shellcheck disable=SC1091
 source "$HOME/.config/bash/git.sh"
+# shellcheck disable=SC1091
+source "$HOME/.config/bash/parsely.sh"
 
 # Load keychain on startup
 eval "$(keychain --eval --quiet id_rsa)"

@@ -14,6 +14,7 @@
 
   # Bash configuration
   home.file.".config/bash/git.sh".source = ../../src/bash/git.sh;
+  home.file.".config/bash/parsely.sh".source = ../../src/bash/parsely.sh;
   programs.bash = {
     enable = true;
     bashrcExtra = builtins.readFile ../../src/bash/includes.sh;
