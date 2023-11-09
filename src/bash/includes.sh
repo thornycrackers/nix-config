@@ -13,8 +13,8 @@ export PATH=$PATH:~/.config/bash/bin
 alias t='tmux'
 alias ta='tmux attach'
 alias n='nvim'
-alias inc='nvim ~/.nixpkgs/src/zsh/zshrc'
-alias incc='source ~/.zshrc'
+alias inc='nvim ~/.nixpkgs/src/bash/includes.sh'
+alias incc='source ~/.bashrc'
 alias dod="cd ~/.nixpkgs"
 alias lg="lazygit"
 alias s="ssh"
@@ -62,12 +62,10 @@ tlo() {
 	if [[ -z "$1" ]]; then
 		return
 	fi
-	local projs=("$(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d)")
-	local proj_name=''
-	local proj_dir=''
-	for dir in "${projs[@]}"; do
-		if [[ $(basename "$dir") == "$1" ]]; then
-			proj_name=$(basename "$dir")
+	mapfile -t proj_dirs < <(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d)
+	for dir in "${proj_dirs[@]}"; do
+		proj_name=$(basename "$dir")
+		if [[ "$proj_name" == "$1" ]]; then
 			proj_dir="$dir/code"
 			tmux new-session -c "${proj_dir}" -s "${proj_name}"
 			return
