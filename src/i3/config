@@ -116,6 +116,9 @@ smart_borders on
 # Floating window
 for_window [class="st" class="floating"] floating enable, move position center
 
+# Take a screen shot
+bindsym $mod+Control+1 exec "flameshot gui"
+
 # Note to self, after moving to xfce, things are stored in "Session and
 # Startup". But I like to keep a list here if I forget. Picom is now in home
 # manager:
