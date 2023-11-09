@@ -38,6 +38,7 @@
   # https://brew.sh/ to get install info.
   homebrew = {
     enable = true;
+    brews = ["choose-gui"];
     casks = [
       "google-chrome"
       "zoom"
