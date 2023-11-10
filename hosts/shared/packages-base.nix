@@ -5,11 +5,13 @@ with pkgs; [
   unstable.blesh
   btop
   curl
-  docker-compose
+  csvkit
+  gh
   git
   gitAndTools.delta
   gnumake
   htop
+  jq
   keychain
   lazydocker
   lazygit

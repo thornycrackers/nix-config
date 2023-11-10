@@ -164,6 +164,40 @@ patha() {
 	export "$CHOICE=$(pwd)"
 }
 
+# Command for finding all my ghprs across multiple repos since a specific time.
+# I use this to figure out what I've worked on in the last quarter
+#
+# Usage: ghprr NixOS/nixpkgs thornycrackers/nix-config
+ghprr() {
+	repos=("$@")
+	for repo in "${repos[@]}"; do
+		local my_dated_prs lines title url number
+		my_dated_prs=$(
+			gh pr list --repo "$repo" --author @me --state all --json number,title,headRefName,url,createdAt |
+				jq --raw-output '. | map(select((.createdAt | strptime("%Y-%m-%dT%H:%M:%SZ")) > ("2023-09-11T00:00:00Z" | strptime("%Y-%m-%dT%H:%M:%SZ")))) | map(del(.createdAt))'
+		)
+		# Skip if there are no PRs
+		if [[ '[]' == "$my_dated_prs" ]]; then
+			echo ""
+			continue
+		fi
+		lines=$(echo "$my_dated_prs" |
+			jq -r 'map({number,title,headRefName,url}) | (first | keys_unsorted) as $keys | map([to_entries[] | .value]) as $rows | $keys,$rows[] | @csv' |
+			tail -n+2)
+		if [[ -n "$lines" ]]; then
+			mapfile -t lines < <(echo "$lines")
+			# Print into html anchors
+			for line in "${lines[@]}"; do
+				url=$(echo "$line" | csvcut -c '4')
+				title=$(echo "$line" | csvcut -c '2' | tr -d '"')
+				number=$(echo "$line" | csvcut -c '1')
+				echo "<a href=\"$url\">$repo $number: $title</a>"
+			done
+		fi
+		echo ""
+	done
+}
+
 # Completions for jumping into projects
 function __projects_completion() {
 	local suggestions

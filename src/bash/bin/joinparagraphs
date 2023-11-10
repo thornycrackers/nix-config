@@ -1,0 +1,20 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p perl
+#
+# Script for joining all the paragraphs in a markdown file. I like to write in
+# one sentence per line in markdown. If you publish markdown in that format,
+# the paragraph looks normal. Sometime's I need to copy the text though and
+# paste it into something else (Slack, Google Docs). Perl is great for
+# multi-line searches. Chatgpt is great at helping me write them cause I can't
+# do jack in perl.
+#
+# Prompt (Had to add \@\[ manually though)
+#
+# write a perl one liner that will do multi line searches to find a
+# periods, explanation marks, or question marks next to a newline character
+# followed by any alpha numeric character or a closing bracket and replace
+# it with an the symbol that was found and a blank space. Do not replace
+# any lines that have a newline followed by another newline. Only target
+# lines that have existing text or special characters on them.
+
+perl -0777 -pe 's/(?<=\S)([.!?])\n(?!\n)(?=[\w\\@\[)])/$1 /g' "$1"

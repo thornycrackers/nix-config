@@ -95,6 +95,7 @@
       remmina
       (pass.withExtensions (ext: with ext; [pass-otp]))
       xdotool
+      xsel
     ];
   in
     lib.mkMerge [basePackages parselyPackages localPackages desktopPackages];
