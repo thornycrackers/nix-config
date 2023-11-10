@@ -90,6 +90,7 @@
       # Sound
       qjackctl
       playerctl
+      pavucontrol
       # Misc
       remmina
       (pass.withExtensions (ext: with ext; [pass-otp]))

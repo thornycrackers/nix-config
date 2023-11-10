@@ -158,6 +158,12 @@ pipr() {
 # Stop all docker containers
 dstop() { docker stop "$(docker ps -a -q)"; }
 
+# Quickly set paths
+patha() {
+	CHOICE=$(echo -ne "PYTHONPATH\nNIXPKGS" | fzf)
+	export "$CHOICE=$(pwd)"
+}
+
 # Completions for jumping into projects
 function __projects_completion() {
 	local suggestions

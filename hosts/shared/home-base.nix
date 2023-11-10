@@ -29,6 +29,10 @@
     source = ../../src/bash/bin;
     recursive = true;
   };
+  home.file.".config/bash/scripts" = {
+    source = ../../src/bash/scripts;
+    recursive = true;
+  };
 
   # colors for ls
   programs.dircolors = {
