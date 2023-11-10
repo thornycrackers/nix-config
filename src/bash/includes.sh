@@ -108,9 +108,37 @@ nixc() {
 	fi
 }
 
-jp() { # Jump to project code in parsely
-	proj=$(find "$HOME/Work/parsely/engineering/code" -mindepth 1 -maxdepth 1 -type d -name "$1")
-	cd "$proj" || exit
+# A couple functions here are all related
+# Mark a directory as a root, usually the top level directory in a git repo.
+# Then, jp with no args is like cd with no args, jumps to the root.
+# Autocompletions from jp, however, are directories at the root.
+# save typing things like "cd ../../other-dir". I like working with the
+# absolute root. Save root between sessions.
+set-marked-dir() {
+	# Use cache, else, set a default
+	if [[ -f ~/.local/state/jpcache ]]; then
+		dir=$(cat ~/.local/state/jpcache)
+	else
+		dir=$HOME
+	fi
+	export MARKED_DIR="$dir"
+}
+# run on startup
+set-marked-dir
+
+mm() {
+	export MARKED_DIR=$PWD
+	mkdir -p ~/.local/state
+	echo "$MARKED_DIR" >~/.local/state/jpcache
+}
+
+jp() {
+	proj=$(find "$MARKED_DIR" -mindepth 1 -maxdepth 1 -type d -name "$1" 2>/dev/null)
+	if [[ -n $proj ]]; then
+		cd "$proj" || exit
+	else
+		cd "$MARKED_DIR" || exit
+	fi
 }
 
 # A lazy command that will wait for me to press enter and then rebuild the my nix config.
@@ -207,10 +235,10 @@ function __projects_completion() {
 complete -F __projects_completion j
 complete -F __projects_completion tlo
 
-# Completions for jumping around folders
+# Completions for jumping around marked directory
 function __engineering_folders_completion() {
 	local suggestions
-	suggestions=("$(find "$HOME"/Work/parsely/engineering/code -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -n1 basename)")
+	suggestions=("$(find "$MARKED_DIR" -maxdepth 1 -type d -not -name '.*' -print0 2>/dev/null | xargs -0 -n1 basename)")
 	mapfile -t COMPREPLY < <(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[COMP_CWORD]}")
 }
 complete -F __engineering_folders_completion jp
