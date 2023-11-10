@@ -12,6 +12,11 @@
 #
 # The first column being whatever I'd type to autocomplete and the second the
 # url.
+
 index=$(cut -d ',' -f 1 ~/.bookmarks.csv | choose -i)
-url=$(awk "NR==$((index + 1))" ~/.bookmarks.csv | cut -d ',' -f 2)
-open "$url"
+
+# If the menu was cancelled then skip
+if [[ $index != "-1" ]]; then
+	url=$(awk "NR==$((index + 1))" ~/.bookmarks.csv | cut -d ',' -f 2)
+	open "$url"
+fi

@@ -5,6 +5,10 @@
 export PATH=~/.local/bin:$PATH
 # Add my custom bash scripts to the path
 export PATH=$PATH:~/.config/bash/bin
+# Add hombrew to the tail end for macbooks
+if [[ $(uname -s) == "Darwin" ]]; then
+	export PATH=$PATH:/opt/homebrew/bin
+fi
 
 # shellcheck disable=SC1091
 [[ $- == *i* ]] && source "$(blesh-share)/ble.sh" --noattach
