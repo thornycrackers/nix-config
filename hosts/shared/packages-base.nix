@@ -18,6 +18,5 @@ with pkgs; [
   lf
   neofetch
   nixos-rebuild
-  wireguard-tools
   wget
 ]
