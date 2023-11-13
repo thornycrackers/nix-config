@@ -18,5 +18,6 @@ with pkgs; [
   lf
   neofetch
   nixos-rebuild
+  tailscale
   wget
 ]
