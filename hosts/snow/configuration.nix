@@ -152,6 +152,9 @@
     package = pkgs.steam.override {extraLibraries = pkgs: [pkgs.pipewire];};
   };
 
+  # Setup tailscale private network
+  services.tailscale.enable = true;
+
   # Enable docker
   virtualisation.docker.enable = true;
   virtualisation.docker.rootless = {

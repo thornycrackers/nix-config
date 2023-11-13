@@ -4,8 +4,9 @@ with pkgs; [
   # I want 0.4 of blesh at a minimum
   unstable.blesh
   btop
-  curl
   csvkit
+  curl
+  file
   gh
   git
   gitAndTools.delta

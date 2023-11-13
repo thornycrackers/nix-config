@@ -1,4 +1,8 @@
-{lib, ...}:
+{
+  lib,
+  pkgs,
+  ...
+}:
 # Home manager configs that are common to all setups
 {
   # lf
@@ -19,9 +23,24 @@
     enable = true;
     bashrcExtra = builtins.readFile ../../src/bash/includes.sh;
     enableCompletion = true;
-    initExtra = lib.mkAfter ''
-      [[ ''${BLE_VERSION-} ]] && ble-attach
-    '';
+    initExtra =
+      lib.mkAfter
+      /*
+      bash
+      */
+      ''
+        # Load autocomplete functions from git, used to provide autcompletes
+        # to some of my aliases
+        source ${pkgs.unstable.git}/share/bash-completion/completions/git
+        # https://github.com/scop/bash-completion/issues/545
+        # Complete for gco alias
+        _comp_gco() {
+          local __git_cmd_idx=0
+          _git_checkout
+        } && __git_complete gco _comp_gco
+        # Load BLE last
+        [[ ''${BLE_VERSION-} ]] && ble-attach
+      '';
   };
   home.file.".blerc".source = ../../src/blesh/blerc;
   # Add my custom bash scripts

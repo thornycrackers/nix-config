@@ -30,6 +30,7 @@ alias ls="ls --color=tty"
 alias me="make enter"
 alias lkj='nix develop "$HOME"/.nixpkgs#python39'
 alias vin="virtualenv .venv && source .venv/bin/activate"
+alias vout="deactivate && rm -rf .venv"
 alias ns="nix-shell -p"
 
 # Environment Variables
@@ -228,6 +229,10 @@ ghprr() {
 		fi
 		echo ""
 	done
+}
+
+rwh() {
+	readlink "$(which "$1")"
 }
 
 # Completions for jumping into projects
