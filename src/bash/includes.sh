@@ -138,7 +138,9 @@ mm() {
 }
 
 jp() {
-	proj=$(find "$MARKED_DIR" -mindepth 1 -maxdepth 1 -type d -name "$1" 2>/dev/null)
+	# Remove trailing slashes from autocomplete if they exist
+	folder="${1%/}"
+	proj=$(find "$MARKED_DIR" -mindepth 1 -maxdepth 1 -type d -name "$folder" 2>/dev/null)
 	if [[ -n $proj ]]; then
 		cd "$proj" || exit
 	else
@@ -231,8 +233,18 @@ ghprr() {
 	done
 }
 
+# Utilities for dealing with nix symlinks
 rwh() {
 	readlink "$(which "$1")"
+}
+lwh() {
+	less "$(which "$1")"
+}
+cwh() {
+	cat "$(which "$1")"
+}
+nwh() {
+	nvim "$(which "$1")"
 }
 
 # Completions for jumping into projects

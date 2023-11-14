@@ -7,9 +7,11 @@ with pkgs; let
     vendorHash = "sha256-3ZQcWatJlQ6NVoPL/7cKQO6+YCSM3Ld77iLEQK3jBDE=";
   };
 in [
-  openvpn
   awscli2
+  jdk8_headless
+  leiningen
   nomad
-  wander
+  openvpn
   terraform-mine
+  wander
 ]
