@@ -294,6 +294,20 @@ nwh() {
 	nvim "$(which "$1")"
 }
 
+# Read a file containing hostnames and select one to ssh into
+psh() {
+	choice=$(fzf <"$1")
+	# Save in history for bash
+	history -s ssh "${choice}"
+	ssh "${choice}"
+}
+
+# Same as psh but seelct multiple servers from the file
+xpsh() {
+	choices=$(fzf --multi --reverse <"$1")
+	xpanes --ssh "${choices[*]}"
+}
+
 ############
 # !terraform
 ############
@@ -492,6 +506,36 @@ gf() {
 		BRANCH="$2"
 	fi
 	git fetch "$1" "$BRANCH"
+}
+
+########
+# !aws
+########
+
+# List key values of ec2 hosts by a region
+awsregionkeys() {
+	aws ec2 describe-instances \
+		--region "$1" \
+		--filters "Name=instance-state-name,Values=running" \
+		--query "Reservations[*].Instances[].Tags[?Key == '$2'].Value[] | [] | sort(@)" |
+		jq -r '.[]' |
+		sort
+}
+# Get IP for ELB
+awselbip() {
+	choices=$(
+		aws ec2 describe-network-interfaces |
+			jq -r '.NetworkInterfaces[].Description' |
+			sed '/^[[:space:]]*$/d' |
+			grep "^ELB" |
+			sort |
+			uniq
+	)
+	choice=$(printf "%s\n" "${choices[@]}" | fzf)
+	aws ec2 describe-network-interfaces \
+		--filters Name=description,Values="$choice" \
+		--query 'NetworkInterfaces[*].PrivateIpAddresses[*].PrivateIpAddress' \
+		--output text
 }
 
 ############

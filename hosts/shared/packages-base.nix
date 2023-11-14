@@ -20,5 +20,6 @@ with pkgs; [
   neofetch
   nixos-rebuild
   tailscale
+  tmux-xpanes
   wget
 ]
