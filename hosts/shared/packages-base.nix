@@ -22,4 +22,5 @@ with pkgs; [
   tailscale
   tmux-xpanes
   wget
+  zip
 ]
