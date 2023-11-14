@@ -25,6 +25,7 @@
         inherit pkgs;
         modules = [../../src/bat ../../src/tmux];
       })
+      (pass.withExtensions (ext: with ext; [pass-otp]))
     ];
   in
     lib.mkMerge [

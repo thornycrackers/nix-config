@@ -2,7 +2,7 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title qwer
+# @raycast.title autofill_example
 # @raycast.mode silent
 
 # Example of how to send a variable to osascript to autofill something.
