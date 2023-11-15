@@ -120,10 +120,12 @@ tlo() {
 	if [[ -z "$1" ]]; then
 		return
 	fi
+	# Remove trailing slashes from autocomplete if they exist
+	desired_proj_name="${1%/}"
 	mapfile -t proj_dirs < <(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d)
 	for dir in "${proj_dirs[@]}"; do
 		proj_name=$(basename "$dir")
-		if [[ "$proj_name" == "$1" ]]; then
+		if [[ "$proj_name" == "$desired_proj_name" ]]; then
 			proj_dir="$dir/code"
 			tmux new-session -c "${proj_dir}" -s "${proj_name}"
 			return
@@ -374,12 +376,25 @@ gcoo() {
 		git checkout "$FILE"
 	done
 }
-#
+
+# Checkout a commit based on timerange
+gcot() {
+	# E.G 2023-01-01
+	desired_date="$1" # Replace with your desired date
+	target_commit=$(git log --before="$desired_date" -n 1 --format="%H")
+
+	if [ -n "$target_commit" ]; then
+		git checkout "$target_commit"
+	else
+		echo "No commit found before $desired_date"
+	fi
+}
+
 # Fold staged work into the previous commit to keep clean history
 gfo() {
 	git commit --amend --no-edit
 }
-#
+
 # Interactively select untracked files to remove
 gwu() {
 	local ROOT_DIR

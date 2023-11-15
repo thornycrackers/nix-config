@@ -74,7 +74,17 @@
     parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
     localPackages = [flakePkgs.myneovim];
     # TODO: At some point these should be broken out like the above
-    desktopPackages = [
+    desktopPackages = let
+      # Note to future self, if you ran the native install curl script, you'll
+      # need to remove the items manually. Should be two files like:
+      # ./.mozilla/native-messaging-hosts/tridactyl.json
+      # ./.local/share/tridactyl
+      myfirefox = firefox-devedition.override {
+        extraNativeMessagingHosts = [
+          pkgs.tridactyl-native
+        ];
+      };
+    in [
       kitty
       # Desktop xfce things
       xfce.xfce4-panel
@@ -82,9 +92,10 @@
       xfce.xfce4-screensaver
       nitrogen
       # GUI Apps
-      firefox-devedition-bin
+      myfirefox
       slack
       spotify
+      discord
       # Signal complains when it's out of date. Need to use unstable.
       unstable.signal-desktop
       # Sound

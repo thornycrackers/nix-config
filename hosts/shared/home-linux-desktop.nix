@@ -62,6 +62,10 @@
   # kitty config
   xdg.configFile."kitty/kitty.conf".source = ../../src/kitty/kitty.conf;
 
+  # tridactyl config
+  xdg.configFile."tridactyl/tridactylrc".source =
+    ../../src/tridactyl/tridactylrc;
+
   services.flameshot = {
     enable = true;
   };
