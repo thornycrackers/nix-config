@@ -318,6 +318,10 @@ xpsh() {
 	xpanes --ssh "${choices[*]}"
 }
 
+findreqs() {
+	find . -name "*.py" -not -path '*/.venv/*' -print0 | xargs -0 importprinter
+}
+
 ############
 # !terraform
 ############
