@@ -1,4 +1,4 @@
-# #!/usr/bin/env bash
+#!/usr/bin/env bash
 # vi: ft=sh
 #
 # Author: Cody Hiar
