@@ -1,1 +1,1 @@
-import spam
+import spam  # noqa: F401

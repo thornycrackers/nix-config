@@ -17,3 +17,5 @@ jobs:
         run: nix develop --command alejandra --check .
       - name: Lint bash files
         run: find . -name "*.sh" -print0 | xargs -0 shellcheck --format=gcc
+      - name: Lint python with ruff
+        run: ruff check .

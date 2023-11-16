@@ -1,27 +1,31 @@
 pkgs:
-with pkgs; [
-  ctags
-  gcc
-  nodejs
-  (pkgs.python3Packages.callPackage ./nix/nvimpython.nix {
+with pkgs; let
+  vale = pkgs.callPackage ./nix/vale.nix {};
+  flake8-isort = pkgs.python3Packages.callPackage ./nix/nvimpython.nix {
     flake8-isort =
       pkgs.python3Packages.callPackage ./nix/flake8-isort.nix {};
-  })
-  (pkgs.callPackage ./nix/vale.nix {})
-  pyright
-  tree-sitter
-  nodePackages.bash-language-server
-  shellcheck
-  shfmt
+  };
+in [
+  alejandra
+  ansible
+  ansible-language-server
+  ansible-lint
+  ctags
+  flake8-isort
+  gcc
+  go
+  gotools
   hadolint
   languagetool
   lf
-  terraform-ls
-  ansible-language-server
-  ansible-lint
-  ansible
-  go
-  gotools
   nil
-  alejandra
+  nodePackages.bash-language-server
+  nodejs
+  pyright
+  ruff
+  shellcheck
+  shfmt
+  terraform-ls
+  tree-sitter
+  vale
 ]
