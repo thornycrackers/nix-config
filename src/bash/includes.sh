@@ -89,6 +89,14 @@ alias gwr='git reset'
 alias gwrr='git reset HEAD^'
 alias gwR='git reset --hard'
 alias gwc='git clean -f'
+# Docker
+# Fun fact for future reference. If you try to put these aliases into functions
+# linting will complain that you need to quote them. But, quoting will
+# remove wordsplitting which is the mechanism these all depend on to work.
+alias dstop='docker stop $(docker ps -q)'
+alias drm='docker stop $(docker ps -q)'
+alias drv='docker volume rm $(docker volume ls -qf dangling=true)'
+alias dri='docker rmi -f $(docker images -q)'
 
 # Environment Variables
 export EDITOR='nvim'
@@ -238,9 +246,6 @@ pipr() {
 		echo "no requirements files found"
 	fi
 }
-
-# Stop all docker containers
-dstop() { docker stop "$(docker ps -a -q)"; }
 
 # Commands for quick redis setup/teardown
 start_redis() {
