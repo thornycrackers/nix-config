@@ -561,50 +561,6 @@ awselbip() {
 		--output text
 }
 
-#################
-# !elasticsearch
-#################
-
-esnodeexclude() {
-	master="$1"
-	node="$2"
-	exclude_node="$(echo "$node" | awk -F '.' '{ print $1 }')"
-	endpoint="http://$master:9200/_cluster/settings"
-	echo "Original Exclusion List"
-	curl -H 'Content-Type: application/json' -X GET "$endpoint" 2>/dev/null | jq .transient.cluster.routing
-	echo "Adding to list"
-	data='{"transient" : {"cluster.routing.allocation.exclude._name" : "'"$exclude_node"'"}}'
-	curl -H 'Content-Type: application/json' -X PUT "$endpoint" -d "$data"
-	echo "Updated Exclustion list"
-	curl -H 'Content-Type: application/json' -X GET "$endpoint" 2>/dev/null | jq .transient.cluster.routing
-	sleep 4
-	while true; do
-		clear
-		curl -sX GET "http://$master:9200/_cat/recovery?v&ts=false&active_only=true" | awk '{ print $1, " ", $3, " ", $7, " ", $9, " ", $12, " ", $13, " ", $14 }' | column -t -s' '
-		sleep 5
-	done
-}
-
-esnodeinclude() {
-	master="$1"
-	node="$2"
-	exclude_node="$(echo "$node" | awk -F '.' '{ print $1 }')"
-	endpoint="http://$master:9200/_cluster/settings"
-	echo "Original Exclusion List"
-	curl -H 'Content-Type: application/json' -X GET "$endpoint" 2>/dev/null | jq .transient.cluster.routing
-	echo "Removing from list"
-	data='{"transient" : {"cluster.routing.allocation.exclude._name" : ""}}'
-	curl -H 'Content-Type: application/json' -X PUT "$endpoint" -d "$data"
-	echo "Updated Exclustion list"
-	curl -H 'Content-Type: application/json' -X GET "$endpoint" 2>/dev/null | jq .transient.cluster.routing
-	sleep 4
-	while true; do
-		clear
-		curl -sX GET "http://$master:9200/_cat/recovery?v&ts=false&active_only=true" | awk '{ print $1, " ", $3, " ", $7, " ", $9, " ", $12, " ", $13, " ", $14 }' | column -t -s' '
-		sleep 5
-	done
-}
-
 ############
 # !completions
 ############

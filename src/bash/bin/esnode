@@ -1,0 +1,4 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p xorg.xdpyinfo termdown
+#
+source ~/.config/bash/scripts/esnode.sh
