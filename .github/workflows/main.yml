@@ -18,4 +18,4 @@ jobs:
       - name: Lint bash files
         run: find . -name "*.sh" -print0 | xargs -0 shellcheck --format=gcc
       - name: Lint python with ruff
-        run: ruff check .
+        run: nix develop --command ruff check .
