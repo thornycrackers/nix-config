@@ -98,6 +98,9 @@ alias drm='docker stop $(docker ps -q)'
 alias drv='docker volume rm $(docker volume ls -qf dangling=true)'
 alias dri='docker rmi -f $(docker images -q)'
 
+# cdspell If set, minor errors in the spelling of a directory component in a cd command will be corrected.
+shopt -s cdspell
+
 # Environment Variables
 export EDITOR='nvim'
 export VISUAL='nvim'
@@ -121,25 +124,6 @@ j() { # Jump to project code
 	else
 		echo "$proj/code does not exist"
 	fi
-}
-
-# Launch a new tmux session around an existing project
-tlo() {
-	if [[ -z "$1" ]]; then
-		return
-	fi
-	# Remove trailing slashes from autocomplete if they exist
-	desired_proj_name="${1%/}"
-	mapfile -t proj_dirs < <(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d)
-	for dir in "${proj_dirs[@]}"; do
-		proj_name=$(basename "$dir")
-		if [[ "$proj_name" == "$desired_proj_name" ]]; then
-			proj_dir="$dir/code"
-			tmux new-session -c "${proj_dir}" -s "${proj_name}"
-			return
-		fi
-	done
-	echo "Project '${1}' was not found"
 }
 
 rmresult() {
@@ -568,6 +552,54 @@ awselbip() {
 		--filters Name=description,Values="$choice" \
 		--query 'NetworkInterfaces[*].PrivateIpAddresses[*].PrivateIpAddress' \
 		--output text
+}
+#
+########
+# !tmux
+########
+
+# Launch a new tmux session around an existing project
+tlo() {
+	if [[ -z "$1" ]]; then
+		return
+	fi
+	# Remove trailing slashes from autocomplete if they exist
+	desired_proj_name="${1%/}"
+	mapfile -t proj_dirs < <(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d)
+	for dir in "${proj_dirs[@]}"; do
+		proj_name=$(basename "$dir")
+		if [[ "$proj_name" == "$desired_proj_name" ]]; then
+			proj_dir="$dir/code"
+			tmux new-session -d -c "$proj_dir" -s "$proj_name"
+			tmux split-window -v -c "$proj_dir" -t "$proj_name"
+			tmux resize-pane -t "$proj_name":1.1 -y 2
+			tmux attach-session -t "$proj_name"
+			return
+		fi
+	done
+	echo "Project '${1}' was not found"
+}
+
+# Launch a session for mynixpkgs
+tlom() {
+	local session_name session_dir
+	session_name="mynixpkgs"
+	session_dir="$HOME/.nixpkgs"
+	tmux new-session -d -c "$session_dir" -s "$session_name"
+	tmux split-window -v -c "$session_dir" -t "$session_name"
+	tmux send-keys -t "$session_name":1.1 "rebuildr" C-m
+	tmux resize-pane -t "$session_name":1.1 -y 2
+	tmux attach-session -t "$session_name"
+}
+
+# Launch a session for obsidian
+tloo() {
+	local session_name session_dir
+	session_name="obsidian"
+	session_dir="$HOME/Obsidian/MyVault"
+	tmux new-session -d -c "$session_dir" -s "$session_name"
+	tmux split-window -v -c "$session_dir" -t "$session_name"
+	tmux attach-session -t "$session_name"
 }
 
 ############
