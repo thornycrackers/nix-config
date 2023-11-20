@@ -93,6 +93,7 @@
       nitrogen
       # GUI Apps
       myfirefox
+      chromium
       slack
       spotify
       discord
@@ -129,6 +130,7 @@
         enableXfwm = false;
       };
     };
+    videoDrivers = ["nvidia"];
   };
 
   # Enable ssh
