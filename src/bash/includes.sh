@@ -307,8 +307,28 @@ xpsh() {
 	xpanes --ssh "${choices[*]}"
 }
 
+# Find and print all of the python imports in a directory
 findreqs() {
 	find . -name "*.py" -not -path '*/.venv/*' -print0 | xargs -0 importprinter
+}
+
+# "pull down" a port to your local machine.
+# For example:
+#
+# run `python -m http.server --bind 127.0.0.1` on a remote host
+# If you try to hit the remote host on port 8000 in your web browser it will
+# obviously fail. But if you use this command, you will be able to hit
+# `localhost:8000` in your web broser and see everything working
+sl() {
+	if [ $# -eq 0 ]; then
+		# shellcheck disable=SC2016
+		echo 'Usage: sl $host $port $bindingaddress(optional)'
+		return
+	fi
+	while true; do
+		ssh -nNT -L "$2":localhost:"$2" "$1"
+		sleep 10
+	done &
 }
 
 ############
