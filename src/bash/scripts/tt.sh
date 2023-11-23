@@ -19,18 +19,18 @@ set -eo pipefail
 IFS=$'\n\t'
 
 traperr() {
-	echo "ERROR: ${BASH_SOURCE[1]} at about ${BASH_LINENO[0]}"
+    echo "ERROR: ${BASH_SOURCE[1]} at about ${BASH_LINENO[0]}"
 }
 
 set -o errtrace
 trap traperr ERR
 
 get_screen_width() {
-	xdpyinfo | awk '/dimensions:/ { print $2 }' | awk -F'x' '{ print $1 }'
+    xdpyinfo | awk '/dimensions:/ { print $2 }' | awk -F'x' '{ print $1 }'
 }
 
 get_screen_height() {
-	xdpyinfo | awk '/dimensions:/ { print $2 }' | awk -F'x' '{ print $2 }'
+    xdpyinfo | awk '/dimensions:/ { print $2 }' | awk -F'x' '{ print $2 }'
 }
 
 time="$1"

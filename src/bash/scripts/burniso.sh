@@ -28,14 +28,14 @@ DISK_PATH=$(echo "$DISK" | awk '{ print $1 }')
 
 case $input in
 [yY][eE][sS] | [yY])
-	echo 'run watch "cat /proc/meminfo | grep -i dirty" to watch progress'
-	sudo dd if="$ISO" of="/dev/$DISK_PATH" bs=4096 oflag=sync status=progress
-	;;
+    echo 'run watch "cat /proc/meminfo | grep -i dirty" to watch progress'
+    sudo dd if="$ISO" of="/dev/$DISK_PATH" bs=4096 oflag=sync status=progress
+    ;;
 [nN][oO] | [nN])
-	echo "You say No"
-	;;
+    echo "You say No"
+    ;;
 *)
-	echo "Invalid input..."
-	exit 1
-	;;
+    echo "Invalid input..."
+    exit 1
+    ;;
 esac

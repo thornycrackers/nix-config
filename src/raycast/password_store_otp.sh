@@ -11,11 +11,11 @@ IFS=$'\n\t'
 dir="$HOME/.password-store"
 
 print_choices() {
-	mapfile -t files < <(find "$dir" -not -name ".*")
-	for file in "${files[@]}"; do
-		relative_file=${file#"$dir"/}
-		basename "$relative_file" ".gpg"
-	done
+    mapfile -t files < <(find "$dir" -not -name ".*")
+    for file in "${files[@]}"; do
+        relative_file=${file#"$dir"/}
+        basename "$relative_file" ".gpg"
+    done
 }
 choice=$(print_choices | choose)
 otp=$(/run/current-system/sw/bin/pass otp "$choice")

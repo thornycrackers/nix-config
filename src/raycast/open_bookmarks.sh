@@ -17,6 +17,6 @@ index=$(cut -d ',' -f 1 ~/.bookmarks.csv | choose -i)
 
 # If the menu was cancelled then skip
 if [[ $index != "-1" ]]; then
-	url=$(awk "NR==$((index + 1))" ~/.bookmarks.csv | cut -d ',' -f 2)
-	open "$url"
+    url=$(awk "NR==$((index + 1))" ~/.bookmarks.csv | cut -d ',' -f 2)
+    open "$url"
 fi

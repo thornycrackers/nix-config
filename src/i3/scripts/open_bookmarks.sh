@@ -30,7 +30,7 @@ items=$(cat -n ~/.bookmarks.csv)
 selection=$(echo "$items" | awk -F ',' '{print $1}' | rofi -dmenu -i -P Bookmark)
 # Make sure there was a selection and I didn't cancel out of the window
 if [[ -n "$selection" ]]; then
-	index=$(echo "$selection" | awk '{ print $1 }')
-	url=$(awk "NR==$index" ~/.bookmarks.csv | cut -d ',' -f 2)
-	xdg-open "$url"
+    index=$(echo "$selection" | awk '{ print $1 }')
+    url=$(awk "NR==$index" ~/.bookmarks.csv | cut -d ',' -f 2)
+    xdg-open "$url"
 fi
