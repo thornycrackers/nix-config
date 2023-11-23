@@ -44,6 +44,7 @@ autocmd BufNewFile,BufRead *.yaml setfiletype yaml.ansible
 autocmd BufNewFile,BufRead *.yml setfiletype yaml.ansible
 autocmd BufNewFile,BufRead *.tfvars setfiletype terraform
 autocmd FileType nix setlocal commentstring=#\ %s
+autocmd FileType terraform setlocal commentstring=#\ %s
 ]]
 -- https://github.com/neovim/nvim-lspconfig/issues/2685#issuecomment-1623575758
 -- ^ for the tfvars to terraform above
