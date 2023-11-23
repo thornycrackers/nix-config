@@ -33,6 +33,10 @@ vim.g.mapleader = ' '
 vim.o.expandtab = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 0
+-- Automatically convert tabs to spaces on save
+vim.api.nvim_exec([[
+    autocmd BufWritePre * :retab
+]], false)
 vim.cmd [[
 autocmd Filetype nix setlocal ts=2 sw=2 sts=0 expandtab
 autocmd Filetype terraform setlocal ts=2 sw=2 sts=0 expandtab
