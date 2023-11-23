@@ -240,11 +240,11 @@ stop_redis() {
 }
 
 start_postgres() {
-	[[ -z $POSTGRES_PASSWORD ]] && echo "missing POSTGRES_PASSWORD" && return
-	docker run --name mypostgres -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" -p 5432:5432 -d postgres
+    [[ -z $POSTGRES_PASSWORD ]] && echo "missing POSTGRES_PASSWORD" && return
+    docker run --name mypostgres -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" -p 5432:5432 -d postgres
 }
 stop_postgres() {
-	docker stop mypostgres && docker rm mypostgres
+    docker stop mypostgres && docker rm mypostgres
 }
 
 # Quickly set paths
