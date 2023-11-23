@@ -312,7 +312,8 @@ psh() {
 # Same as psh but seelct multiple servers from the file
 xpsh() {
 	choices=$(fzf --multi --reverse <"$1")
-	xpanes --ssh "${choices[*]}"
+	# Make xpanes use the same tmux as my other sessions
+	xpanes -S /tmp/tmux-$UID/default --ssh "${choices[*]}"
 }
 
 # Find and print all of the python imports in a directory
@@ -337,6 +338,12 @@ sl() {
 		ssh -nNT -L "$2":localhost:"$2" "$1"
 		sleep 10
 	done &
+}
+
+# Clean
+clean_nix_generations() {
+    sudo nix-env -p /nix/var/nix/profiles/system --delete-generations +5
+    sudo nix-collect-garbage
 }
 
 ############
