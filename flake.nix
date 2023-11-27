@@ -61,6 +61,22 @@
         in [devpython postgresql];
         LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
       };
+      python310 = pkgs.mkShell {
+        nativeBuildInputs = with pkgs; let
+          devpython =
+            pkgs.python310.withPackages
+            (packages: with packages; [virtualenv pip setuptools wheel]);
+        in [devpython postgresql];
+        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
+      };
+      python311 = pkgs.mkShell {
+        nativeBuildInputs = with pkgs; let
+          devpython =
+            pkgs.python311.withPackages
+            (packages: with packages; [virtualenv pip setuptools wheel]);
+        in [devpython postgresql];
+        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
+      };
     });
 
     # Create packages out of my wrapped applications.
