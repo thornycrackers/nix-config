@@ -3,7 +3,7 @@
 # Lots of the color codes will use specific numbers for color. I generally
 # overwrite them as I find them to use the the system's colorscheme instead.
 ble-face command_function='fg=purple'
-ble-face -s auto_complete             fg=gray
+ble-face -s auto_complete fg=gray
 
 # Inherit LS colors
 bleopt filename_ls_colors="$LS_COLORS"

@@ -13,10 +13,6 @@
     minus-style = syntax "#35000030"
     line-numbers = true
     side-by-side = true
-[alias]
-    lg = log --topo-order --all --graph --date=local --pretty=format:'%C(green)%h%C(reset) %><(55,trunc)%s%C(red)%d%C(reset) %C(blue)[%an]%C(reset) %C(yellow)%ad%C(reset)%n'
-    sw = show --pretty='format:' --name-only
-    st = status
 [rebase]
     autostash = true
 [pull]

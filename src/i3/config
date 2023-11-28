@@ -11,7 +11,7 @@ font pango:DejaVuSansMono Nerd Font
 floating_modifier $mod
 focus_wrapping workspace
 
-# App Launchers
+# Custome Keybinds
 bindsym $mod+p exec "CM_LAUNCHER=rofi clipmenu"
 bindsym $mod+d exec ~/.config/bash/bin/myrofi
 bindsym $mod+b exec ~/.config/i3/scripts/open_bookmarks.sh

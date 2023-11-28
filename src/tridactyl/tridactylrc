@@ -1,21 +1,3 @@
-" bovine3dom's dogfood
-
-" Provided only as an example.
-" Do not install/run without reading through as you may be surprised by some
-" of the settings.
-
-" May require the latest beta builds.
-
-" Move this to $XDG_CONFIG_DIR/tridactyl/tridactylrc (that's
-" ~/.config/tridactyl/tridactylrc to mere mortals) or ~/.tridactylrc and
-" install the native messenger (:installnative in Tridactyl). Run :source to
-" get it in the browser, or just restart.
-
-" NB: If you want "vim-like" behaviour where removing a line from
-" here makes the setting disappear, uncomment the line below.
-
-"sanitise tridactyllocal tridactylsync
-
 "
 " Binds
 "
@@ -46,7 +28,7 @@ set newtab https://duckduckgo.com
 set hintchars fjdksla
 set colourscheme dark
 
-js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = os.os=="linux" ? "alacritty vim" : "auto"; tri.config.set("editorcmd", editorcmd)})
+js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = os.os=="linux" ? "kitty vim" : "auto"; tri.config.set("editorcmd", editorcmd)})
 
 
 ""
@@ -55,7 +37,3 @@ js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = os.os=="l
 
 "" New reddit is bad
 autocmd DocStart www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
-
-" This will have to do until someone writes us a nice syntax file :)
-" vim: set filetype=vim:
-
