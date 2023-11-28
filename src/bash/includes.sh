@@ -158,27 +158,27 @@ nixc() {
 
 # Function for loading different versions of python
 lkjh() {
-	CHOICE=$(echo -ne "python311\npython310\npython39" | fzf)
-	[ -z "$CHOICE" ] && echo "no choice" && return 1
-	nix develop "$HOME"/.nixpkgs#"$CHOICE" -c "$SHELL"
+    CHOICE=$(echo -ne "python311\npython310\npython39" | fzf)
+    [ -z "$CHOICE" ] && echo "no choice" && return 1
+    nix develop "$HOME"/.nixpkgs#"$CHOICE" -c "$SHELL"
 }
 
 # Try to guess python version from .python-version
 lkj() {
-	if [[ -e ".python-version" ]]; then
-		VERSION=$(awk -F'.' '{ print $1$2}' .python-version)
-		if [[ "$VERSION" == "39" ]]; then
-			nix develop "$HOME"/.dotfiles/nix#python39 -c "$SHELL"
-		elif [[ "$VERSION" == "310" ]]; then
-			nix develop "$HOME"/.dotfiles/nix#python310 -c "$SHELL"
-		elif [[ "$VERSION" == "311" ]]; then
-			nix develop "$HOME"/.dotfiles/nix#python311 -c "$SHELL"
-		else
-			echo "$(cat .python-version) not supported"
-		fi
-	else
-		echo "No .python-version"
-	fi
+    if [[ -e ".python-version" ]]; then
+        VERSION=$(awk -F'.' '{ print $1$2}' .python-version)
+        if [[ "$VERSION" == "39" ]]; then
+            nix develop "$HOME"/.nixpkgs#python39 -c "$SHELL"
+        elif [[ "$VERSION" == "310" ]]; then
+            nix develop "$HOME"/.nixpkgs#python310 -c "$SHELL"
+        elif [[ "$VERSION" == "311" ]]; then
+            nix develop "$HOME"/.nixpkgs#python311 -c "$SHELL"
+        else
+            echo "$(cat .python-version) not supported"
+        fi
+    else
+        echo "No .python-version"
+    fi
 }
 
 # A couple functions here are all related
