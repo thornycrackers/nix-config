@@ -40,6 +40,7 @@ alias tf="terraform"
 alias tfi="terraform init"
 alias twl="terraform workspace list"
 alias tws="terraform workspace select"
+alias clear="clear -x"
 # Branch (b)
 alias gb='git branch'
 alias gbc='git checkout -b'
@@ -71,7 +72,6 @@ alias grs='git rebase --skip'
 alias gm='git merge'
 # Push (p)
 alias gp='git push'
-alias gpl='git fetch origin master && git rebase origin/master'
 # Stash (s)
 alias gs='git stash'
 alias gsa='git stash apply'
@@ -100,6 +100,9 @@ alias dri='docker rmi -f $(docker images -q)'
 
 # cdspell If set, minor errors in the spelling of a directory component in a cd command will be corrected.
 shopt -s cdspell
+
+# Bind ^l to `clear -x` to preserve buffer history
+bind -x $'"\C-l":clear -x;'
 
 # Environment Variables
 export EDITOR='nvim'
@@ -439,6 +442,12 @@ gu() {
     current_branch="$(gcb)"
     git fetch origin "$current_branch"
     git reset --hard origin/"$current_branch"
+}
+
+# Pull and rebase local changes
+gpl() {
+    current_branch="$(gcb)"
+    git fetch origin "$current_branch" && git rebase origin/"$current_branch"
 }
 
 # Update a remote branch with it's latest latest from origin without having

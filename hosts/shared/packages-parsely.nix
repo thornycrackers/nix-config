@@ -10,7 +10,7 @@ in [
   awscli2
   jdk8_headless
   leiningen
-  nomad
+  unstable.nomad
   openvpn
   terraform-mine
   wander
