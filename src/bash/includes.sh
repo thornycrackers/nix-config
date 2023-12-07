@@ -93,7 +93,7 @@ alias gwc='git clean -f'
 # linting will complain that you need to quote them. But, quoting will
 # remove wordsplitting which is the mechanism these all depend on to work.
 alias dstop='docker stop $(docker ps -q)'
-alias drm='docker stop $(docker ps -q)'
+alias drm='docker rm $(docker ps -a -q) 2> /dev/null'
 alias drv='docker volume rm $(docker volume ls -qf dangling=true)'
 alias dri='docker rmi -f $(docker images -q)'
 
@@ -620,6 +620,12 @@ awselbip() {
         --filters Name=description,Values="$choice" \
         --query 'NetworkInterfaces[*].PrivateIpAddresses[*].PrivateIpAddress' \
         --output text
+}
+
+awsecrlogin() {
+    # E.g. 111111111111.dkr.ecr.region.amazonaws.com
+    ecr_url=$1
+    aws ecr get-login-password | docker login --username AWS --password-stdin "$ecr_url"
 }
 #
 ########
