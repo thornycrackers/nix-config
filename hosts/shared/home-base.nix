@@ -6,7 +6,6 @@
 # Home manager configs that are common to all setups
 {
   # lf
-  programs.lf.enable = true;
   xdg.configFile."lf/lfrc".source = ../../src/lf/lfrc;
 
   # starship

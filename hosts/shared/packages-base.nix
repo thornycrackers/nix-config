@@ -17,7 +17,8 @@ with pkgs; [
   keychain
   lazydocker
   lazygit
-  lf
+  # Want at least version 31 for dupfilefmt
+  unstable.lf
   neofetch
   nixos-rebuild
   tailscale

@@ -17,7 +17,8 @@ in [
   gotools
   hadolint
   languagetool
-  lf
+  # Want at least version 31 for dupfilefmt
+  unstable.lf
   nil
   nodePackages.bash-language-server
   nodejs
