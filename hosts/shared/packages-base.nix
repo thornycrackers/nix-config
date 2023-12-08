@@ -6,6 +6,7 @@ with pkgs; [
   btop
   csvkit
   curl
+  entr
   file
   gh
   git
