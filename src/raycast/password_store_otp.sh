@@ -11,10 +11,11 @@ IFS=$'\n\t'
 dir="$HOME/.password-store"
 
 print_choices() {
-    mapfile -t files < <(find "$dir" -not -name ".*")
+    mapfile -t files < <(find "$dir" -type f -name "*.gpg")
     for file in "${files[@]}"; do
-        relative_file=${file#"$dir"/}
-        basename "$relative_file" ".gpg"
+        # convert a full file path "/home/me/.password-store/my/pass.gpg" into "my/pass"
+        tmp="${file#"$dir"/}"
+        echo "${tmp%.*}"
     done
 }
 choice=$(print_choices | choose)
