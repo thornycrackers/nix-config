@@ -452,12 +452,12 @@ gfo() {
 
 # Interactively select untracked files to remove
 gwu() {
-    local ROOT_DIR
-    local FILES
-    ROOT_DIR="$(git rev-parse --show-toplevel)"
-    FILES=("$(git -C "$ROOT_DIR" ls-files --others --exclude-standard | fzf --multi --reverse)")
-    for FILE in "${FILES[@]}"; do
-        rm "$ROOT_DIR/$FILE"
+    local root_dir
+    local files
+    root_dir="$(git rev-parse --show-toplevel)"
+    mapfile -t files < <(git -C "$root_dir" ls-files --others --exclude-standard | fzf --multi --reverse)
+    for file in "${files[@]}"; do
+        rm "$root_dir/$file"
     done
 }
 
