@@ -6,16 +6,20 @@
     # Unstable for select packages
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     # Home manager for dotfiles
-    home-manager.url = "github:nix-community/home-manager/release-23.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-23.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # Wrapper manager for wrapping applications
     wrapper-manager = {
       url = "github:viperML/wrapper-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Darwin for macbook
-    darwin.url = "github:lnl7/nix-darwin/master";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    darwin = {
+      url = "github:lnl7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -47,39 +51,30 @@
       };
     };
   in {
-    # Default is used by CI for linting
+    # Default is used by CI for linting. All my linting stuff is already baked
+    # into my neovim package so I reuse the packages from there.
     devShells = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
       nvimPackages = import ./src/nvim/packages.nix pkgs;
+      # Function for making python shells. That way I can switch between
+      # different versions of python as required.
+      pythonShell = pythonVersion:
+        pkgs.mkShell {
+          nativeBuildInputs = with pkgs; let
+            devpython =
+              pythonVersion.withPackages
+              (packages: with packages; [virtualenv pip setuptools wheel]);
+          in [devpython];
+          LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
+        };
     in {
       default = pkgs.mkShell {buildInputs = nvimPackages;};
-      python39 = pkgs.mkShell {
-        nativeBuildInputs = with pkgs; let
-          devpython =
-            pkgs.python39.withPackages
-            (packages: with packages; [virtualenv pip setuptools wheel]);
-        in [devpython postgresql];
-        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
-      };
-      python310 = pkgs.mkShell {
-        nativeBuildInputs = with pkgs; let
-          devpython =
-            pkgs.python310.withPackages
-            (packages: with packages; [virtualenv pip setuptools wheel]);
-        in [devpython postgresql];
-        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
-      };
-      python311 = pkgs.mkShell {
-        nativeBuildInputs = with pkgs; let
-          devpython =
-            pkgs.python311.withPackages
-            (packages: with packages; [virtualenv pip setuptools wheel]);
-        in [devpython postgresql];
-        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
-      };
+      python39 = pythonShell pkgs.python39;
+      python310 = pythonShell pkgs.python310;
+      python311 = pythonShell pkgs.python311;
     });
 
-    # Create packages out of my wrapped applications.
+    # Create packages out of my wrapped applications. Mostly for fun.
     packages = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
     in {
@@ -90,10 +85,11 @@
       myneovim = pkgs.callPackage ./src/nvim/myneovim.nix {inherit pkgs;};
     });
 
-    # Expose my wrapped applications. If you clone this repository you can run:
-    # nix run .#mytmux
-    # nix run .#myneovim
-    # To test them out
+    # Expose my wrapped applications. This lets you do stuff like:
+    # nix run git+https://github.com/thornycrackers/nix-config#myneovim
+    # nix run git+https://github.com/thornycrackers/nix-config#mytmux
+    #
+    # If you want to test the setups out
     apps = forAllSystems (system: {
       mytmux = {
         type = "app";
