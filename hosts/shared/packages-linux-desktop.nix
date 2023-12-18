@@ -33,4 +33,5 @@ in [
   (pass.withExtensions (ext: with ext; [pass-otp]))
   xdotool
   xsel
+  zbar
 ]

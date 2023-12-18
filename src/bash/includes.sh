@@ -237,12 +237,13 @@ paws() {
 
 # If I'm building containers and it it fails:
 # 1. I'm not generally watching docker build, I'm doing something else
-# 2. 90% of the time it's another project on port 8000
-# So we try to kill the container on port 8000 and try one more time
+# 2. Kill all the containers running instead of trying to find the problem
+# 3. Rerun the command
+# With 93.78% certainty, the command is failing because of port allocation.
 mcu() {
     make clean && make up
     if [[ $? == "2" ]]; then
-        docker stop "$(docker ps | grep "0.0.0.0:8000->" | awk '{ print $1 }')"
+        dstop
         make clean && make up
     fi
 }
@@ -272,6 +273,11 @@ start_postgres() {
 }
 stop_postgres() {
     docker stop mypostgres && docker rm mypostgres
+}
+
+dex() {
+    choice=$(docker ps --format "{{.Names}}" | fzf)
+    docker exec -it "$choice" /bin/bash
 }
 
 # Quickly set paths
@@ -373,6 +379,15 @@ clean_nix_generations() {
     sudo nix-collect-garbage
 }
 
+# Import 2fa images into password store
+2faimport() {
+    if [[ "$#" -ne 2 ]]; then
+        echo 'error in num args'
+    else
+        # 1 is image 2 is account
+        zbarimg -q --raw "${1}" | pass otp append "${2}"
+    fi
+}
 ############
 # !terraform
 ############
