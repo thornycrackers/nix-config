@@ -75,4 +75,4 @@ map <enter> open
 map gh cd ~
 map gd cd ~/Downloads
 map ge cd /etc
-map S $zsh
+map S $bash

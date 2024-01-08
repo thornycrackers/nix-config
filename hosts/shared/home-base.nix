@@ -35,6 +35,9 @@
           local __git_cmd_idx=0
           _git_checkout
         } && __git_complete gco _comp_gco
+        # Direnv needs to be loaded just before ble.sh. If I leave it to home
+        # manager then it will put direnv after blesh and it doesn't work.
+        eval "$(direnv hook bash)"
         # Load BLE last
         [[ ''${BLE_VERSION-} ]] && ble-attach
       '';
