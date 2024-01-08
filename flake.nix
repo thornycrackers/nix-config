@@ -64,8 +64,7 @@
             devpython =
               pythonVersion.withPackages
               (packages: with packages; [virtualenv pip setuptools wheel]);
-          in [devpython];
-          LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.xmlsec}/lib/:${pkgs.rdkafka}/lib/";
+          in [devpython pkg-config libtool xmlsec.dev libxml2.dev];
         };
     in {
       default = pkgs.mkShell {buildInputs = nvimPackages;};
