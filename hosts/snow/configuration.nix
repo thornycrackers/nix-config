@@ -17,10 +17,6 @@
     '';
   };
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   networking.hostName = "snow"; # Define your hostname.
 
   # Enable networking
@@ -122,12 +118,6 @@
     enable = true;
     pinentryFlavor = "gtk2";
     enableSSHSupport = true;
-  };
-
-  programs.steam = {
-    enable = true;
-    # Let pipewire handle the sound
-    package = pkgs.steam.override {extraLibraries = pkgs: [pkgs.pipewire];};
   };
 
   # Setup tailscale private network
