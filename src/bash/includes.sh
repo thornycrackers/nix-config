@@ -320,6 +320,16 @@ ghprr() {
     done
 }
 
+# Clone all repositories for a given organization. (E.g ghcloneall thornycrackers)
+ghcloneall() {
+    org_name="$1"
+    mapfile -t repos < <(gh repo list "$org_name" --json=name | jq -r '.[].name')
+    for repo in "${repos[@]}"; do
+        git clone "git@github.com:$org_name/$repo"
+    done
+
+}
+
 # Utilities for dealing with nix symlinks
 rwh() {
     readlink "$(which "$1")"
