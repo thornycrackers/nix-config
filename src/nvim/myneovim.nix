@@ -56,6 +56,7 @@ let
           vim-abolish
           neorg
           plenary-nvim
+          vim-fetch
         ];
       };
     };

@@ -467,3 +467,4 @@ vim.g.maplocalleader = ','
 vim.api.nvim_set_keymap('n', '<leader>,i', '<cmd>Neorg index<cr>', { noremap = true});
 vim.api.nvim_set_keymap('n', '<leader>,r', '<cmd>Neorg return<cr>', { noremap = true});
 vim.api.nvim_set_keymap('n', '<leader>,e', '<cmd>Neorg export directory /home/thorny/Obsidian/MyVault markdown<cr>', { noremap = true});
+vim.api.nvim_set_keymap('n', '<leader>,pp', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>', { noremap = true});
