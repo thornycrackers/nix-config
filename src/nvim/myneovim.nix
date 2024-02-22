@@ -39,7 +39,6 @@ let
           vim-argwrap
           vim-fugitive
           indent-blankline-nvim
-          camelcasemotion
           hop-nvim
           ale
           goyo-vim
@@ -48,13 +47,15 @@ let
           (pkgs.callPackage ./nix/vim-angry-reviewer.nix {})
           (pkgs.callPackage ./nix/vim-hmts.nix {})
           LanguageTool-nvim
-          camelcasemotion
           vim-table-mode
           vim-bufkill
           emmet-vim
           tagbar
           vim-markdown
           vim-go
+          vim-abolish
+          neorg
+          plenary-nvim
         ];
       };
     };

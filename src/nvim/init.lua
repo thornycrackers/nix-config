@@ -100,6 +100,24 @@ au BufLeave *.py call clearmatches()
 -- Custom commands
 vim.cmd [[
 command! MakeTagsPython !ctags --exclude=venv --exclude=.venv --languages=python --python-kinds=-i -R .
+autocmd VimEnter * Abolish prod production
+autocmd VimEnter * Abolish deve development
+autocmd VimEnter * Abolish devs developers
+autocmd VimEnter * Abolish reqs requirements
+autocmd VimEnter * Abolish app{s,} application{}
+autocmd VimEnter * Abolish ver{s,} version{}
+autocmd VimEnter * iabbrev psql PostgreSQL
+autocmd VimEnter * iabbrev soa Service-oriented architecture
+autocmd VimEnter * Abolish dmint deploymint
+autocmd VimEnter * Abolish infra infrastructure
+autocmd VimEnter * Abolish envi environment
+autocmd VimEnter * Abolish vuln vulnerability
+autocmd VimEnter * Abolish vulns vulnerabilities
+autocmd VimEnter * Abolish mods modifications
+autocmd VimEnter * Abolish dle dreamline express
+autocmd VimEnter * Abolish swe{ing,} software engineer{}
+autocmd VimEnter * Abolish deps dependencies
+autocmd VimEnter * Abolish perf performance
 ]]
 
 
@@ -410,8 +428,6 @@ vim.cmd([[
       \ "ack -s -H --nocolor --nogroup --column --ignore-dir=.venv/ --ignore-dir=.vimcache/ --ignore-dir=migrations/ --ignore-dir=.mypy_cache/ --ignore-file=is:tags --nojs --nocss --nosass"
 ]])
 
--- camelcasemotion
-vim.g.camelcasemotion_key = ','
 
 -- vim-oscyank
 -- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1145673058
@@ -428,3 +444,26 @@ vim.api.nvim_set_keymap('n', '<leader>bd', '<cmd>BD<cr>', { noremap = true })
 -- vim-markdown
 vim.g.vim_markdown_auto_insert_bullets = 0
 vim.g.vim_markdown_new_list_item_indent = 0
+
+
+
+-- neorg
+require('neorg').setup {
+    load = {
+        ["core.defaults"] = {}, -- Loads default behaviour
+        ["core.export"] = {}, -- Loads default behaviour
+        ["core.concealer"] = {}, -- Adds pretty icons to your documents
+        ["core.dirman"] = { -- Manages Neorg workspaces
+            config = {
+                workspaces = {
+                    main = "~/Obsidian/MyVault",
+                },
+                default_workspace = "main",
+            },
+        },
+    },
+}
+vim.g.maplocalleader = ','
+vim.api.nvim_set_keymap('n', '<leader>,i', '<cmd>Neorg index<cr>', { noremap = true});
+vim.api.nvim_set_keymap('n', '<leader>,r', '<cmd>Neorg return<cr>', { noremap = true});
+vim.api.nvim_set_keymap('n', '<leader>,e', '<cmd>Neorg export directory /home/thorny/Obsidian/MyVault markdown<cr>', { noremap = true});

@@ -31,6 +31,7 @@ in [
   # Misc
   remmina
   (pass.withExtensions (ext: with ext; [pass-otp]))
+  wineWowPackages.staging
   xdotool
   xsel
   zbar
