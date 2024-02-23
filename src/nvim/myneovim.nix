@@ -9,7 +9,8 @@ let
         lua << EOF
         ${pkgs.lib.readFile ./init.lua}
         EOF
-        " lua doesn't like the special characters in this map
+        " lua doesn't like the special characters in some maps so I define them here.
+        " Too lazy to figure out right now.
         nnoremap <leader>pl vipJV:s/\v[.!?:] */\0\r/g<cr>k:noh<cr>
         let g:languagetool_server_command = '${pkgs.languagetool}/bin/languagetool-http-server'
       '';
@@ -54,8 +55,6 @@ let
           vim-markdown
           vim-go
           vim-abolish
-          neorg
-          plenary-nvim
           vim-fetch
         ];
       };

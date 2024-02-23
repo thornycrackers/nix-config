@@ -39,6 +39,7 @@ autocmd Filetype terraform setlocal ts=2 sw=2 sts=0 expandtab
 autocmd Filetype hcl setlocal ts=2 sw=2 sts=0 expandtab
 autocmd Filetype html setlocal ts=2 sw=2 sts=0 expandtab
 autocmd Filetype htmldjango setlocal ts=2 sw=2 sts=0 expandtab
+autocmd Filetype markdown setlocal ts=2 sw=2 sts=0 expandtab
 autocmd BufNewFile,BufRead *.nomad setfiletype hcl
 autocmd BufNewFile,BufRead *.yaml setfiletype yaml.ansible
 autocmd BufNewFile,BufRead *.yml setfiletype yaml.ansible
@@ -167,10 +168,16 @@ vim.api.nvim_set_keymap('n', '<leader>psl', '<cmd>LanguageToolClear<cr>', { nore
 vim.api.nvim_set_keymap('n', '<leader>pc', '<cmd>cclose<cr><cmd>lclose<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>pg', '<cmd>Goyo<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>pp', 'vipJVgq', { noremap = true })
+-- <leader>pl defined in nix CustomRC
 -- Add "il" text object to mean "in line"
 vim.api.nvim_set_keymap('x', 'il', 'g_o^', { noremap = true })
 vim.api.nvim_set_keymap('o', 'il', '<cmd>normal vil<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>v', '^vg_o^', { noremap = true })
+-- Shortcuts to help take notes
+-- Print current filepath with line number to reference
+vim.api.nvim_set_keymap('n', '<leader>,pp', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>', { noremap = true});
+vim.api.nvim_set_keymap('n', '<leader>,i', '<Cmd>edit '  .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>', { noremap = true});
+vim.api.nvim_set_keymap('n', '<leader>,n', '<Cmd>edit '  .. vim.fn.expand('~') .. '/Obsidian/MyVault/notes.md<CR>', { noremap = true});
 
 -- Build a custom status line
 local status_line = {
@@ -361,7 +368,20 @@ vim.api.nvim_set_keymap('n', '<leader>m', '<cmd>Lf<cr>', { noremap = true });
 vim.api.nvim_set_keymap('n', '<leader>n', '<cmd>LfWorkingDirectory<cr>', { noremap = true});
 
 --hop-nvim
-vim.api.nvim_set_keymap('', '<leader>s', '<cmd>HopChar2<cr>', { noremap = true })
+vim.api.nvim_set_keymap('', '<leader>ss', '<cmd>HopChar2<cr>', { noremap = true })
+-- set the pattern as a variable to avoid escaping issues
+vim.cmd([[
+let g:hop_file_pattern = '\v(\.\/|\.\.\/|\w+\/)+\w+(\.\w+)?'
+nnoremap <Leader>sf :lua HopToFilePath()<cr>
+]])
+function HopToFilePath()
+    -- Use hop to look for file paths and visually select, Then run "gF" to go
+    -- to file. I use "gF" because vim-fetch understands line numbers
+    require'hop'.hint_patterns({}, vim.g.hop_file_pattern)
+    vim.schedule(function()
+        vim.api.nvim_feedkeys('gF', 'n', true)
+    end)
+end
 require'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
 
 -- ale
@@ -444,27 +464,3 @@ vim.api.nvim_set_keymap('n', '<leader>bd', '<cmd>BD<cr>', { noremap = true })
 -- vim-markdown
 vim.g.vim_markdown_auto_insert_bullets = 0
 vim.g.vim_markdown_new_list_item_indent = 0
-
-
-
--- neorg
-require('neorg').setup {
-    load = {
-        ["core.defaults"] = {}, -- Loads default behaviour
-        ["core.export"] = {}, -- Loads default behaviour
-        ["core.concealer"] = {}, -- Adds pretty icons to your documents
-        ["core.dirman"] = { -- Manages Neorg workspaces
-            config = {
-                workspaces = {
-                    main = "~/Obsidian/MyVault",
-                },
-                default_workspace = "main",
-            },
-        },
-    },
-}
-vim.g.maplocalleader = ','
-vim.api.nvim_set_keymap('n', '<leader>,i', '<cmd>Neorg index<cr>', { noremap = true});
-vim.api.nvim_set_keymap('n', '<leader>,r', '<cmd>Neorg return<cr>', { noremap = true});
-vim.api.nvim_set_keymap('n', '<leader>,e', '<cmd>Neorg export directory /home/thorny/Obsidian/MyVault markdown<cr>', { noremap = true});
-vim.api.nvim_set_keymap('n', '<leader>,pp', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>', { noremap = true});
