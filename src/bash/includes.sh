@@ -32,6 +32,8 @@ alias ..="cd ../"
 alias ...="cd ../.."
 alias ls="ls --color=tty"
 alias me="make enter"
+alias mu="make up"
+alias mc="make clean"
 alias vin="virtualenv .venv && source .venv/bin/activate"
 alias vout="deactivate && rm -rf .venv"
 alias ns="nix-shell -p"
@@ -483,6 +485,17 @@ gwu() {
     mapfile -t files < <(git -C "$root_dir" ls-files --others --exclude-standard | fzf --multi --reverse)
     for file in "${files[@]}"; do
         rm "$root_dir/$file"
+    done
+}
+
+# Interactively add files
+gaa() {
+    local root_dir
+    local files
+    root_dir="$(git rev-parse --show-toplevel)"
+    mapfile -t files < <(git -C "$root_dir" status --short | awk '{print $2}' | fzf --multi --reverse)
+    for file in "${files[@]}"; do
+        git add "$root_dir/$file"
     done
 }
 

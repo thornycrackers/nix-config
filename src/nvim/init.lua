@@ -175,7 +175,7 @@ vim.api.nvim_set_keymap('o', 'il', '<cmd>normal vil<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>v', '^vg_o^', { noremap = true })
 -- Shortcuts to help take notes
 -- Print current filepath with line number to reference
-vim.api.nvim_set_keymap('n', '<leader>,pp', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>', { noremap = true});
+vim.api.nvim_set_keymap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>', { noremap = true});
 vim.api.nvim_set_keymap('n', '<leader>,i', '<Cmd>edit '  .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>', { noremap = true});
 vim.api.nvim_set_keymap('n', '<leader>,n', '<Cmd>edit '  .. vim.fn.expand('~') .. '/Obsidian/MyVault/notes.md<CR>', { noremap = true});
 

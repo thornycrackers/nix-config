@@ -35,4 +35,5 @@ in [
   xdotool
   xsel
   zbar
+  zathura
 ]
