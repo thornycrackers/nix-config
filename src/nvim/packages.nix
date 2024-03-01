@@ -5,7 +5,9 @@ with pkgs; let
     flake8-isort =
       pkgs.python3Packages.callPackage ./nix/flake8-isort.nix {};
   };
+  my-lua = unstable.lua5_1.withPackages (ps: with ps; [luarocks]);
 in [
+  my-lua
   alejandra
   ansible
   ansible-language-server

@@ -178,6 +178,10 @@ vim.api.nvim_set_keymap('n', '<leader>v', '^vg_o^', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>', { noremap = true});
 vim.api.nvim_set_keymap('n', '<leader>,i', '<Cmd>edit '  .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>', { noremap = true});
 vim.api.nvim_set_keymap('n', '<leader>,n', '<Cmd>edit '  .. vim.fn.expand('~') .. '/Obsidian/MyVault/notes.md<CR>', { noremap = true});
+-- Search and replace word under cursor
+vim.api.nvim_set_keymap('n', '<Leader>r', ':%s/<c-r><c-w>/', { noremap = true, silent = true })
+
+
 
 -- Build a custom status line
 local status_line = {

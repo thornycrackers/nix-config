@@ -8,6 +8,7 @@ with pkgs; [
   curl
   direnv
   entr
+  feh
   file
   gh
   git
