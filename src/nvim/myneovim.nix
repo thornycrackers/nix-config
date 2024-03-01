@@ -8,6 +8,7 @@ let
       customRC = ''
         lua << EOF
         ${pkgs.lib.readFile ./init.lua}
+        dofile('${./lua/qfnotes.lua}')
         EOF
         " lua doesn't like the special characters in some maps so I define them here.
         " Too lazy to figure out right now.
