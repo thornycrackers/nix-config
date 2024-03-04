@@ -1,0 +1,4 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p pandoc
+#
+source ~/.config/bash/scripts/mermaidlink2html.sh

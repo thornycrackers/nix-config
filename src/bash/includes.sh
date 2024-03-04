@@ -120,6 +120,19 @@ export DOCKER_HOST="unix:///run/docker.sock"
 # Load keychain on startup
 eval "$(keychain --eval --quiet id_rsa)"
 
+# Wrappers for bin stuff that more frequently are used for copying to clipboard than in a pipe
+# This saves key strokes since I can press "up arrow" then backwards delete the
+# last word instead when switching the input rather than navigating to the middle of:
+# <command> <input> | xsel -ib
+joinparagraphsclip() {
+    # shellcheck disable=SC2317
+    joinparagraphs "$1" | xsel -ib
+}
+
+mermaidlive2htmlclip() {
+    # shellcheck disable=SC2317
+    mermaidlive2html "$1" | xsel -ib
+}
 # Jump to a project diredtory
 j() { # Jump to project code
     proj=$(find "$HOME/Work" -mindepth 2 -maxdepth 2 -type d -name "$1")
@@ -665,7 +678,7 @@ awsecrlogin() {
     ecr_url=$1
     aws ecr get-login-password | docker login --username AWS --password-stdin "$ecr_url"
 }
-#
+
 ########
 # !tmux
 ########
