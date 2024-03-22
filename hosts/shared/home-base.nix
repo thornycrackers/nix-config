@@ -26,7 +26,7 @@
       bash
       */
       ''
-        # Load autocomplete functions from git, used to provide autcompletes
+        # Load autocomplete functions from git, used to provide autocompletes
         # to some of my aliases
         source ${pkgs.unstable.git}/share/bash-completion/completions/git
         # https://github.com/scop/bash-completion/issues/545

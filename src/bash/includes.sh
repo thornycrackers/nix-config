@@ -129,9 +129,9 @@ joinparagraphsclip() {
     joinparagraphs "$1" | xsel -ib
 }
 
-mermaidlive2htmlclip() {
+mermaidlink2htmlclip() {
     # shellcheck disable=SC2317
-    mermaidlive2html "$1" | xsel -ib
+    mermaidlink2html "$1" | xsel -ib
 }
 # Jump to a project diredtory
 j() { # Jump to project code
@@ -506,7 +506,10 @@ gaa() {
     local root_dir
     local files
     root_dir="$(git rev-parse --show-toplevel)"
-    mapfile -t files < <(git -C "$root_dir" status --short | awk '{print $2}' | fzf --multi --reverse)
+    # There's no builtin way (that I know) to filter out files that are already
+    # staged so I just grep for "^M " at the start of the line. Likely brittle,
+    # but works for now.
+    mapfile -t files < <(git -C "$root_dir" status --short | grep -v -E "^M " | awk '{print $2}' | fzf --multi --reverse)
     for file in "${files[@]}"; do
         git add "$root_dir/$file"
     done

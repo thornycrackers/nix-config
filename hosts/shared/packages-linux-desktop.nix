@@ -19,7 +19,8 @@ in [
   # GUI Apps
   myfirefox
   chromium
-  slack
+  # Was getting notices about it being out of date
+  unstable.slack
   spotify
   discord
   # Signal complains when it's out of date. Need to use unstable.
