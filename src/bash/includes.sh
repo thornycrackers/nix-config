@@ -98,6 +98,8 @@ alias dstop='docker stop $(docker ps -q)'
 alias drm='docker rm $(docker ps -a -q) 2> /dev/null'
 alias drv='docker volume rm $(docker volume ls -qf dangling=true)'
 alias dri='docker rmi -f $(docker images -q)'
+# Print the current time in format used in hugo posts
+alias hugodate="date --utc +%FT%H:%M:%SZ"
 
 # cdspell If set, minor errors in the spelling of a directory component in a cd command will be corrected.
 shopt -s cdspell
