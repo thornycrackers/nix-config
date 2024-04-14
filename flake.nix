@@ -50,27 +50,34 @@
         config.allowUnfree = true;
       };
     };
+
+    # Function for making python shells. That way I can switch between
+    # different versions of python as required. It can also be used between
+    # different subflakes.
+    pythonShell = myPkgs: pythonVersion:
+      myPkgs.mkShell {
+        nativeBuildInputs = with myPkgs; let
+          devpython =
+            pythonVersion.withPackages
+            (packages: with packages; [virtualenv pip setuptools wheel]);
+        in [devpython pkg-config libtool xmlsec.dev libxml2.dev];
+      };
   in {
+    # Lib is not part of the flake standard, it's a custom entry I add so that
+    # I can reuse functions in other flakes.
+    lib = {
+      inherit forAllSystems nixpkgsFor pythonShell;
+    };
     # Default is used by CI for linting. All my linting stuff is already baked
     # into my neovim package so I reuse the packages from there.
     devShells = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
       nvimPackages = import ./src/nvim/packages.nix pkgs;
-      # Function for making python shells. That way I can switch between
-      # different versions of python as required.
-      pythonShell = pythonVersion:
-        pkgs.mkShell {
-          nativeBuildInputs = with pkgs; let
-            devpython =
-              pythonVersion.withPackages
-              (packages: with packages; [virtualenv pip setuptools wheel]);
-          in [devpython pkg-config libtool xmlsec.dev libxml2.dev];
-        };
     in {
       default = pkgs.mkShell {buildInputs = nvimPackages;};
-      python39 = pythonShell pkgs.python39;
-      python310 = pythonShell pkgs.python310;
-      python311 = pythonShell pkgs.python311;
+      python39 = pythonShell pkgs pkgs.python39;
+      python310 = pythonShell pkgs pkgs.python310;
+      python311 = pythonShell pkgs pkgs.python311;
     });
 
     # Create packages out of my wrapped applications. Mostly for fun.
