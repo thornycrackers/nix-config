@@ -21,7 +21,6 @@ IFS=$'\n\t'
 
 choice=$(tmux list-sessions |
     sed -E 's/:.*$//' |
-    grep -v \"^"$(tmux display-message -p '#S')"\$\" |
     fzf --reverse || true)
 if [ -n "$choice" ]; then
     tmux switch-client -t "$choice"
