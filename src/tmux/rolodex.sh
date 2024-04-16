@@ -38,38 +38,30 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# Colors for printing
-G='\e[0;32m' # Green
-LG='\e[0;37m' # Light Gray
-C='\e[0;36m' # Cyan
-NC='\e[0m' # No Color
-
 # Immutable globals
-readonly ARGS=( "$@" )
-readonly NUM_ARGS="$#"
-readonly PROGNAME=$(basename "$0")
+readonly ARGS=("$@")
 readonly OPEN=1
 readonly CLOSED=0
 readonly DRAWER_SIZE=20
+
 # This allows us to redefine using either 1.1 or 1.2 as the pane. I'm growing
 # more partial to having 1.1 as drawer to match tmux alt 3 layout
 readonly DRAWER_WINDOW_NUMBER="1.1"
-readonly MAIN_WINDOW_NUMBER="1.2"
 
-get_active_pane(){
-    echo $(tmux lsp | grep '(active)' | cut -c 1)
+get_active_pane() {
+    tmux lsp | grep '(active)' | cut -c 1
 }
 
 get_number_of_buffer_window_panes() {
-    echo $(tmux lsp  -t 2 | wc -l)
+    tmux lsp -t 2 | wc -l
 }
 
 get_number_of_active_window_panes() {
-    echo $(tmux lsp | wc -l)
+    tmux lsp | wc -l
 }
 
 get_number_of_windows() {
-    echo $(tmux lsw | wc -l)
+    tmux lsw | wc -l
 }
 
 get_prev_pane() {
@@ -101,7 +93,6 @@ get_next_pane() {
         tmux select-pane -t 1."$ACTIVE_PANE"
     fi
 }
-
 
 close_drawer() {
     PANE_COUNT=$(get_number_of_active_window_panes)
@@ -136,7 +127,7 @@ open_drawer() {
 
 check_if_drawer_is_open_or_closed() {
     set +e
-    tmux showenv DRAWER_PANE_ID &> /dev/null
+    tmux showenv DRAWER_PANE_ID &>/dev/null
     RETVAL="$?"
     set -e
     if [[ "$RETVAL" == 0 ]]; then
