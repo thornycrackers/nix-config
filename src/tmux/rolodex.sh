@@ -165,4 +165,4 @@ main() {
         echo "Unrecognized command: ${ACTION}"
     fi
 }
-main $ARGS
+main "${ARGS[0]}"
