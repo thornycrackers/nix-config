@@ -23,6 +23,10 @@
         inherit pkgs;
         modules = [../../src/bat ../../src/tmux];
       })
+      # Quick way to get password-store up and running
+      gnupg
+      (pass.withExtensions (ext: with ext; [pass-otp]))
+      pinentry-curses
     ];
   in
     lib.mkMerge [
