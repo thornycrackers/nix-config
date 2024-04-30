@@ -37,7 +37,7 @@
     isNormalUser = true;
     shell = pkgs.bash;
     description = "thorny";
-    extraGroups = ["networkmanager" "jackaudio" "wheel" "docker"];
+    extraGroups = ["networkmanager" "jackaudio" "wheel" "docker" "libvirtd"];
     # Required for the docker rootless
     subUidRanges = [
       {
@@ -129,6 +129,9 @@
     enable = true;
     setSocketVariable = true;
   };
+
+  # Enable virtd for virtualization
+  virtualisation.libvirtd.enable = true;
 
   # When I shutdown the computer, docker takes forever and the default is 90s.
   # I don't feel like waiting more than 10 seconds.

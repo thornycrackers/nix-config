@@ -54,13 +54,18 @@
     # Function for making python shells. That way I can switch between
     # different versions of python as required. It can also be used between
     # different subflakes.
-    pythonShell = myPkgs: pythonVersion:
+    pythonShell = {
+      myPkgs,
+      pythonVersion,
+      additionalPkgs ? [],
+    }:
       myPkgs.mkShell {
         nativeBuildInputs = with myPkgs; let
           devpython =
             pythonVersion.withPackages
             (packages: with packages; [virtualenv pip setuptools wheel]);
-        in [devpython pkg-config libtool xmlsec.dev libxml2.dev];
+        in
+          [devpython pkg-config libtool xmlsec.dev libxml2.dev] ++ additionalPkgs;
       };
   in {
     # Lib is not part of the flake standard, it's a custom entry I add so that
@@ -75,9 +80,18 @@
       nvimPackages = import ./src/nvim/packages.nix pkgs;
     in {
       default = pkgs.mkShell {buildInputs = nvimPackages;};
-      python39 = pythonShell pkgs pkgs.python39;
-      python310 = pythonShell pkgs pkgs.python310;
-      python311 = pythonShell pkgs pkgs.python311;
+      python39 = pythonShell {
+        myPkgs = pkgs;
+        pythonVersion = pkgs.python39;
+      };
+      python310 = pythonShell {
+        myPkgs = pkgs;
+        pythonVersion = pkgs.python310;
+      };
+      python311 = pythonShell {
+        myPkgs = pkgs;
+        pythonVersion = pkgs.python311;
+      };
     });
 
     # Create packages out of my wrapped applications. Mostly for fun.

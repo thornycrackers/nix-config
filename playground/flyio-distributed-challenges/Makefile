@@ -1,0 +1,9 @@
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+init:  ## Download and unzip the maelstrom binary
+	wget https://github.com/jepsen-io/maelstrom/releases/download/v0.2.3/maelstrom.tar.bz2
+	tar -xvf maelstrom.tar.bz2
+
+start_echo:  ## Run the echo.py file. "Helloworld" example to test everything setup
+	./maelstrom/maelstrom test -w echo --bin echo.py --node-count 1 --time-limit 10

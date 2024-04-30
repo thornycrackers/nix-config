@@ -29,6 +29,9 @@ in [
   qjackctl
   playerctl
   pavucontrol
+  # Virtualization
+  qemu
+  virt-manager
   # Misc
   remmina
   (pass.withExtensions (ext: with ext; [pass-otp]))
