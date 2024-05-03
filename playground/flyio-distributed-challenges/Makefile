@@ -13,3 +13,6 @@ start_uniqueid:  ## Run unique-ids file
 
 start_broadcast_parta:  ## Run broadcast file
 	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 1 --time-limit 20 --rate 10
+
+start_broadcast_partb:  ## Run broadcast file
+	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 5 --time-limit 20 --rate 10

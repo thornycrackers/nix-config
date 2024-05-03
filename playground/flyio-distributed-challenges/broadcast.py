@@ -3,21 +3,28 @@
 from maelstrom import Body, Node, Request
 
 node = Node()
-messages = []
+messages = set()
 neighbors = []
 
 
 @node.handler
 async def broadcast(req: Request) -> Body:
     global messages
-    messages.append(req.body["message"])
+    global neighbors
+    new_message = req.body["message"]
+    if new_message not in messages:
+        messages.add(new_message)
+        for neighbor in neighbors:
+            node.spawn(
+                node.rpc(neighbor, {"type": "broadcast", "message": new_message})
+            )
     return {"type": "broadcast_ok"}
 
 
 @node.handler
 async def read(req: Request) -> Body:
     global messages
-    return {"type": "read_ok", "messages": messages}
+    return {"type": "read_ok", "messages": list(messages)}
 
 
 @node.handler
