@@ -15,9 +15,7 @@ async def broadcast(req: Request) -> Body:
     if new_message not in messages:
         messages.add(new_message)
         for neighbor in neighbors:
-            node.spawn(
-                node.rpc(neighbor, {"type": "broadcast", "message": new_message})
-            )
+            node.spawn(send_msg_with_infinite_retry(neighbor, new_message))
     return {"type": "broadcast_ok"}
 
 
@@ -32,6 +30,17 @@ async def topology(req: Request) -> Body:
     global neighbors
     neighbors = req.body["topology"][node.node_id]
     return {"type": "topology_ok"}
+
+
+async def send_msg_with_infinite_retry(neighbor, message):
+    """Infinite retry sending of msg."""
+    message_sent = False
+    while not message_sent:
+        body = {"type": "broadcast", "message": message}
+        res = await node.rpc(neighbor, body)
+        if res["type"] != "error":
+            message_sent = True
+    return
 
 
 node.run()

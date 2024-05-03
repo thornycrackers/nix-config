@@ -16,3 +16,6 @@ start_broadcast_parta:  ## Run broadcast file
 
 start_broadcast_partb:  ## Run broadcast file
 	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 5 --time-limit 20 --rate 10
+
+start_broadcast_partc:  ## Run broadcast file
+	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 5 --time-limit 20 --rate 10 --nemesis partition
