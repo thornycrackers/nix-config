@@ -122,10 +122,14 @@ class Node:
         return Request(data["src"], data["dest"], data["body"])
 
     async def _send(self, req: Request) -> None:
-        serialized = json.dumps({"src": req.src, "dest": req.dest, "body": req.body})
+        serialized = json.dumps(
+            {"src": req.src, "dest": req.dest, "body": req.body}
+        )  # noqa E501
         async with self._stdout_lock:
             loop = asyncio.get_running_loop()
-            await loop.run_in_executor(None, lambda: print(serialized, flush=True))
+            await loop.run_in_executor(
+                None, lambda: print(serialized, flush=True)
+            )  # noqa E501
 
     async def _run(self, init: Optional[Callable[[], None]]) -> None:
         req = await self._recv()
@@ -150,8 +154,8 @@ class Node:
             if req.body.get("in_reply_to"):
                 reply_id = req.body["in_reply_to"]
                 fut = self._reply_handlers.pop(reply_id, None)
-                # If there's no handler, this might be a duplicate message--we'll quietly
-                # ignore it.
+                # If there's no handler, this might be a
+                # duplicate message--we'll quietly ignore it.
                 if fut is not None:
                     try:
                         fut.set_result(req.body)
