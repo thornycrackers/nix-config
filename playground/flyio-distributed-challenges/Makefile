@@ -10,3 +10,6 @@ start_echo:  ## Run the echo.py file. "Helloworld" example to test everything se
 
 start_uniqueid:  ## Run unique-ids file
 	./maelstrom/maelstrom test -w unique-ids --bin unique-ids.py --time-limit 30 --rate 1000 --node-count 3 --availability total --nemesis partition
+
+start_broadcast_parta:  ## Run broadcast file
+	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 1 --time-limit 20 --rate 10
