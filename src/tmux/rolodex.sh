@@ -42,7 +42,7 @@ IFS=$'\n\t'
 readonly ARGS=("$@")
 readonly OPEN=1
 readonly CLOSED=0
-readonly DRAWER_SIZE=20
+readonly DRAWER_SIZE=10
 
 # This allows us to redefine using either 1.1 or 1.2 as the pane. I'm growing
 # more partial to having 1.1 as drawer to match tmux alt 3 layout
