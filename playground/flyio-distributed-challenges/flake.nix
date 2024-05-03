@@ -16,7 +16,7 @@
       default = root.lib.pythonShell {
         myPkgs = pkgs;
         pythonVersion = pkgs.python311;
-        additionalPkgs = [pkgs.jdk17_headless];
+        additionalPkgs = [pkgs.jdk17_headless pkgs.gnuplot pkgs.graphviz];
       };
     });
   };

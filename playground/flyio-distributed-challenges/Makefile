@@ -7,3 +7,6 @@ init:  ## Download and unzip the maelstrom binary
 
 start_echo:  ## Run the echo.py file. "Helloworld" example to test everything setup
 	./maelstrom/maelstrom test -w echo --bin echo.py --node-count 1 --time-limit 10
+
+start_uniqueid:  ## Run unique-ids file
+	./maelstrom/maelstrom test -w unique-ids --bin unique-ids.py --time-limit 30 --rate 1000 --node-count 3 --availability total --nemesis partition

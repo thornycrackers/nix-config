@@ -161,6 +161,8 @@ class Node:
 
             async def thunk(req: Request):
                 message_type = req.body["type"]
+                if message_type == "validate_ok":
+                    print("FUCKING EH")
                 if message_type in self._handlers:
                     callback = self._handlers[message_type]
                     resp_body = await callback(copy.deepcopy(req))
