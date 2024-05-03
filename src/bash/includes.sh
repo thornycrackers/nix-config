@@ -350,7 +350,7 @@ ghprr() {
         local my_dated_prs lines title url number
         my_dated_prs=$(
             gh pr list --repo "$repo" --author @me --state all --json number,title,headRefName,url,createdAt |
-                jq --raw-output '. | map(select((.createdAt | strptime("%Y-%m-%dT%H:%M:%SZ")) > ("2024-01-01T00:00:00Z" | strptime("%Y-%m-%dT%H:%M:%SZ")))) | map(del(.createdAt))'
+                jq --raw-output '. | map(select((.createdAt | strptime("%Y-%m-%dT%H:%M:%SZ")) > ("2024-03-10T00:00:00Z" | strptime("%Y-%m-%dT%H:%M:%SZ")))) | map(del(.createdAt))'
         )
         # Skip if there are no PRs
         if [[ '[]' == "$my_dated_prs" ]]; then
