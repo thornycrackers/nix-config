@@ -118,6 +118,9 @@ export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
 # For some reason, docker client is expecting in a different location
 # (unix:///run/user/1000/docker.sock) but hardcode for now
 export DOCKER_HOST="unix:///run/docker.sock"
+# This avoids having to use sudo with virsh commands
+# I'll specify a different one if required
+export LIBVIRT_DEFAULT_URI="qemu:///system"
 
 # Load keychain on startup
 eval "$(keychain --eval --quiet id_rsa)"
@@ -250,6 +253,40 @@ rebuildr() {
 paws() {
     choice="$(grep '\[profile' "$HOME/.aws/config" | awk '{ print $2 }' | tr -d ']' | fzf)"
     export AWS_PROFILE="$choice"
+}
+
+# Use curl to heartbeat a website. I use this if I'm doing ops work and want to
+# see if there is an interuption to the service
+heartbeat() {
+    local G='\e[38;5;2m'
+    local R='\e[38;5;1m'
+    while true; do
+        STATUS=$(nice curl -I "$1" 2>/dev/null | grep '200 OK')
+        if [[ -n $STATUS ]]; then
+            echo -e "$(date) ${G}$1 is up${NC}"
+        else
+            STATUS=$(nice curl -I "$1" 2>/dev/null | grep 'HTTP/2 200')
+            if [[ -n $STATUS ]]; then
+                echo -e "$(date) ${G}$1 is up${NC}"
+            else
+                echo -e "$(date) ${R}$1 is down${NC}"
+            fi
+        fi
+        sleep 2
+    done
+}
+
+# Small helper function that ensures that both www and non-www redirct to the
+# correct url for both http and https
+finalurl() {
+    curl http://"$1" -s -L -o /dev/null -w '%{url_effective}'
+    echo ''
+    curl http://www."$1" -s -L -o /dev/null -w '%{url_effective}'
+    echo ''
+    curl https://"$1" -s -L -o /dev/null -w '%{url_effective}'
+    echo ''
+    curl https://www."$1" -s -L -o /dev/null -w '%{url_effective}'
+    echo ''
 }
 
 # If I'm building containers and it it fails:
