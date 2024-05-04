@@ -14,8 +14,11 @@ async def broadcast(req: Request) -> Body:
     new_message = req.body["message"]
     if new_message not in messages:
         messages.add(new_message)
-        for neighbor in neighbors:
-            node.spawn(send_msg_with_infinite_retry(neighbor, new_message))
+        # only broadcast messages from client, drop messages from other nodes
+        msg_from_client = req.src.startswith("c")
+        if msg_from_client:
+            for neighbor in neighbors:
+                node.spawn(send_msg_with_infinite_retry(neighbor, new_message))
     return {"type": "broadcast_ok"}
 
 
@@ -28,7 +31,8 @@ async def read(req: Request) -> Body:
 @node.handler
 async def topology(req: Request) -> Body:
     global neighbors
-    neighbors = req.body["topology"][node.node_id]
+    neighbors = set(node.node_ids)
+    neighbors.remove(node.node_id)
     return {"type": "topology_ok"}
 
 
