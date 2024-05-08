@@ -29,7 +29,7 @@
   i18n.defaultLocale = "en_CA.UTF-8";
 
   # Instal DejaVuSansMono nerd font
-  fonts.fonts = with pkgs; [(nerdfonts.override {fonts = ["DejaVuSansMono"];})];
+  fonts.packages = with pkgs; [(nerdfonts.override {fonts = ["DejaVuSansMono"];})];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.thorny = {

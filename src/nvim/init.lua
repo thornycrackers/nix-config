@@ -354,7 +354,7 @@ vim.api.nvim_set_keymap('n', '<leader>gb', '<cmd>Git blame<cr>', { noremap = tru
 vim.api.nvim_set_keymap('n', '<leader>gd', '<cmd>Gdiffsplit<cr>', { noremap = true })
 
 -- indent-blankline-nvim
-require("indent_blankline").setup()
+require("ibl").setup()
 
 -- lf-vim
 -- vim-floaterm

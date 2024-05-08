@@ -2,7 +2,7 @@
   vimUtils,
   fetchFromGitHub,
 }:
-vimUtils.buildVimPluginFrom2Nix rec {
+vimUtils.buildVimPlugin rec {
   pname = "hmts.nvim";
   version = "1.2.2";
   src = fetchFromGitHub {

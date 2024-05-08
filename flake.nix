@@ -10,7 +10,7 @@
       url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Wrapper manager for wrapping applications
+    # Wrapper manager for wrapping applications (careful updating)
     wrapper-manager = {
       url = "github:viperML/wrapper-manager";
       inputs.nixpkgs.follows = "nixpkgs";

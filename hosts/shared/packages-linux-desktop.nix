@@ -5,7 +5,7 @@ with pkgs; let
   # ./.mozilla/native-messaging-hosts/tridactyl.json
   # ./.local/share/tridactyl
   myfirefox = firefox-devedition.override {
-    extraNativeMessagingHosts = [
+    nativeMessagingHosts = [
       pkgs.tridactyl-native
     ];
   };
