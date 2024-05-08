@@ -1,5 +1,5 @@
-{...}: {
-  imports = [./home-base.nix];
+{ ... }: {
+  imports = [ ./home-base.nix ];
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.homeDirectory = "/Users/codyhiar";

@@ -1,8 +1,7 @@
-{
-  pkgs,
-  wrapper-manager,
-  flakePkgs,
-  ...
+{ pkgs
+, wrapper-manager
+, flakePkgs
+, ...
 }: {
   nix = {
     extraOptions = ''
@@ -24,26 +23,26 @@
       flakePkgs.myneovim
       (wrapper-manager.lib.build {
         inherit pkgs;
-        modules = [../../src/bat ../../src/tmux];
+        modules = [ ../../src/bat ../../src/tmux ];
       })
       # Quick way to get password-store up and running
       gnupg
-      (pass.withExtensions (ext: with ext; [pass-otp]))
+      (pass.withExtensions (ext: with ext; [ pass-otp ]))
       pinentry-curses
     ];
   in
-    lib.mkMerge [
-      basePackages
-      darwinPackages
-      parselyPackages
-      localPackages
-    ];
+  lib.mkMerge [
+    basePackages
+    darwinPackages
+    parselyPackages
+    localPackages
+  ];
 
   # Let nix run homebrew. This won't install homebrew visit:
   # https://brew.sh/ to get install info.
   homebrew = {
     enable = true;
-    brews = ["choose-gui"];
+    brews = [ "choose-gui" ];
     casks = [
       "firefox"
       "zoom"
@@ -56,9 +55,9 @@
       "docker"
       "raycast"
     ];
-    taps = ["homebrew/cask-fonts"];
+    taps = [ "homebrew/cask-fonts" ];
     onActivation.cleanup = "zap";
-    masApps = {"Logic Pro" = 634148309;};
+    masApps = { "Logic Pro" = 634148309; };
   };
 
   users.users.codyhiar = {
@@ -68,7 +67,7 @@
   };
   programs.bash.enable = true;
   # I had to manually run `chsh` to get the shell to change.
-  environment.shells = [pkgs.bashInteractive];
+  environment.shells = [ pkgs.bashInteractive ];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;

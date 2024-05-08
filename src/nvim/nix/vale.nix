@@ -1,12 +1,12 @@
-{
-  buildGoModule,
-  fetchFromGitHub,
+{ buildGoModule
+, fetchFromGitHub
+,
 }:
 buildGoModule rec {
   pname = "vale";
   version = "2.17.0";
-  subPackages = ["cmd/vale"];
-  outputs = ["out" "data"];
+  subPackages = [ "cmd/vale" ];
+  outputs = [ "out" "data" ];
   src = fetchFromGitHub {
     owner = "errata-ai";
     repo = "vale";
@@ -18,5 +18,5 @@ buildGoModule rec {
     mkdir -p $data/share/vale
     cp -r styles $data/share/vale
   '';
-  ldflags = ["-s" "-w" "-X main.version=${version}"];
+  ldflags = [ "-s" "-w" "-X main.version=${version}" ];
 }

@@ -1,10 +1,9 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{
-  pkgs,
-  flakePkgs,
-  ...
+{ pkgs
+, flakePkgs
+, ...
 }: {
   imports = [
     # Include the results of the hardware scan.
@@ -29,7 +28,7 @@
   i18n.defaultLocale = "en_CA.UTF-8";
 
   # Instal DejaVuSansMono nerd font
-  fonts.packages = with pkgs; [(nerdfonts.override {fonts = ["DejaVuSansMono"];})];
+  fonts.packages = with pkgs; [ (nerdfonts.override { fonts = [ "DejaVuSansMono" ]; }) ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.thorny = {
@@ -37,7 +36,7 @@
     isNormalUser = true;
     shell = pkgs.bash;
     description = "thorny";
-    extraGroups = ["networkmanager" "jackaudio" "wheel" "docker" "libvirtd"];
+    extraGroups = [ "networkmanager" "jackaudio" "wheel" "docker" "libvirtd" ];
     # Required for the docker rootless
     subUidRanges = [
       {
@@ -69,14 +68,14 @@
     basePackages = import ../../hosts/shared/packages-base.nix pkgs;
     parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
     desktopPackages = import ../../hosts/shared/packages-linux-desktop.nix pkgs;
-    localPackages = [flakePkgs.myneovim];
+    localPackages = [ flakePkgs.myneovim ];
   in
-    lib.mkMerge [basePackages parselyPackages localPackages desktopPackages];
+  lib.mkMerge [ basePackages parselyPackages localPackages desktopPackages ];
 
   # Graphical settings. Use i3 to manage windows but xfce as a desktop manager.
   services.xserver = {
     enable = true;
-    displayManager = {defaultSession = "xfce+i3";};
+    displayManager = { defaultSession = "xfce+i3"; };
     windowManager = {
       i3 = {
         enable = true;
@@ -91,11 +90,11 @@
         enableXfwm = false;
       };
     };
-    videoDrivers = ["nvidia"];
+    videoDrivers = [ "nvidia" ];
   };
 
   # Enable ssh
-  services.openssh = {enable = true;};
+  services.openssh = { enable = true; };
 
   # Enable pipewire to take care of everything
   services.pipewire = {
@@ -109,7 +108,7 @@
   # Setup printing
   services.printing = {
     enable = true;
-    drivers = [pkgs.hplip];
+    drivers = [ pkgs.hplip ];
   };
 
   # gtk2 is the most reliable out all the other flavors that I've tried so far

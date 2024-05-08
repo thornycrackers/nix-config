@@ -6,7 +6,8 @@ with pkgs; let
     hash = "sha256-mnJ9d3UHAZxmz0i7PH0JF5gA3m3nJxM2NyAn0J0L6u8=";
     vendorHash = "sha256-3ZQcWatJlQ6NVoPL/7cKQO6+YCSM3Ld77iLEQK3jBDE=";
   };
-in [
+in
+[
   awscli2
   jdk8_headless
   leiningen

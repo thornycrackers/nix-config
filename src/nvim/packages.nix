@@ -1,14 +1,15 @@
 pkgs:
 with pkgs; let
-  vale = pkgs.callPackage ./nix/vale.nix {};
+  vale = pkgs.callPackage ./nix/vale.nix { };
   flake8-isort = pkgs.python3Packages.callPackage ./nix/nvimpython.nix {
     flake8-isort =
-      pkgs.python3Packages.callPackage ./nix/flake8-isort.nix {};
+      pkgs.python3Packages.callPackage ./nix/flake8-isort.nix { };
   };
-  my-lua = unstable.lua5_1.withPackages (ps: with ps; [luarocks]);
-in [
+  my-lua = unstable.lua5_1.withPackages (ps: with ps; [ luarocks ]);
+in
+[
   my-lua
-  alejandra
+  nixpkgs-fmt
   ansible
   ansible-language-server
   ansible-lint

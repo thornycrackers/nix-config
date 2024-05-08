@@ -9,7 +9,8 @@ with pkgs; let
       pkgs.tridactyl-native
     ];
   };
-in [
+in
+[
   kitty
   # Desktop xfce things
   xfce.xfce4-panel
@@ -34,7 +35,7 @@ in [
   virt-manager
   # Misc
   remmina
-  (pass.withExtensions (ext: with ext; [pass-otp]))
+  (pass.withExtensions (ext: with ext; [ pass-otp ]))
   wineWowPackages.staging
   xdotool
   xsel

@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 # I keep this in a file simply to keep the top level flake a bit cleaner to read.
 # Defines my neovim with it's config file, vim plugins, and all packages (such as language servers and linters)
 let
@@ -47,8 +47,8 @@ let
           goyo-vim
           vim-oscyank
           ack-vim
-          (pkgs.callPackage ./nix/vim-angry-reviewer.nix {})
-          (pkgs.callPackage ./nix/vim-hmts.nix {})
+          (pkgs.callPackage ./nix/vim-angry-reviewer.nix { })
+          (pkgs.callPackage ./nix/vim-hmts.nix { })
           LanguageTool-nvim
           vim-table-mode
           vim-bufkill
@@ -63,17 +63,18 @@ let
     };
   };
 in
-  pkgs.symlinkJoin {
-    name = "neovim";
-    paths = [neovimOverride];
-    buildInputs = [pkgs.makeWrapper];
-    postBuild = with pkgs; let
-      nvimPackages = import ./packages.nix pkgs;
-    in ''
-      rm $out/bin/nvim
-      BINPATH=${
-        lib.makeBinPath nvimPackages
-      }
-      makeWrapper ${neovimOverride}/bin/nvim $out/bin/nvim --prefix PATH : $BINPATH
-    '';
-  }
+pkgs.symlinkJoin {
+  name = "neovim";
+  paths = [ neovimOverride ];
+  buildInputs = [ pkgs.makeWrapper ];
+  postBuild = with pkgs; let
+    nvimPackages = import ./packages.nix pkgs;
+  in
+  ''
+    rm $out/bin/nvim
+    BINPATH=${
+      lib.makeBinPath nvimPackages
+    }
+    makeWrapper ${neovimOverride}/bin/nvim $out/bin/nvim --prefix PATH : $BINPATH
+  '';
+}

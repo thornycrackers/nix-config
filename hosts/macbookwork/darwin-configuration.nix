@@ -1,8 +1,7 @@
-{
-  pkgs,
-  wrapper-manager,
-  flakePkgs,
-  ...
+{ pkgs
+, wrapper-manager
+, flakePkgs
+, ...
 }: {
   nix = {
     extraOptions = ''
@@ -36,34 +35,36 @@
             # as a hackey work around for adding tmux config overrides. It
             # seems to be working for now, but I'm sure there's a cleaner
             # solution to doing this.
-            wrappers.tmux = let
-              tmuxConf = builtins.readFile ../../src/tmux/tmux.conf;
-              tmuxOverrides = builtins.readFile ../../src/tmux/tmux-darwin-overrides.conf;
-              darwinTmuxConf = lib.concatStringsSep "\n" [tmuxConf tmuxOverrides];
-              fileLocation = pkgs.writeText "tmuxdarwinconfig" darwinTmuxConf;
-            in {
-              basePackage = pkgs.tmux;
-              flags = ["-f ${fileLocation}"];
-              pathAdd = [(pkgs.writeShellScriptBin "rolodex.sh" (builtins.readFile ../../src/tmux/rolodex.sh))];
-            };
+            wrappers.tmux =
+              let
+                tmuxConf = builtins.readFile ../../src/tmux/tmux.conf;
+                tmuxOverrides = builtins.readFile ../../src/tmux/tmux-darwin-overrides.conf;
+                darwinTmuxConf = lib.concatStringsSep "\n" [ tmuxConf tmuxOverrides ];
+                fileLocation = pkgs.writeText "tmuxdarwinconfig" darwinTmuxConf;
+              in
+              {
+                basePackage = pkgs.tmux;
+                flags = [ "-f ${fileLocation}" ];
+                pathAdd = [ (pkgs.writeShellScriptBin "rolodex.sh" (builtins.readFile ../../src/tmux/rolodex.sh)) ];
+              };
           }
         ];
       })
-      (pass.withExtensions (ext: with ext; [pass-otp]))
+      (pass.withExtensions (ext: with ext; [ pass-otp ]))
     ];
   in
-    lib.mkMerge [
-      basePackages
-      darwinPackages
-      parselyPackages
-      localPackages
-    ];
+  lib.mkMerge [
+    basePackages
+    darwinPackages
+    parselyPackages
+    localPackages
+  ];
 
   # Let nix run homebrew. This won't install homebrew visit:
   # https://brew.sh/ to get install info.
   homebrew = {
     enable = true;
-    brews = ["choose-gui"];
+    brews = [ "choose-gui" ];
     casks = [
       "blackhole-2ch"
       "obs"
@@ -80,7 +81,7 @@
       "docker"
       "raycast"
     ];
-    taps = ["homebrew/cask-fonts"];
+    taps = [ "homebrew/cask-fonts" ];
     onActivation.cleanup = "zap";
   };
 
@@ -91,7 +92,7 @@
   };
   programs.bash.enable = true;
   # I had to manually run `chsh` to get the shell to change.
-  environment.shells = [pkgs.bashInteractive];
+  environment.shells = [ pkgs.bashInteractive ];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;

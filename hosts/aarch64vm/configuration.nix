@@ -1,9 +1,8 @@
-{
-  modulesPath,
-  pkgs,
-  ...
+{ modulesPath
+, pkgs
+, ...
 }: {
-  imports = ["${modulesPath}/virtualisation/amazon-image.nix"];
+  imports = [ "${modulesPath}/virtualisation/amazon-image.nix" ];
   ec2.efi = true;
 
   networking.hostName = "aarch64vm";
@@ -36,7 +35,7 @@
     '';
   };
 
-  services = {openssh = {enable = true;};};
+  services = { openssh = { enable = true; }; };
 
   virtualisation.docker.enable = true;
 }
