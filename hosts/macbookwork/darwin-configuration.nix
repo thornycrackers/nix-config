@@ -27,7 +27,7 @@
           ../../src/bat
           {
             # Instead of using the shared module for tmux, I build my own here
-            # as a hackey work around for addint tmux config overrides. It
+            # as a hackey work around for adding tmux config overrides. It
             # seems to be working for now, but I'm sure there's a cleaner
             # solution to doing this.
             wrappers.tmux = let
@@ -38,7 +38,7 @@
             in {
               basePackage = pkgs.tmux;
               flags = ["-f ${fileLocation}"];
-              pathAdd = [(pkgs.writeShellScriptBin "rolodex" (builtins.readFile ../../src/tmux/rolodex))];
+              pathAdd = [(pkgs.writeShellScriptBin "rolodex.sh" (builtins.readFile ../../src/tmux/rolodex.sh))];
             };
           }
         ];
