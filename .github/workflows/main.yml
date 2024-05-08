@@ -14,7 +14,7 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v3
       - name: Lint nix files
-        run: nix develop --command alejandra --check .
+        run: nix develop --command nixpkgs-fmt --check .
       - name: Lint bash files
         run: find . -name "*.sh" -print0 | xargs -0 shellcheck --format=gcc
       - name: Lint python with ruff
