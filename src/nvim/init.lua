@@ -336,9 +336,10 @@ vim.api.nvim_set_keymap('n', '<leader>ew', '<cmd>ArgWrap<cr>', { noremap = true 
 vim.api.nvim_set_keymap('n', '<leader>du', '<cmd>diffupdate<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>dd', '<cmd>diffget<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>df', '<cmd>diffput<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>dc', ']c', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>de', '[c', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>dn', ']c', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>dp', '[c', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>gs', '<cmd>Git<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>gc', '<cmd>Git commit<cr>', { noremap = true })
 vim.cmd([[
   function! ToggleGStatus()
     if buflisted(bufname('.git/index'))
