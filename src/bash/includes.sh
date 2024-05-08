@@ -100,6 +100,7 @@ alias drv='docker volume rm $(docker volume ls -qf dangling=true)'
 alias dri='docker rmi -f $(docker images -q)'
 # Print the current time in format used in hugo posts
 alias hugodate="date --utc +%FT%H:%M:%SZ"
+alias rmvenvs="find . -name '.venv' -type d | xargs rm -rf"
 
 # cdspell If set, minor errors in the spelling of a directory component in a cd command will be corrected.
 shopt -s cdspell
@@ -739,7 +740,7 @@ tlo() {
             proj_dir="$dir/code"
             tmux new-session -d -c "$proj_dir" -s "$proj_name"
             tmux split-window -v -c "$proj_dir" -t "$proj_name"
-            tmux resize-pane -t "$proj_name":1.1 -y 2
+            tmux resize-pane -t "$proj_name":1.1 -y 30%
             tmux attach-session -t "$proj_name"
             return
         fi
@@ -755,7 +756,7 @@ tlom() {
     tmux new-session -d -c "$session_dir" -s "$session_name"
     tmux split-window -v -c "$session_dir" -t "$session_name"
     tmux send-keys -t "$session_name":1.1 "rebuildr" C-m
-    tmux resize-pane -t "$session_name":1.1 -y 10
+    tmux resize-pane -t "$session_name":1.1 -y 30%
     tmux attach-session -t "$session_name"
 }
 
