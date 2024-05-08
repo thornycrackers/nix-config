@@ -9,8 +9,7 @@
 -- Ideas:
 --   - Namespacing notes?
 
-local codenotes_dir = os.getenv("HOME") .. "/codenotes"
-local notesdb = codenotes_dir .. "/notesdb.csv"
+local notesdb = os.getenv("HOME") .. "/.notesdb.csv"
 local symbol_group = "myGroup"
 local symbol_name = "mySign"
 
@@ -193,7 +192,12 @@ function open_note()
     if current_buffer_path ~= '' then
         -- Loop through the csv data and see if our buffer and line number match
         local found_note = false
-        for _, row in ipairs(get_code_note_data()) do
+        local code_note_table = get_code_note_data()
+        if not code_note_table then
+            clear_notes()
+            code_note_table = get_code_note_data()
+        end
+        for _, row in ipairs() do
             if row["filename"] == current_buffer_path then
                 if tonumber(row["line_number"]) == current_line_number then
                     print("Trying to open the floating window")
@@ -290,7 +294,12 @@ function draw_existing_note_symbols()
     -- Check if the buffer has a valid path
     if current_buffer_path ~= '' then
         -- Loop through the csv data and see if our buffer matches
-        for _, row in ipairs(get_code_note_data()) do
+        local code_note_table = get_code_note_data()
+        if not code_note_table then
+            clear_notes()
+            code_note_table = get_code_note_data()
+        end
+        for _, row in ipairs(code_note_table) do
             if row["filename"] == current_buffer_path then
                 -- create the symbol on the line
                 line_number = row["line_number"]
