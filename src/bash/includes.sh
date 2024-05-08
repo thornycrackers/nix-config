@@ -755,7 +755,7 @@ tlom() {
     tmux new-session -d -c "$session_dir" -s "$session_name"
     tmux split-window -v -c "$session_dir" -t "$session_name"
     tmux send-keys -t "$session_name":1.1 "rebuildr" C-m
-    tmux resize-pane -t "$session_name":1.1 -y 2
+    tmux resize-pane -t "$session_name":1.1 -y 10
     tmux attach-session -t "$session_name"
 }
 
