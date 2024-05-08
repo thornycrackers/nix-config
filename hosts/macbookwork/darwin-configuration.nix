@@ -13,6 +13,12 @@
   # Enable unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # I'm not sure why, but LANG is never set on this host and it messes with the
+  # nerdfont symbols.
+  environment.variables = {
+    LANG = "en_CA.UTF-8";
+  };
+
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; let
