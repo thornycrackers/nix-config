@@ -59,6 +59,10 @@
     enable = true;
     brews = ["choose-gui"];
     casks = [
+      "blackhole-2ch"
+      "obs"
+      "vlc"
+      "openshot-video-editor"
       "google-chrome"
       "zoom"
       "karabiner-elements"
