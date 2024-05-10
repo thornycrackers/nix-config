@@ -101,6 +101,7 @@ alias dri='docker rmi -f $(docker images -q)'
 # Print the current time in format used in hugo posts
 alias hugodate="date --utc +%FT%H:%M:%SZ"
 alias rmvenvs="find . -name '.venv' -type d | xargs rm -rf"
+alias chx="chmod +x"
 
 # cdspell If set, minor errors in the spelling of a directory component in a cd command will be corrected.
 shopt -s cdspell

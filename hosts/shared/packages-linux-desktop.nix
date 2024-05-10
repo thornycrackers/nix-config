@@ -1,14 +1,11 @@
 pkgs:
-with pkgs; let
+with pkgs;
+let
   # Note to future self, if you ran the native install curl script, you'll
   # need to remove the items manually. Should be two files like:
   # ./.mozilla/native-messaging-hosts/tridactyl.json
   # ./.local/share/tridactyl
-  myfirefox = firefox-devedition.override {
-    nativeMessagingHosts = [
-      pkgs.tridactyl-native
-    ];
-  };
+  myfirefox = firefox-devedition.override { nativeMessagingHosts = [ pkgs.tridactyl-native ]; };
 in
 [
   kitty
@@ -33,9 +30,11 @@ in
   # Virtualization
   qemu
   virt-manager
+  guestfs-tools
   # Misc
   remmina
   (pass.withExtensions (ext: with ext; [ pass-otp ]))
+  pinentry-gtk2
   wineWowPackages.staging
   xdotool
   xsel

@@ -9,7 +9,7 @@ with pkgs; let
 in
 [
   my-lua
-  nixpkgs-fmt
+  unstable.nixfmt-rfc-style
   ansible
   ansible-language-server
   ansible-lint
