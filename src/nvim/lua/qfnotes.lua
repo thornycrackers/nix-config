@@ -12,6 +12,7 @@
 local notesdb = os.getenv("HOME") .. "/.notesdb.csv"
 local symbol_group = "myGroup"
 local symbol_name = "mySign"
+local previous_line_count = vim.fn.line('$')
 
 
 -- Generic function for printing a table for debugging purposes
@@ -338,12 +339,56 @@ function clear_notes()
     draw_existing_note_symbols()
 end
 
+function gogogo(line_number)
+    if line_number == nil then
+        return
+    end
+
+    local new_line_count = vim.fn.line('$')
+    local current_buffer_path = vim.fn.expand('%:p')
+    local code_note_table = get_code_note_data()
+    if not code_note_table then
+        clear_notes()
+        code_note_table = get_code_note_data()
+    end
+    for _, row in ipairs(code_note_table) do
+        if line_number <= tonumber(row["line_number"]) then
+            print(row["line_number"])
+            print("change")
+            csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path, row["line_number"], "")
+            if new_line_count > previous_line_count then
+                local data = {
+                    {current_buffer_path, tonumber(row["line_number"]) + (new_line_count - previous_line_count), ""}
+                }
+                print("A line was added.")
+                csv_append(notesdb, data)
+            elseif new_line_count < previous_line_count then
+                local data = {
+                    {current_buffer_path, tonumber(row["line_number"]) - (previous_line_count - new_line_count), ""}
+                }
+                print("A line was removed.")
+                csv_append(notesdb, data)
+            else
+                print("No change in line count.")
+            end
+            previous_line_count = new_line_count
+            symbols_clear_in_buffer()
+            draw_existing_note_symbols()
+        else
+            print(row["line_number"])
+            print("no change")
+        end
+    end
+end
+
+
 -- Register
 vim.cmd([[
     augroup MyAutoCommands
         autocmd!
         autocmd BufRead * lua draw_existing_note_symbols()
         autocmd VimEnter * lua draw_existing_note_symbols()
+        autocmd TextChanged,TextChangedI <buffer> lua if vim.fn.getline(vim.fn.line('.')) == '' and vim.fn.col('.') == 1 then gogogo(vim.fn.line('.')) end
     augroup END
 ]])
 vim.api.nvim_set_keymap('n', '<leader>eno', '<cmd>lua open_note()<cr>', { noremap = true })
