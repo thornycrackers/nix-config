@@ -29,8 +29,9 @@ in
   pavucontrol
   # Virtualization
   qemu
-  virt-manager
   guestfs-tools
+  # Unstable to install latest distros
+  unstable.virt-manager
   # Misc
   remmina
   (pass.withExtensions (ext: with ext; [ pass-otp ]))
