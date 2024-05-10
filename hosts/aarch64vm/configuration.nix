@@ -1,7 +1,5 @@
-{ modulesPath
-, pkgs
-, ...
-}: {
+{ modulesPath, pkgs, ... }:
+{
   imports = [ "${modulesPath}/virtualisation/amazon-image.nix" ];
   ec2.efi = true;
 
@@ -35,7 +33,11 @@
     '';
   };
 
-  services = { openssh = { enable = true; }; };
+  services = {
+    openssh = {
+      enable = true;
+    };
+  };
 
   virtualisation.docker.enable = true;
 }

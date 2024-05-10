@@ -1,7 +1,5 @@
-{ modulesPath
-, pkgs
-, ...
-}: {
+{ modulesPath, pkgs, ... }:
+{
   # NOTE: Initial configuration when loading up a nixos blank nixos aarch64 vm.
   # I'm sure there is a better way to do this, but haven't figured it out yet.
   # When I first boot up the aarch64 machine, I copy this file to

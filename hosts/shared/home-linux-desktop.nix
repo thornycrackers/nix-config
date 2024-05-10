@@ -1,9 +1,11 @@
-{ pkgs
-, inputs
-, username
-, homedirectory
-, ...
-}: {
+{
+  pkgs,
+  inputs,
+  username,
+  homedirectory,
+  ...
+}:
+{
   imports = [ ./home-base.nix ];
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
@@ -16,7 +18,10 @@
   home.packages = [
     (inputs.wrapper-manager.lib.build {
       inherit pkgs;
-      modules = [ ../../src/bat ../../src/tmux ];
+      modules = [
+        ../../src/bat
+        ../../src/tmux
+      ];
     })
   ];
 
@@ -62,8 +67,7 @@
   xdg.configFile."kitty/kitty.conf".source = ../../src/kitty/kitty.conf;
 
   # tridactyl config
-  xdg.configFile."tridactyl/tridactylrc".source =
-    ../../src/tridactyl/tridactylrc;
+  xdg.configFile."tridactyl/tridactylrc".source = ../../src/tridactyl/tridactylrc;
 
   services.flameshot = {
     enable = true;

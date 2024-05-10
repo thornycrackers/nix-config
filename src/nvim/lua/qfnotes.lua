@@ -6,6 +6,8 @@
 -- All the code is contained in a single file and the neovim config is at the bottom.
 -- Everything is still a work in progress, but it works at least
 --
+-- How to test outside of nix: nvim -c ':luafile /home/thorny/.nixpkgs/src/nvim/lua/qfnotes.lua'
+--
 -- Ideas:
 --   - Namespacing notes?
 

@@ -1,5 +1,4 @@
-pkgs:
-with pkgs; [
+pkgs: with pkgs; [
   ack
   # I want 0.4 of blesh at a minimum
   unstable.blesh

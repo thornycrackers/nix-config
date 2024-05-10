@@ -1,7 +1,4 @@
-{ lib
-, pkgs
-, ...
-}:
+{ lib, pkgs, ... }:
 # Home manager configs that are common to all setups
 {
   # lf
@@ -21,9 +18,7 @@
     enableCompletion = true;
     initExtra =
       lib.mkAfter
-        /*
-      bash
-        */
+        # bash
         ''
           # Load autocomplete functions from git, used to provide autocompletes
           # to some of my aliases

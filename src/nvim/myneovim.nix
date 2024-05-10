@@ -67,14 +67,14 @@ pkgs.symlinkJoin {
   name = "neovim";
   paths = [ neovimOverride ];
   buildInputs = [ pkgs.makeWrapper ];
-  postBuild = with pkgs; let
-    nvimPackages = import ./packages.nix pkgs;
-  in
-  ''
-    rm $out/bin/nvim
-    BINPATH=${
-      lib.makeBinPath nvimPackages
-    }
-    makeWrapper ${neovimOverride}/bin/nvim $out/bin/nvim --prefix PATH : $BINPATH
-  '';
+  postBuild =
+    with pkgs;
+    let
+      nvimPackages = import ./packages.nix pkgs;
+    in
+    ''
+      rm $out/bin/nvim
+      BINPATH=${lib.makeBinPath nvimPackages}
+      makeWrapper ${neovimOverride}/bin/nvim $out/bin/nvim --prefix PATH : $BINPATH
+    '';
 }

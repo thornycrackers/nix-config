@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   imports = [ ./home-base.nix ];
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
@@ -8,8 +9,7 @@
   xdg.configFile."kitty/kitty.conf".source = ../../src/kitty/kitty.conf;
 
   # tridactyl config
-  xdg.configFile."tridactyl/tridactylrc".source =
-    ../../src/tridactyl/tridactylrc;
+  xdg.configFile."tridactyl/tridactylrc".source = ../../src/tridactyl/tridactylrc;
 
   # karabiner configs
   xdg.configFile."karabiner" = {

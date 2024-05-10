@@ -1,7 +1,4 @@
-{ vimUtils
-, fetchFromGitHub
-,
-}:
+{ vimUtils, fetchFromGitHub }:
 vimUtils.buildVimPlugin rec {
   pname = "hmts.nvim";
   version = "1.2.2";

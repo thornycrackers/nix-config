@@ -1,10 +1,8 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ pkgs
-, flakePkgs
-, ...
-}: {
+{ pkgs, flakePkgs, ... }:
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -48,7 +46,11 @@
     isNormalUser = true;
     shell = pkgs.bash;
     description = "thorny";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+    ];
     # Required for the docker rootless
     subUidRanges = [
       {
@@ -77,12 +79,18 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; let
-    basePackages = import ../../hosts/shared/packages-base.nix pkgs;
-    parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
-    localPackages = [ flakePkgs.myneovim ];
-  in
-  lib.mkMerge [ basePackages parselyPackages localPackages ];
+  environment.systemPackages =
+    with pkgs;
+    let
+      basePackages = import ../../hosts/shared/packages-base.nix pkgs;
+      parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
+      localPackages = [ flakePkgs.myneovim ];
+    in
+    lib.mkMerge [
+      basePackages
+      parselyPackages
+      localPackages
+    ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

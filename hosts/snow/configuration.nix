@@ -1,10 +1,8 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ pkgs
-, flakePkgs
-, ...
-}: {
+{ pkgs, flakePkgs, ... }:
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -36,7 +34,13 @@
     isNormalUser = true;
     shell = pkgs.bash;
     description = "thorny";
-    extraGroups = [ "networkmanager" "jackaudio" "wheel" "docker" "libvirtd" ];
+    extraGroups = [
+      "networkmanager"
+      "jackaudio"
+      "wheel"
+      "docker"
+      "libvirtd"
+    ];
     # Required for the docker rootless
     subUidRanges = [
       {
@@ -64,18 +68,27 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; let
-    basePackages = import ../../hosts/shared/packages-base.nix pkgs;
-    parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
-    desktopPackages = import ../../hosts/shared/packages-linux-desktop.nix pkgs;
-    localPackages = [ flakePkgs.myneovim ];
-  in
-  lib.mkMerge [ basePackages parselyPackages localPackages desktopPackages ];
+  environment.systemPackages =
+    with pkgs;
+    let
+      basePackages = import ../../hosts/shared/packages-base.nix pkgs;
+      parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
+      desktopPackages = import ../../hosts/shared/packages-linux-desktop.nix pkgs;
+      localPackages = [ flakePkgs.myneovim ];
+    in
+    lib.mkMerge [
+      basePackages
+      parselyPackages
+      localPackages
+      desktopPackages
+    ];
 
   # Graphical settings. Use i3 to manage windows but xfce as a desktop manager.
   services.xserver = {
     enable = true;
-    displayManager = { defaultSession = "xfce+i3"; };
+    displayManager = {
+      defaultSession = "xfce+i3";
+    };
     windowManager = {
       i3 = {
         enable = true;
@@ -94,7 +107,9 @@
   };
 
   # Enable ssh
-  services.openssh = { enable = true; };
+  services.openssh = {
+    enable = true;
+  };
 
   # Enable pipewire to take care of everything
   services.pipewire = {

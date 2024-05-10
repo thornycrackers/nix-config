@@ -1,5 +1,6 @@
 pkgs:
-with pkgs; let
+with pkgs;
+let
   # Define a custom terraform so I can control the specific version
   terraform-mine = pkgs.mkTerraform {
     version = "1.4.5";
