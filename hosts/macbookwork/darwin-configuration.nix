@@ -52,7 +52,12 @@
                 {
                   basePackage = pkgs.tmux;
                   flags = [ "-f ${fileLocation}" ];
-                  pathAdd = [ (pkgs.writeShellScriptBin "rolodex.sh" (builtins.readFile ../../src/tmux/rolodex.sh)) ];
+                  pathAdd = [
+                    (pkgs.writeShellScriptBin "rolodex.sh" (builtins.readFile ../../src/tmux/rolodex.sh))
+                    (pkgs.writeShellScriptBin "tmux_switch_session.sh" (
+                      builtins.readFile ../../src/tmux/tmux_switch_sessions.sh
+                    ))
+                  ];
                 };
             }
           ];
