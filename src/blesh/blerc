@@ -22,3 +22,9 @@ bleopt history_share=1
 # C-w will leave you with "ls "
 # if you use C-M-w you get "ls my/long/path/"
 ble-bind -f 'C-M-w' kill-backward-cword
+# I like my default movements to move an entire word, ignoring punctuation
+ble-bind -f 'M-b' backward-sword
+ble-bind -f 'M-f' forward-sword
+# If I want to include punctuation, add control to the sequence
+ble-bind -f 'C-M-b' backward-cword
+ble-bind -f 'C-M-f' forward-cword
