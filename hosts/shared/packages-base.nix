@@ -1,7 +1,6 @@
 pkgs: with pkgs; [
   ack
-  # I want 0.4 of blesh at a minimum
-  unstable.blesh
+  blesh
   btop
   csvkit
   curl
