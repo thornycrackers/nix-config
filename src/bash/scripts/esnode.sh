@@ -130,7 +130,8 @@ function get_index_settings {
 
 if [ $# -eq 0 ]; then
     help
-else
+elif [ -z "${2:-}" ]; then
+    echo "The second argument is empty."
     options=(
         "get_cluster_settings"
         "get_cluster_health"
@@ -146,4 +147,6 @@ else
     if [ -n "$selected_option" ]; then
         "$selected_option" "$1"
     fi
+else
+    "$2" "$1"
 fi
