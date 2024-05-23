@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import asyncio
 from collections import deque
 
 from maelstrom import Body, Node, Request
@@ -69,6 +68,7 @@ async def send_msg_with_infinite_retry(neighbor, message):
 
 
 # async def bulk_sender():
+#     import asyncio
 #     await asyncio.sleep(0.5)  # Wait for 500ms
 #     messages_to_send = list(message_queue)
 #     message_queue.clear()
