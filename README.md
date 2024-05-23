@@ -1,17 +1,18 @@
-# My Nix Configs
+# My Nix Config Monorepo
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/thornycrackers/nix-config/main.yml)
 ![GitHub last commit](https://img.shields.io/github/last-commit/thornycrackers/nix-config)
 
-My flake based Nix configs shared between my linux and darwin machines.
-Each of the systems can be found in `hosts`.
-The `src` folder contains all of the source files for my dotfiles.
-For example, if you clone the repo you can run my tmux with.
-I also expose wrapped versions of my tools as apps:
+At first, this repo was for storing config between linux/darwin machines in the `hosts`.
+Then I added `home-manager` and started adding all my dotfiles in the `src`.
+Then I decided to export my `tmux` and `neovim` setups.
 
 ```bash
 # Run my tmux setup
-$ nix run .#mytmux
+nix run github:thornycrackers/nix-config#mytmux
 # Run my neovim setup with everything installed
-$ nix run .#myneovim
+nix run github:thornycrackers/nix-config#myneovim
 ```
+
+Then I wanted a place to for toy projects so I created the `playground` directory.
+Projects in that directory re-use functions and packages from the root flake which helps cut down setup time.
