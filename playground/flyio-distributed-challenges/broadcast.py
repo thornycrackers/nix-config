@@ -68,11 +68,11 @@ async def send_msg_with_infinite_retry(neighbor, message):
     return
 
 
-async def bulk_sender():
-    await asyncio.sleep(0.5)  # Wait for 500ms
-    messages_to_send = list(message_queue)
-    message_queue.clear()
-    # TODO: Figure out how to send a bunch at once
+# async def bulk_sender():
+#     await asyncio.sleep(0.5)  # Wait for 500ms
+#     messages_to_send = list(message_queue)
+#     message_queue.clear()
+# TODO: Figure out how to send a bunch at once
 
 
 node.run()
