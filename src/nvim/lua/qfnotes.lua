@@ -17,6 +17,12 @@ local symbol_name = "mySign"
 local previous_line_count = vim.fn.line('$')
 
 
+-- Hardcoding directory, so ugly
+package.path = os.getenv("HOME") .. "/.nixpkgs/src/nvim/lua/?.lua;" .. package.path
+-- Import the utils file
+local qfnotes_utils = require('qfnotes_utils')
+
+
 -- Generic function for printing a table for debugging purposes
 function printTable(table)
     for key, value in pairs(table) do
@@ -42,40 +48,6 @@ function symbols_clear_in_buffer()
     vim.fn.sign_unplace(symbol_group, {buffer=current_buf})
 end
 
--- Read the csv file
-function csv_read(filename)
-    local file = io.open(filename, "r") -- Open the file in read mode
-    if not file then
-        print("Error opening the file for reading.")
-        return nil
-    end
-    local data = {}
-    local headers = {}
-    local header_line = file:read()
-    if header_line then
-        for header in header_line:gmatch("([^,]+),") do
-            table.insert(headers, header)
-        end
-        table.insert(headers, header_line:match("([^,]+)$"))
-    else
-        print("Error reading header line.")
-        file:close()
-        return nil
-    end
-    for line in file:lines() do
-        local row = {}
-        local column_index = 1
-        for value in line:gmatch("([^,]+),") do
-            row[headers[column_index]] = value
-            column_index = column_index + 1
-        end
-        row[headers[column_index]] = line:match("([^,]+)$")
-        table.insert(data, row)
-    end
-    file:close()
-    return data
-end
-
 -- Function to write a table of data to a CSV file
 function csv_write(filename, data)
     local file = io.open(filename, "w") -- Open the file in write mode
@@ -86,10 +58,9 @@ function csv_write(filename, data)
         for i = 2, #data do
             file:write(table.concat(data[i], ",") .. "\n")
         end
-        file:close() -- Close the file
-        print("CSV file '" .. filename .. "' created successfully.")
+        file:close()
     else
-        print("Error: Unable to open file for writing.")
+        error("Error: Unable to open file for writing.")
     end
 end
 
@@ -182,7 +153,7 @@ end
 -- Reade the code note data from the db
 -- Centralize all access here
 function get_code_note_data()
-    return csv_read(notesdb)
+    return qfnotes_utils.csv_read(notesdb)
 end
 
 -- Open a note

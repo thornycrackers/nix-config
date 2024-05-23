@@ -5,7 +5,7 @@ let
   flake8-isort = pkgs.python3Packages.callPackage ./nix/nvimpython.nix {
     flake8-isort = pkgs.python3Packages.callPackage ./nix/flake8-isort.nix { };
   };
-  my-lua = unstable.lua5_1.withPackages (ps: with ps; [ luarocks ]);
+  my-lua = unstable.lua5_1.withPackages (ps: with ps; [ busted ]);
 in
 [
   my-lua
