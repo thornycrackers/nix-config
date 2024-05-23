@@ -2,6 +2,8 @@
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/thornycrackers/nix-config/main.yml)
 ![GitHub last commit](https://img.shields.io/github/last-commit/thornycrackers/nix-config)
+![Monthly Commit Activity](https://img.shields.io/github/commit-activity/m/thornycrackers/nix-config)
+
 
 At first, this repo was for storing config between linux/darwin machines in the `hosts`.
 Then I added `home-manager` and started adding all my dotfiles in the `src`.
