@@ -24,3 +24,6 @@ start_broadcast_partd:  ## Run broadcast file, check performance
 	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 25 --time-limit 20 --rate 100 --latency 100
 	cat store/broadcast/latest/results.edn | grep -A 8 ':net' | grep 'msgs-per-op' ; cat store/broadcast/latest/results.edn | grep -A 4 ':stable-latencies'
 
+start_broadcast_parte:  ## Run broadcast file, check performance
+	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 25 --time-limit 20 --rate 100 --latency 100
+	cat store/broadcast/latest/results.edn | grep -A 8 ':net' | grep 'msgs-per-op' ; cat store/broadcast/latest/results.edn | grep -A 4 ':stable-latencies'

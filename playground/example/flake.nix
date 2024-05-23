@@ -6,12 +6,14 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , root
-    ,
-    }: {
-      devShells = root.lib.forAllSystems (system:
+    {
+      self,
+      nixpkgs,
+      root,
+    }:
+    {
+      devShells = root.lib.forAllSystems (
+        system:
         let
           pkgs = root.lib.nixpkgsFor.${system};
         in
@@ -20,6 +22,7 @@
             myPkgs = pkgs;
             pythonVersion = pkgs.python311;
           };
-        });
+        }
+      );
     };
 }
