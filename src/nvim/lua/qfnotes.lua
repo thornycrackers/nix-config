@@ -7,24 +7,15 @@
 -- Everything is still a work in progress, but it works at least
 --
 -- How to test outside of nix: nvim -c ':luafile /home/thorny/.nixpkgs/src/nvim/lua/qfnotes.lua'
-
-
 -- wrapping vim api calls for easier mocking in tests
-function get_current_buffer()
-    return vim.fn.bufnr('%')
-end
+-- Function to get the current buffer
+function get_current_buffer() return vim.fn.bufnr('%') end
 
-function get_current_line_number()
-    return vim.fn.line('.')
-end
+function get_current_line_number() return vim.fn.line('.') end
 
-function get_line_count()
-    return vim.fn.line('$')
-end
+function get_line_count() return vim.fn.line('$') end
 
-function get_current_buffer_path()
-    return vim.fn.expand('%:p')
-end
+function get_current_buffer_path() return vim.fn.expand('%:p') end
 
 local notesdb = os.getenv("HOME") .. "/.notesdb.csv"
 local symbol_group = "myGroup"
@@ -33,21 +24,23 @@ local previous_line_count = get_line_count()
 local csv_headers = "filename,line_number,content"
 
 -- Hardcoding directory, so ugly
-package.path = os.getenv("HOME") .. "/.nixpkgs/src/nvim/lua/?.lua;" .. package.path
+package.path = os.getenv("HOME") .. "/.nixpkgs/src/nvim/lua/?.lua;" ..
+                   package.path
 -- Import the utils file
 local qfnotes_utils = require('qfnotes_utils')
 
-
 -- Add a symbol to the neovim gutter
 function symbols_add_to_gutter(file_path, line_num)
-    vim.fn.sign_define(symbol_name, { text = "", texthl = "", linehl = "", numhl = "" })
-    vim.fn.sign_place(line_num, symbol_group, symbol_name, file_path, {lnum= line_num})
+    vim.fn.sign_define(symbol_name,
+                       {text = "", texthl = "", linehl = "", numhl = ""})
+    vim.fn.sign_place(line_num, symbol_group, symbol_name, file_path,
+                      {lnum = line_num})
 end
 
 -- Clear all codenote symbols in buffer
 function symbols_clear_in_buffer()
     local current_buf = get_current_buffer()
-    vim.fn.sign_unplace(symbol_group, {buffer=current_buf})
+    vim.fn.sign_unplace(symbol_group, {buffer = current_buf})
 end
 
 -- Read the code note data from the db
@@ -75,7 +68,9 @@ function open_note()
                         else
                             user_input = vim.fn.input("Note: ", row["content"])
                         end
-                        qfnotes_utils.csv_update_line_by_columns_from_csv(notesdb, row["filename"], row["line_number"], user_input)
+                        qfnotes_utils.csv_update_line_by_columns_from_csv(
+                            notesdb, row["filename"], row["line_number"],
+                            user_input)
                         found_note = true
                     end)
                     if not success then
@@ -88,7 +83,10 @@ function open_note()
         if found_note == false then
             create_note()
             user_input = vim.fn.input("Note: ")
-            qfnotes_utils.csv_update_line_by_columns_from_csv(notesdb, current_buffer_path, current_line_number, user_input)
+            qfnotes_utils.csv_update_line_by_columns_from_csv(notesdb,
+                                                              current_buffer_path,
+                                                              current_line_number,
+                                                              user_input)
         end
     else
         print("Note not found")
@@ -101,7 +99,7 @@ local function calculate_center_pos(width, height)
     local win_height = vim.api.nvim_get_option("lines")
     local row = math.floor((win_height - height) / 2)
     local col = math.floor((win_width - width) / 2)
-    return { row = row, col = col }
+    return {row = row, col = col}
 end
 
 -- Open a new buffer in a floating window and center it
@@ -123,11 +121,12 @@ function open_floating_buffer(file_path)
         row = center_pos.row,
         col = center_pos.col,
         style = 'minimal',
-        border = 'single',
+        border = 'single'
     }
     local win_id = vim.api.nvim_open_win(bufnr, true, win_config)
     -- Set the 'winhighlight' option to match the colorscheme
-    vim.api.nvim_win_set_option(win_id, 'winhighlight', 'Normal:NormalNC,NormalNC:Normal,NormalNC:NormalNC')
+    vim.api.nvim_win_set_option(win_id, 'winhighlight',
+                                'Normal:NormalNC,NormalNC:Normal,NormalNC:NormalNC')
     -- If a file path is provided, load the file into the buffer
     if file_path then
         vim.api.nvim_command('silent edit ' .. vim.fn.fnameescape(file_path))
@@ -148,7 +147,9 @@ end
 function delete_note()
     local current_buffer_path = get_current_buffer_path()
     local current_line_number = tostring(get_current_line_number())
-    qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path, current_line_number)
+    qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb,
+                                                      current_buffer_path,
+                                                      current_line_number)
     symbols_clear_in_buffer()
     draw_existing_note_symbols()
 end
@@ -174,10 +175,10 @@ function list_notes()
     local quicklist_items = {}
     for _, row in ipairs(get_code_note_data()) do
         local quicklist_item = {
-            filename=row["filename"],
-            lnum=row["line_number"],
-            col=0,
-            text=row["content"],
+            filename = row["filename"],
+            lnum = row["line_number"],
+            col = 0,
+            text = row["content"]
         }
         table.insert(quicklist_items, quicklist_item)
     end
@@ -198,24 +199,32 @@ function clear_notes()
 end
 
 function gogogo(line_number)
-    if line_number == nil then
-        return
-    end
+    if line_number == nil then return end
 
     local new_line_count = get_line_count()
     local current_buffer_path = get_current_buffer_path()
     local code_note_table = get_code_note_data()
     for _, row in ipairs(code_note_table) do
         if line_number <= tonumber(row["line_number"]) then
-            qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path, row["line_number"])
+            qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb,
+                                                              current_buffer_path,
+                                                              row["line_number"])
             if new_line_count > previous_line_count then
                 local data = {
-                    {current_buffer_path, tonumber(row["line_number"]) + (new_line_count - previous_line_count), ""}
+                    {
+                        current_buffer_path,
+                        tonumber(row["line_number"]) +
+                            (new_line_count - previous_line_count), ""
+                    }
                 }
                 qfnotes_utils.csv_append(notesdb, data)
             elseif new_line_count < previous_line_count then
                 local data = {
-                    {current_buffer_path, tonumber(row["line_number"]) - (previous_line_count - new_line_count), ""}
+                    {
+                        current_buffer_path,
+                        tonumber(row["line_number"]) -
+                            (previous_line_count - new_line_count), ""
+                    }
                 }
                 qfnotes_utils.csv_append(notesdb, data)
             else
@@ -227,7 +236,6 @@ function gogogo(line_number)
     end
 end
 
-
 -- Register
 vim.cmd([[
     augroup MyAutoCommands
@@ -237,8 +245,13 @@ vim.cmd([[
         autocmd TextChanged,TextChangedI <buffer> lua if vim.fn.getline(vim.fn.line('.')) == '' and vim.fn.col('.') == 1 then gogogo(vim.fn.line('.')) end
     augroup END
 ]])
-vim.api.nvim_set_keymap('n', '<leader>eno', '<cmd>lua open_note()<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>enn', '<cmd>lua create_note()<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>end', '<cmd>lua delete_note()<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>enl', '<cmd>lua list_notes()<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>enc', '<cmd>lua clear_notes()<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>eno', '<cmd>lua open_note()<cr>',
+                        {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>enn', '<cmd>lua create_note()<cr>',
+                        {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>end', '<cmd>lua delete_note()<cr>',
+                        {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>enl', '<cmd>lua list_notes()<cr>',
+                        {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>enc', '<cmd>lua clear_notes()<cr>',
+                        {noremap = true})

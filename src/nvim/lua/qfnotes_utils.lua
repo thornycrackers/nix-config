@@ -1,22 +1,17 @@
 -- All kinds of little utils that I split up for unit testing
-
 local M = {}
 
 -- Map function
 function M.map(tbl, f)
     local t = {}
-    for k,v in pairs(tbl) do
-        t[k] = f(v)
-    end
+    for k, v in pairs(tbl) do t[k] = f(v) end
     return t
 end
 
 -- Iterator to table
 function M.iter_to_table(iter)
     local t = {}
-    for v in iter do
-        table.insert(t, v)
-    end
+    for v in iter do table.insert(t, v) end
     return t
 end
 
@@ -25,9 +20,7 @@ function M.read_file(file_path)
     local success, file = pcall(io.open, file_path, "r")
     local lines = {}
     if success and file then
-        for line in file:lines() do
-            table.insert(lines, line)
-        end
+        for line in file:lines() do table.insert(lines, line) end
         file:close()
     else
         error("Error opening or reading the file")
@@ -72,9 +65,7 @@ end
 function M.arrays_to_table(array1, array2)
     local length = math.min(#array1, #array2)
     local result = {}
-    for i = 1, length do
-        result[array1[i]] = array2[i]
-    end
+    for i = 1, length do result[array1[i]] = array2[i] end
     return result
 end
 
@@ -131,16 +122,15 @@ end
 function M.filter(array, predicate)
     local res = {}
     for _, v in ipairs(array) do
-        if predicate(v) then
-            table.insert(res, v)
-        end
+        if predicate(v) then table.insert(res, v) end
     end
     return res
 end
 
 -- Function to remove a line based on matching values in two columns from a CSV file
 -- TODO: This is being refactored via the old method signature. Clean up later cause ugly
-function M.csv_remove_line_by_columns_from_csv(filename, column1Value, column2Value)
+function M.csv_remove_line_by_columns_from_csv(filename, column1Value,
+                                               column2Value)
     -- This function will keep the lines that don't match the one we're looking for
     -- It's janky because it deletes from a csv file based on the first two
     -- column values which are a unique ID in our case consisting of "filepath" and "line number"
@@ -150,14 +140,15 @@ function M.csv_remove_line_by_columns_from_csv(filename, column1Value, column2Va
     end
     local lines = M.read_file(filename)
     local new_lines = M.filter(lines, keep_line)
-    new_data = M.map(new_lines, function(line) return M.split_string(line, ",") end)
+    new_data = M.map(new_lines,
+                     function(line) return M.split_string(line, ",") end)
     M.csv_write(filename, new_data)
 end
 
-
 -- Function to update a csv file based on the first two column values
 -- TODO: This is being refactored via the old method signature. Clean up later cause ugly
-function M.csv_update_line_by_columns_from_csv(filename, column1Value, column2Value, newValue)
+function M.csv_update_line_by_columns_from_csv(filename, column1Value,
+                                               column2Value, newValue)
     -- This function looks for the specific line and updates it if found
     local function update_line(line)
         prefix = column1Value .. "," .. column2Value
@@ -169,10 +160,9 @@ function M.csv_update_line_by_columns_from_csv(filename, column1Value, column2Va
     end
     local lines = M.read_file(filename)
     local new_lines = M.map(lines, update_line)
-    new_data = M.map(new_lines, function(line) return M.split_string(line, ",") end)
+    new_data = M.map(new_lines,
+                     function(line) return M.split_string(line, ",") end)
     M.csv_write(filename, new_data)
 end
-
-
 
 return M
