@@ -8,17 +8,35 @@
 --
 -- How to test outside of nix: nvim -c ':luafile /home/thorny/.nixpkgs/src/nvim/lua/qfnotes.lua'
 
+
+-- wrapping vim api calls for easier mocking in tests
+function get_current_buffer()
+    return vim.fn.bufnr('%')
+end
+
+function get_current_line_number()
+    return vim.fn.line('.')
+end
+
+function get_line_count()
+    return vim.fn.line('$')
+end
+
+function get_current_buffer_path()
+    return vim.fn.expand('%:p')
+end
+
 local notesdb = os.getenv("HOME") .. "/.notesdb.csv"
 local symbol_group = "myGroup"
 local symbol_name = "mySign"
-local previous_line_count = vim.fn.line('$')
+local previous_line_count = get_line_count()
 local csv_headers = "filename,line_number,content"
-
 
 -- Hardcoding directory, so ugly
 package.path = os.getenv("HOME") .. "/.nixpkgs/src/nvim/lua/?.lua;" .. package.path
 -- Import the utils file
 local qfnotes_utils = require('qfnotes_utils')
+
 
 -- Add a symbol to the neovim gutter
 function symbols_add_to_gutter(file_path, line_num)
@@ -28,7 +46,7 @@ end
 
 -- Clear all codenote symbols in buffer
 function symbols_clear_in_buffer()
-    local current_buf = vim.fn.bufnr('%')
+    local current_buf = get_current_buffer()
     vim.fn.sign_unplace(symbol_group, {buffer=current_buf})
 end
 
@@ -41,13 +59,9 @@ end
 
 -- Open a note
 function open_note()
-    -- Get the full path of the current buffer
-    local current_buffer_path = vim.fn.expand('%:p')
-    -- Get the current line number
-    local current_line_number = vim.fn.line('.')
-    -- Check if the buffer has a valid path
+    local current_buffer_path = get_current_buffer_path()
+    local current_line_number = get_current_line_number()
     if current_buffer_path ~= '' then
-        -- Loop through the csv data and see if our buffer and line number match
         local found_note = false
         local code_note_table = get_code_note_data()
         for _, row in ipairs(code_note_table) do
@@ -121,19 +135,19 @@ function open_floating_buffer(file_path)
     return bufnr, win_id
 end
 
+-- Create a new note
 function create_note()
-    local current_buffer_path = vim.fn.expand('%:p')
-    local current_line_number = vim.fn.line('.')
-    local data = {
-        {current_buffer_path, current_line_number, ""}
-    }
+    local current_buffer_path = get_current_buffer_path()
+    local current_line_number = get_current_line_number()
+    local data = {{current_buffer_path, current_line_number, ""}}
     qfnotes_utils.csv_append(notesdb, data)
     draw_existing_note_symbols()
 end
 
+-- Delete a note
 function delete_note()
-    local current_buffer_path = vim.fn.expand('%:p')
-    local current_line_number = tostring(vim.fn.line('.'))
+    local current_buffer_path = get_current_buffer_path()
+    local current_line_number = tostring(get_current_line_number())
     qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path, current_line_number)
     symbols_clear_in_buffer()
     draw_existing_note_symbols()
@@ -141,7 +155,7 @@ end
 
 -- Loop through and add any note symbols to the current buffer
 function draw_existing_note_symbols()
-    local current_buffer_path = vim.fn.expand('%:p')
+    local current_buffer_path = get_current_buffer_path()
     if current_buffer_path ~= '' then
         local code_note_table = get_code_note_data()
         for _, row in ipairs(code_note_table) do
@@ -159,18 +173,18 @@ end
 function list_notes()
     local quicklist_items = {}
     for _, row in ipairs(get_code_note_data()) do
-        quicklist_item = {
+        local quicklist_item = {
             filename=row["filename"],
             lnum=row["line_number"],
             col=0,
             text=row["content"],
         }
-        table.insert(items, quicklist_item)
+        table.insert(quicklist_items, quicklist_item)
     end
-    local current_buf = vim.fn.bufnr('%')
+    local current_buf = get_current_buffer()
     local replace_items = 'r'
     -- Set the quickfix list
-    vim.fn.setqflist(items, replace_items)
+    vim.fn.setqflist(quicklist_items, replace_items)
     vim.cmd('copen')
 end
 
@@ -188,8 +202,8 @@ function gogogo(line_number)
         return
     end
 
-    local new_line_count = vim.fn.line('$')
-    local current_buffer_path = vim.fn.expand('%:p')
+    local new_line_count = get_line_count()
+    local current_buffer_path = get_current_buffer_path()
     local code_note_table = get_code_note_data()
     for _, row in ipairs(code_note_table) do
         if line_number <= tonumber(row["line_number"]) then
