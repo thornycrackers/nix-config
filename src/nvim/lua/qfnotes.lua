@@ -7,34 +7,18 @@
 -- Everything is still a work in progress, but it works at least
 --
 -- How to test outside of nix: nvim -c ':luafile /home/thorny/.nixpkgs/src/nvim/lua/qfnotes.lua'
---
--- Ideas:
---   - Namespacing notes?
 
 local notesdb = os.getenv("HOME") .. "/.notesdb.csv"
 local symbol_group = "myGroup"
 local symbol_name = "mySign"
 local previous_line_count = vim.fn.line('$')
+local csv_headers = "filename,line_number,content"
 
 
 -- Hardcoding directory, so ugly
 package.path = os.getenv("HOME") .. "/.nixpkgs/src/nvim/lua/?.lua;" .. package.path
 -- Import the utils file
 local qfnotes_utils = require('qfnotes_utils')
-
-
--- Generic function for printing a table for debugging purposes
-function printTable(table)
-    for key, value in pairs(table) do
-        if type(value) == "table" then
-            print(key .. ": {")
-            printTable(value)
-            print("}")
-        else
-            print(key .. ": " .. tostring(value))
-        end
-    end
-end
 
 -- Add a symbol to the neovim gutter
 function symbols_add_to_gutter(file_path, line_num)
@@ -48,112 +32,11 @@ function symbols_clear_in_buffer()
     vim.fn.sign_unplace(symbol_group, {buffer=current_buf})
 end
 
--- Function to write a table of data to a CSV file
-function csv_write(filename, data)
-    local file = io.open(filename, "w") -- Open the file in write mode
-    if file then
-        -- Write header
-        file:write(table.concat(data[1], ",") .. "\n")
-        -- Write data
-        for i = 2, #data do
-            file:write(table.concat(data[i], ",") .. "\n")
-        end
-        file:close()
-    else
-        error("Error: Unable to open file for writing.")
-    end
-end
-
--- Function to append a table of data to a CSV file
-function csv_append(filename, data)
-    local file = io.open(filename, "a") -- Open the file in append mode
-    if file then
-        -- Append data
-        for _, row in ipairs(data) do
-            file:write(table.concat(row, ",") .. "\n")
-        end
-        file:close() -- Close the file
-        print("Data appended to CSV file '" .. filename .. "' successfully.")
-    else
-        print("Error: Unable to open file for appending.")
-    end
-end
-
--- Function to remove a line based on matching values in two columns from a CSV file
--- TODO: Make the a better function. It's hardcoded to 1 and 2 columns right now
-function csv_remove_line_by_columns_from_csv(filename, column1Value, column2Value)
-    local file = io.open(filename, "r") -- Open the file in read mode
-    if file then
-        local lines = {}  -- Table to store lines of the file
-        -- Read each line and store it in the 'lines' table
-        for line in file:lines() do
-            table.insert(lines, line)
-        end
-        file:close()  -- Close the file
-        -- Open the file in write mode to overwrite its content
-        file = io.open(filename, "w")
-        if file then
-            -- Write all lines except the one where both column values match
-            for _, currentLine in ipairs(lines) do
-                local columns = {}
-                for columnValue in currentLine:gmatch("[^,]+") do
-                    table.insert(columns, columnValue)
-                end
-                if tostring(columns[1]) ~= tostring(column1Value) or tostring(columns[2]) ~= tostring(column2Value) then
-                    file:write(currentLine .. "\n")
-                end
-            end
-            file:close()  -- Close the file
-        else
-            print("Error: Unable to open file for writing.")
-        end
-    else
-        print("Error: Unable to open file for reading.")
-    end
-end
-
-
-function csv_update_line_by_columns_from_csv(filename, column1Value, column2Value, column3Value)
-    local file = io.open(filename, "r") -- Open the file in read mode
-    if file then
-        local lines = {}  -- Table to store lines of the file
-        -- Read each line and store it in the 'lines' table
-        for line in file:lines() do
-            table.insert(lines, line)
-        end
-        file:close()  -- Close the file
-        -- Open the file in write mode to overwrite its content
-        file = io.open(filename, "w")
-        if file then
-            -- Write all lines except the one where both column values match
-            for _, currentLine in ipairs(lines) do
-                local columns = {}
-                for columnValue in currentLine:gmatch("[^,]+") do
-                    table.insert(columns, columnValue)
-                end
-                if tostring(columns[1]) ~= tostring(column1Value) or tostring(columns[2]) ~= tostring(column2Value) then
-                    file:write(currentLine .. "\n")
-                else
-                    if column3Value == nil then
-                        file:write(column1Value .. "," .. column2Value .. "," .. "\n")
-                    else
-                        file:write(column1Value .. "," .. column2Value .. "," .. column3Value .. "\n")
-                    end
-                end
-            end
-            file:close()  -- Close the file
-        else
-            print("Error: Unable to open file for writing.")
-        end
-    else
-        print("Error: Unable to open file for reading.")
-    end
-end
-
--- Reade the code note data from the db
+-- Read the code note data from the db
 -- Centralize all access here
+-- Creates the file if it doesn't already exist
 function get_code_note_data()
-    return qfnotes_utils.csv_read(notesdb)
+    return qfnotes_utils.csv_read_or_create(notesdb, csv_headers)
 end
 
 -- Open a note
@@ -167,14 +50,9 @@ function open_note()
         -- Loop through the csv data and see if our buffer and line number match
         local found_note = false
         local code_note_table = get_code_note_data()
-        if not code_note_table then
-            clear_notes()
-            code_note_table = get_code_note_data()
-        end
-        for _, row in ipairs() do
+        for _, row in ipairs(code_note_table) do
             if row["filename"] == current_buffer_path then
                 if tonumber(row["line_number"]) == current_line_number then
-                    print("Trying to open the floating window")
                     local success, error_message = pcall(function()
                         -- open_floating_buffer(do_something)
                         local user_input = ""
@@ -183,7 +61,7 @@ function open_note()
                         else
                             user_input = vim.fn.input("Note: ", row["content"])
                         end
-                        csv_update_line_by_columns_from_csv(notesdb, row["filename"], row["line_number"], user_input)
+                        qfnotes_utils.csv_update_line_by_columns_from_csv(notesdb, row["filename"], row["line_number"], user_input)
                         found_note = true
                     end)
                     if not success then
@@ -196,7 +74,7 @@ function open_note()
         if found_note == false then
             create_note()
             user_input = vim.fn.input("Note: ")
-            csv_update_line_by_columns_from_csv(notesdb, current_buffer_path, current_line_number, user_input)
+            qfnotes_utils.csv_update_line_by_columns_from_csv(notesdb, current_buffer_path, current_line_number, user_input)
         end
     else
         print("Note not found")
@@ -249,33 +127,25 @@ function create_note()
     local data = {
         {current_buffer_path, current_line_number, ""}
     }
-    csv_append(notesdb, data)
+    qfnotes_utils.csv_append(notesdb, data)
     draw_existing_note_symbols()
 end
 
 function delete_note()
     local current_buffer_path = vim.fn.expand('%:p')
     local current_line_number = tostring(vim.fn.line('.'))
-    csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path, current_line_number)
+    qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path, current_line_number)
     symbols_clear_in_buffer()
     draw_existing_note_symbols()
 end
 
 -- Loop through and add any note symbols to the current buffer
 function draw_existing_note_symbols()
-    -- Get the full path of the current buffer
     local current_buffer_path = vim.fn.expand('%:p')
-    -- Check if the buffer has a valid path
     if current_buffer_path ~= '' then
-        -- Loop through the csv data and see if our buffer matches
         local code_note_table = get_code_note_data()
-        if not code_note_table then
-            clear_notes()
-            code_note_table = get_code_note_data()
-        end
         for _, row in ipairs(code_note_table) do
             if row["filename"] == current_buffer_path then
-                -- create the symbol on the line
                 line_number = row["line_number"]
                 symbols_add_to_gutter(current_buffer_path, line_number)
             end
@@ -287,14 +157,15 @@ end
 
 -- Put all the notes in the location list
 function list_notes()
-    local items = {}
+    local quicklist_items = {}
     for _, row in ipairs(get_code_note_data()) do
-        table.insert(items, {
+        quicklist_item = {
             filename=row["filename"],
             lnum=row["line_number"],
             col=0,
             text=row["content"],
-        })
+        }
+        table.insert(items, quicklist_item)
     end
     local current_buf = vim.fn.bufnr('%')
     local replace_items = 'r'
@@ -306,7 +177,7 @@ end
 -- Clear all existing notes
 function clear_notes()
     local file = io.open(notesdb, "w") -- Open the file in write mode
-    file:write("filename,line_number,content\n")
+    file:write(csv_headers .. "\n")
     file:close()
     symbols_clear_in_buffer()
     draw_existing_note_symbols()
@@ -320,36 +191,24 @@ function gogogo(line_number)
     local new_line_count = vim.fn.line('$')
     local current_buffer_path = vim.fn.expand('%:p')
     local code_note_table = get_code_note_data()
-    if not code_note_table then
-        clear_notes()
-        code_note_table = get_code_note_data()
-    end
     for _, row in ipairs(code_note_table) do
         if line_number <= tonumber(row["line_number"]) then
-            print(row["line_number"])
-            print("change")
-            csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path, row["line_number"], "")
+            qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path, row["line_number"])
             if new_line_count > previous_line_count then
                 local data = {
                     {current_buffer_path, tonumber(row["line_number"]) + (new_line_count - previous_line_count), ""}
                 }
-                print("A line was added.")
-                csv_append(notesdb, data)
+                qfnotes_utils.csv_append(notesdb, data)
             elseif new_line_count < previous_line_count then
                 local data = {
                     {current_buffer_path, tonumber(row["line_number"]) - (previous_line_count - new_line_count), ""}
                 }
-                print("A line was removed.")
-                csv_append(notesdb, data)
+                qfnotes_utils.csv_append(notesdb, data)
             else
-                print("No change in line count.")
             end
             previous_line_count = new_line_count
             symbols_clear_in_buffer()
             draw_existing_note_symbols()
-        else
-            print(row["line_number"])
-            print("no change")
         end
     end
 end
