@@ -24,6 +24,7 @@ in
   unstable.lf
   nil
   nodePackages.bash-language-server
+  luaformatter
   nodejs
   pyright
   ruff

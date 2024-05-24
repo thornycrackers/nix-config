@@ -420,6 +420,7 @@ vim.g.ale_fixers = {
     python = { "isort", "black" },
     terraform = { "terraform" },
     nix = { "nixfmt" },
+    lua = { "lua-format" },
 }
 -- Use 4 spaces for shfmt, not tabs
 vim.g.ale_sh_shfmt_options = '-i 4'
