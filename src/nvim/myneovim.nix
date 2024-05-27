@@ -58,6 +58,7 @@ let
           vim-go
           vim-abolish
           vim-fetch
+          nvim-luadev
         ];
       };
     };
