@@ -1,6 +1,5 @@
 -- Managed by Nix
 --
-
 -- https://dev.to/voyeg3r/writing-useful-lua-functions-to-my-neovim-14ki
 -- function to remove whitespace and preserve spot on save
 function _G.preserve(cmd)
@@ -9,12 +8,12 @@ function _G.preserve(cmd)
     vim.api.nvim_command(cmd)
     vim.fn.winrestview(original_cursor)
 end
-vim.cmd([[autocmd BufWritePre,FileWritePre,FileAppendPre,FilterWritePre * :lua preserve('%s/\\s\\+$//ge')]])
-
+vim.cmd(
+    [[autocmd BufWritePre,FileWritePre,FileAppendPre,FilterWritePre * :lua preserve('%s/\\s\\+$//ge')]])
 
 -- Debug function for printing lua tables
 function _G.print_table(mytable)
-    for k,v in pairs(mytable) do
+    for k, v in pairs(mytable) do
         if (type(v) == "table") then
             print(k)
             print_table(v)
@@ -24,10 +23,12 @@ function _G.print_table(mytable)
     end
 end
 
+-- Shorcut for the function to save space
+kmap = vim.api.nvim_set_keymap
 
 -- Set up spacebar as leader
 -- https://icyphox.sh/blog/nvim-lua/
-vim.api.nvim_set_keymap('n', '<Space>', '', {})
+kmap('n', '<Space>', '', {})
 vim.g.mapleader = ' '
 -- Set spaces > tabs, 4 as default
 vim.o.expandtab = true
@@ -54,7 +55,8 @@ vim.o.relativenumber = true
 vim.o.wrap = false
 vim.o.history = 1000
 -- Wildmode show list, complete to first result
-vim.o.wildignore = "*/app/cache,*/vendor,*/env,*.pyc,*/venv,*/__pycache__,*/venv"
+vim.o.wildignore =
+    "*/app/cache,*/vendor,*/env,*.pyc,*/venv,*/__pycache__,*/venv"
 -- Default split directions
 vim.o.splitright = true
 vim.o.splitbelow = true
@@ -65,7 +67,7 @@ vim.o.hidden = true
 -- Ask confirm on exit instead of error
 vim.o.confirm = true
 -- If a filetype has folding enabled, make sure all folds are opened
-vim.o.foldlevel=99
+vim.o.foldlevel = 99
 
 -- My Highlights
 vim.cmd [[
@@ -121,80 +123,83 @@ autocmd VimEnter * Abolish deps dependencies
 autocmd VimEnter * Abolish perf performance
 ]]
 
-
 -- Keymaps
---noh gets rid of highlighted search results
-vim.api.nvim_set_keymap('n', '<leader><leader>', ':noh<cr>', { noremap = true })
+-- noh gets rid of highlighted search results
+kmap('n', '<leader><leader>', ':noh<cr>', {noremap = true})
 -- `jj` maps to escape
-vim.api.nvim_set_keymap('i', 'jj', '<esc>', { noremap = true })
+kmap('i', 'jj', '<esc>', {noremap = true})
 -- Visually select last copied text
-vim.api.nvim_set_keymap('n', 'gp', "`[v`]", { noremap = true })
+kmap('n', 'gp', "`[v`]", {noremap = true})
 -- Changelist navigation
-vim.api.nvim_set_keymap('n', '<leader>co', '<cmd>copen<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>cc', '<cmd>cclose<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>cp', "<cmd>cprev<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>cn', "<cmd>cnext<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>lp', "<cmd>lprev<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>ln', "<cmd>lnext<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>lo', "<cmd>lopen<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>lc', "<cmd>lclose<cr>", { noremap = true })
+kmap('n', '<leader>co', '<cmd>copen<cr>', {noremap = true})
+kmap('n', '<leader>cc', '<cmd>cclose<cr>', {noremap = true})
+kmap('n', '<leader>cp', "<cmd>cprev<cr>", {noremap = true})
+kmap('n', '<leader>cn', "<cmd>cnext<cr>", {noremap = true})
+kmap('n', '<leader>lp', "<cmd>lprev<cr>", {noremap = true})
+kmap('n', '<leader>ln', "<cmd>lnext<cr>", {noremap = true})
+kmap('n', '<leader>lo', "<cmd>lopen<cr>", {noremap = true})
+kmap('n', '<leader>lc', "<cmd>lclose<cr>", {noremap = true})
+kmap('n', '<leader>ll', "<Plug>(Luadev-Run)", {noremap = true})
 -- Shorcut to insert pudb statements for python
-vim.api.nvim_set_keymap('n', '<leader>epu', 'ofrom pudb import set_trace; set_trace()<esc>', { noremap = true })
+kmap('n', '<leader>epu', 'ofrom pudb import set_trace; set_trace()<esc>',
+     {noremap = true})
 -- Shorcut to embed ipython
-vim.api.nvim_set_keymap('n', '<leader>epi', 'ofrom IPython import embed<cr>from traitlets.config import get_config<cr>c = get_config()<cr>c.InteractiveShellEmbed.colors = "Linux"<cr>embed(config=c)<esc>', { noremap = true })
+kmap('n', '<leader>epi',
+     'ofrom IPython import embed<cr>from traitlets.config import get_config<cr>c = get_config()<cr>c.InteractiveShellEmbed.colors = "Linux"<cr>embed(config=c)<esc>',
+     {noremap = true})
 -- yank current word and make print statement on next line
-vim.api.nvim_set_keymap('n', '<leader>epp', 'yiwoprint("<esc>pa: ", <esc>pa)<esc>V=', { noremap = true })
+kmap('n', '<leader>epp', 'yiwoprint("<esc>pa: ", <esc>pa)<esc>V=',
+     {noremap = true})
 -- Easy new tab creation
-vim.api.nvim_set_keymap('n', '<c-w>t', "<cmd>tabnew<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<c-w><c-f>', '<c-w>f<c-w>T', { noremap = true })
-vim.api.nvim_set_keymap('n', '<c-w><c-]>', '<c-w>v<c-]><c-w>T', { noremap = true })
-vim.api.nvim_set_keymap('n', '<c-w><c-t>', '<c-w>v<c-w>T', { noremap = true })
-vim.api.nvim_set_keymap('n', '<c-w><c-w>', '<cmd>w<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<c-w><c-a>', '<cmd>wa<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<c-q><c-a>', '<cmd>qa!<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>ee', '<cmd>e!<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<expr> k', [[(v:count > 1 ? "m'" . v:count : '') . 'k']], { noremap = true })
-vim.api.nvim_set_keymap('n', '<expr> j', [[(v:count > 1 ? "m'" . v:count : '') . 'j']], { noremap = true })
+kmap('n', '<c-w>t', "<cmd>tabnew<cr>", {noremap = true})
+kmap('n', '<c-w><c-f>', '<c-w>f<c-w>T', {noremap = true})
+kmap('n', '<c-w><c-]>', '<c-w>v<c-]><c-w>T', {noremap = true})
+kmap('n', '<c-w><c-t>', '<c-w>v<c-w>T', {noremap = true})
+kmap('n', '<c-w><c-w>', '<cmd>w<cr>', {noremap = true})
+kmap('n', '<c-w><c-a>', '<cmd>wa<cr>', {noremap = true})
+kmap('n', '<c-q><c-a>', '<cmd>qa!<cr>', {noremap = true})
+kmap('n', '<leader>ee', '<cmd>e!<cr>', {noremap = true})
+kmap('n', '<expr> k', [[(v:count > 1 ? "m'" . v:count : '') . 'k']],
+     {noremap = true})
+kmap('n', '<expr> j', [[(v:count > 1 ? "m'" . v:count : '') . 'j']],
+     {noremap = true})
 -- Call Ale Fix
-vim.api.nvim_set_keymap('n', '<leader>ef', '<cmd>ALEFix<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>el', '<cmd>ALELint<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>et', '<cmd>lua toggle_ale_linting()<cr>', { noremap = true })
+kmap('n', '<leader>ef', '<cmd>ALEFix<cr>', {noremap = true})
+kmap('n', '<leader>el', '<cmd>ALELint<cr>', {noremap = true})
+kmap('n', '<leader>et', '<cmd>lua toggle_ale_linting()<cr>', {noremap = true})
 -- Markdown functions
-vim.api.nvim_set_keymap('n', '<leader>po', '<cmd>AngryReviewer<cr><c-w>k<cmd>ALELint<cr><cmd>lopen<cr><c-w>k', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>pse', '<cmd>LanguageToolSetUp<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>psc', '<cmd>LanguageToolCheck<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>psu', '<cmd>LanguageToolSummary<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>psl', '<cmd>LanguageToolClear<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>pc', '<cmd>cclose<cr><cmd>lclose<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>pg', '<cmd>Goyo<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>pp', 'vipJVgq', { noremap = true })
+kmap('n', '<leader>po',
+     '<cmd>AngryReviewer<cr><c-w>k<cmd>ALELint<cr><cmd>lopen<cr><c-w>k',
+     {noremap = true})
+kmap('n', '<leader>pse', '<cmd>LanguageToolSetUp<cr>', {noremap = true})
+kmap('n', '<leader>psc', '<cmd>LanguageToolCheck<cr>', {noremap = true})
+kmap('n', '<leader>psu', '<cmd>LanguageToolSummary<cr>', {noremap = true})
+kmap('n', '<leader>psl', '<cmd>LanguageToolClear<cr>', {noremap = true})
+kmap('n', '<leader>pc', '<cmd>cclose<cr><cmd>lclose<cr>', {noremap = true})
+kmap('n', '<leader>pg', '<cmd>Goyo<cr>', {noremap = true})
+kmap('n', '<leader>pp', 'vipJVgq', {noremap = true})
 -- <leader>pl defined in nix CustomRC
 -- Add "il" text object to mean "in line"
-vim.api.nvim_set_keymap('x', 'il', 'g_o^', { noremap = true })
-vim.api.nvim_set_keymap('o', 'il', '<cmd>normal vil<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>v', '^vg_o^', { noremap = true })
+kmap('x', 'il', 'g_o^', {noremap = true})
+kmap('o', 'il', '<cmd>normal vil<cr>', {noremap = true})
+kmap('n', '<leader>v', '^vg_o^', {noremap = true})
 -- Shortcuts to help take notes
 -- Print current filepath with line number to reference
-vim.api.nvim_set_keymap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>', { noremap = true});
-vim.api.nvim_set_keymap('n', '<leader>,i', '<Cmd>edit '  .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>', { noremap = true});
-vim.api.nvim_set_keymap('n', '<leader>,n', '<Cmd>edit '  .. vim.fn.expand('~') .. '/Obsidian/MyVault/notes.md<CR>', { noremap = true});
+kmap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>',
+     {noremap = true});
+kmap('n', '<leader>,i',
+     '<Cmd>edit ' .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>',
+     {noremap = true});
+kmap('n', '<leader>,n',
+     '<Cmd>edit ' .. vim.fn.expand('~') .. '/Obsidian/MyVault/notes.md<CR>',
+     {noremap = true});
 -- Search and replace word under cursor
-vim.api.nvim_set_keymap('n', '<Leader>r', ':%s/<c-r><c-w>/', { noremap = true, silent = true })
-
-
+kmap('n', '<Leader>r', ':%s/<c-r><c-w>/', {noremap = true, silent = true})
 
 -- Build a custom status line
 local status_line = {
-    '%#PrimaryBlock#',
-    '%#SecondaryBlock#',
-    '%#Blanks#',
-    '%f',
-    '%m',
-    '%=',
-    '%#SecondaryBlock#',
-    '%l,%c ',
-    '%#PrimaryBlock#',
-    '%{&filetype}',
+    '%#PrimaryBlock#', '%#SecondaryBlock#', '%#Blanks#', '%f', '%m', '%=',
+    '%#SecondaryBlock#', '%l,%c ', '%#PrimaryBlock#', '%{&filetype}'
 }
 vim.o.statusline = table.concat(status_line)
 
@@ -208,14 +213,10 @@ colorscheme gruvbox
 -- nvim-ts-rainbow
 -- nvim-treesitter
 require('nvim-treesitter.configs').setup {
-    highlight = {
-        enable = true,
-    },
-    indent = {
-        enable = true,
-    },
+    highlight = {enable = true},
+    indent = {enable = true},
     rainbow = {
-        enable = true,
+        enable = true
         -- I use termcolors but this errors if left blank
     }
 }
@@ -227,35 +228,54 @@ nvim_lsp = require('lspconfig')
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
-    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    local function buf_set_keymap(...)
+        vim.api.nvim_buf_set_keymap(bufnr, ...)
+    end
+    local function buf_set_option(...)
+        vim.api.nvim_buf_set_option(bufnr, ...)
+    end
     -- Enable completion triggered by <c-x><c-o>
     buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
     -- Mappings.
-    local opts = { noremap=true, silent=true }
+    local opts = {noremap = true, silent = true}
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
     buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
     buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
     buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    buf_set_keymap('n', '<spnce>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-    buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-    buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>',
+                   opts)
+    buf_set_keymap('n', '<spnce>wa',
+                   '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wr',
+                   '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wl',
+                   '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>',
+                   opts)
+    buf_set_keymap('n', '<space>D',
+                   '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+    buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>',
+                   opts)
     buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-    buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-    buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+    buf_set_keymap('n', '<space>e',
+                   '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',
+                   opts)
+    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',
+                   opts)
+    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>',
+                   opts)
+    buf_set_keymap('n', '<space>q',
+                   '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>',
+                   opts)
 end
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
 -- local servers = { 'pyls', 'rust_analyzer', 'tsserver' }
-local servers = { 'jedi_language_server', 'bashls', 'terraformls', 'ansiblels', 'nil_ls' }
+local servers = {
+    'jedi_language_server', 'bashls', 'terraformls', 'ansiblels', 'nil_ls'
+}
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -263,10 +283,8 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup {
         on_attach = on_attach,
-        flags = {
-            debounce_text_changes = 150,
-        },
-        capabilities = capabilities,
+        flags = {debounce_text_changes = 150},
+        capabilities = capabilities
     }
 end
 -- Set completeopt to have a better completion experience
@@ -274,43 +292,43 @@ vim.o.completeopt = 'menuone,noselect'
 -- nvim-cmp setup
 local cmp = require 'cmp'
 cmp.setup {
-  mapping = {
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-k>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+    mapping = {
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-k>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.close(),
+        ['<CR>'] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true
+        },
+        ['<Tab>'] = function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end,
+        ['<S-Tab>'] = function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end
     },
-    ['<Tab>'] = function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      else
-        fallback()
-      end
-    end,
-    ['<S-Tab>'] = function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      else
-        fallback()
-      end
-    end,
-  },
-  sources = {
-    { name = 'nvim_lsp' },
-  },
+    sources = {{name = 'nvim_lsp'}}
 }
 
 -- nvim-fzf
-vim.api.nvim_set_keymap('n', '<leader>fb', "<cmd>let g:fzf_buffers_jump = 0<cr><cmd>Buffers<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>ft', "<cmd>Tags<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>fm', "<cmd>Marks<cr>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>fg', "<cmd>GF?<cr>", { noremap = true })
-vim.cmd([[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.git/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
+kmap('n', '<leader>fb', "<cmd>let g:fzf_buffers_jump = 0<cr><cmd>Buffers<cr>",
+     {noremap = true})
+kmap('n', '<leader>ft', "<cmd>Tags<cr>", {noremap = true})
+kmap('n', '<leader>fm', "<cmd>Marks<cr>", {noremap = true})
+kmap('n', '<leader>fg', "<cmd>GF?<cr>", {noremap = true})
+vim.cmd(
+    [[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.git/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
 vim.cmd([[
 nnoremap <leader>ff :call FilesDefault()<cr>
 function! FilesDefault()
@@ -330,16 +348,16 @@ endfunction
 ]])
 
 -- vim-argwrap
-vim.api.nvim_set_keymap('n', '<leader>ew', '<cmd>ArgWrap<cr>', { noremap = true })
+kmap('n', '<leader>ew', '<cmd>ArgWrap<cr>', {noremap = true})
 
 -- vim-fugitive
-vim.api.nvim_set_keymap('n', '<leader>du', '<cmd>diffupdate<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>dd', '<cmd>diffget<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>df', '<cmd>diffput<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>dn', ']c', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>dp', '[c', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>gs', '<cmd>Git<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>gc', '<cmd>Git commit<cr>', { noremap = true })
+kmap('n', '<leader>du', '<cmd>diffupdate<cr>', {noremap = true})
+kmap('n', '<leader>dd', '<cmd>diffget<cr>', {noremap = true})
+kmap('n', '<leader>df', '<cmd>diffput<cr>', {noremap = true})
+kmap('n', '<leader>dn', ']c', {noremap = true})
+kmap('n', '<leader>dp', '[c', {noremap = true})
+kmap('n', '<leader>gs', '<cmd>Git<cr>', {noremap = true})
+kmap('n', '<leader>gc', '<cmd>Git commit<cr>', {noremap = true})
 vim.cmd([[
   function! ToggleGStatus()
     if buflisted(bufname('.git/index'))
@@ -351,8 +369,8 @@ vim.cmd([[
   endfunction
   nnoremap <leader>gs :call ToggleGStatus()<CR>
 ]])
-vim.api.nvim_set_keymap('n', '<leader>gb', '<cmd>Git blame<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>gd', '<cmd>Gdiffsplit<cr>', { noremap = true })
+kmap('n', '<leader>gb', '<cmd>Git blame<cr>', {noremap = true})
+kmap('n', '<leader>gd', '<cmd>Gdiffsplit<cr>', {noremap = true})
 
 -- indent-blankline-nvim
 require("ibl").setup()
@@ -362,11 +380,11 @@ require("ibl").setup()
 vim.g.floaterm_opener = "edit"
 vim.g.floaterm_width = 0.99
 vim.g.floaterm_height = 0.99
-vim.api.nvim_set_keymap('n', '<leader>m', '<cmd>Lf<cr>', { noremap = true });
-vim.api.nvim_set_keymap('n', '<leader>n', '<cmd>LfWorkingDirectory<cr>', { noremap = true});
+kmap('n', '<leader>m', '<cmd>Lf<cr>', {noremap = true});
+kmap('n', '<leader>n', '<cmd>LfWorkingDirectory<cr>', {noremap = true});
 
---hop-nvim
-vim.api.nvim_set_keymap('', '<leader>ss', '<cmd>HopChar2<cr>', { noremap = true })
+-- hop-nvim
+kmap('', '<leader>ss', '<cmd>HopChar2<cr>', {noremap = true})
 -- set the pattern as a variable to avoid escaping issues
 vim.cmd([[
 let g:hop_file_pattern = '\v(\.\/|\.\.\/|\w+\/)+\w+(\.\w+)?'
@@ -376,11 +394,9 @@ function HopToFilePath()
     -- Use hop to look for file paths and visually select, Then run "gF" to go
     -- to file. I use "gF" because vim-fetch understands line numbers
     require'hop'.hint_patterns({}, vim.g.hop_file_pattern)
-    vim.schedule(function()
-        vim.api.nvim_feedkeys('gF', 'n', true)
-    end)
+    vim.schedule(function() vim.api.nvim_feedkeys('gF', 'n', true) end)
 end
-require'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
+require'hop'.setup {keys = 'etovxqpdygfblzhckisuran'}
 
 -- ale
 vim.g.ale_lint_on_enter = 1
@@ -407,26 +423,26 @@ function _G.toggle_ale_linting()
     end
 end
 vim.g.ale_linters = {
-    sh = { "shellcheck", },
-    python = { "flake8" },
-    dockerfile = { "hadolint" },
-    terraform = { "terraform_ls" },
-    markdown = { "vale" },
-    nix = { "nix" },
-    ansible = { "ansible-lint" },
+    sh = {"shellcheck"},
+    python = {"flake8"},
+    dockerfile = {"hadolint"},
+    terraform = {"terraform_ls"},
+    markdown = {"vale"},
+    nix = {"nix"},
+    ansible = {"ansible-lint"}
 }
 vim.g.ale_fixers = {
-    sh = { "shfmt", },
-    python = { "isort", "black" },
-    terraform = { "terraform" },
-    nix = { "nixfmt" },
-    lua = { "lua-format" },
+    sh = {"shfmt"},
+    python = {"isort", "black"},
+    terraform = {"terraform"},
+    nix = {"nixfmt"},
+    lua = {"lua-format"}
 }
 -- Use 4 spaces for shfmt, not tabs
 vim.g.ale_sh_shfmt_options = '-i 4'
 
 -- osc-yank
-vim.api.nvim_set_keymap('n', '<leader>y', '<cmd>OSCYankRegister 0<cr>', { noremap = true })
+kmap('n', '<leader>y', '<cmd>OSCYankRegister 0<cr>', {noremap = true})
 
 -- vim-angry-reviewer
 vim.g.AngryReviewerEnglish = 'american'
@@ -447,7 +463,6 @@ vim.cmd([[
       \ "ack -s -H --nocolor --nogroup --column --ignore-dir=.venv/ --ignore-dir=.vimcache/ --ignore-dir=migrations/ --ignore-dir=.mypy_cache/ --ignore-file=is:tags --nojs --nocss --nosass"
 ]])
 
-
 -- vim-oscyank
 -- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1145673058
 -- Fixing issues with tmux
@@ -455,10 +470,8 @@ vim.cmd([[
 let g:oscyank_term = 'default'
 ]])
 
-
 -- vim-bufkill
-vim.api.nvim_set_keymap('n', '<leader>bd', '<cmd>BD<cr>', { noremap = true })
-
+kmap('n', '<leader>bd', '<cmd>BD<cr>', {noremap = true})
 
 -- vim-markdown
 vim.g.vim_markdown_auto_insert_bullets = 0
