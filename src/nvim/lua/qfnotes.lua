@@ -8,18 +8,21 @@
 --
 -- How to test outside of nix: nvim -c ':luafile /home/thorny/.nixpkgs/src/nvim/lua/qfnotes.lua'
 -- wrapping vim api calls for easier mocking in tests
--- Function to get the current buffer
+-- Function to get the current buffer, returns type number
 function get_current_buffer() return vim.fn.bufnr('%') end
 
+-- Function to get the current line number, return type number
 function get_current_line_number() return vim.fn.line('.') end
 
+-- Function to get the current line count, return type number
 function get_line_count() return vim.fn.line('$') end
 
+-- Function to get the current line number, return type string
 function get_current_buffer_path() return vim.fn.expand('%:p') end
 
 local notesdb = os.getenv("HOME") .. "/.notesdb.csv"
 local symbol_group = "myGroup"
-local symbol_name = "mySign"
+local sign_name = "mySign"
 local previous_line_count = get_line_count()
 local csv_headers = "filename,line_number,content"
 
@@ -27,14 +30,15 @@ local csv_headers = "filename,line_number,content"
 package.path = os.getenv("HOME") .. "/.nixpkgs/src/nvim/lua/?.lua;" ..
                    package.path
 -- Import the utils file
-local qfnotes_utils = require('qfnotes_utils')
+local lib = require('qfnotes_lib')
+lib.log("previous line count " .. previous_line_count)
 
 -- Add a symbol to the neovim gutter
 function symbols_add_to_gutter(file_path, line_num)
-    vim.fn.sign_define(symbol_name,
-                       {text = "", texthl = "", linehl = "", numhl = ""})
-    vim.fn.sign_place(line_num, symbol_group, symbol_name, file_path,
-                      {lnum = line_num})
+    sign_attrs = {text = "", texthl = "", linehl = "", numhl = ""}
+    vim.fn.sign_define(sign_name, sign_attrs)
+    opts = {lnum = line_num}
+    vim.fn.sign_place(line_num, symbol_group, sign_name, file_path, opts)
 end
 
 -- Clear all codenote symbols in buffer
@@ -46,9 +50,8 @@ end
 -- Read the code note data from the db
 -- Centralize all access here
 -- Creates the file if it doesn't already exist
-function get_code_note_data()
-    return qfnotes_utils.csv_read_or_create(notesdb, csv_headers)
-end
+function get_code_note_data() return
+    lib.csv_read_or_create(notesdb, csv_headers) end
 
 -- Open a note
 function open_note()
@@ -61,16 +64,15 @@ function open_note()
             if row["filename"] == current_buffer_path then
                 if tonumber(row["line_number"]) == current_line_number then
                     local success, error_message = pcall(function()
-                        -- open_floating_buffer(do_something)
-                        local user_input = ""
-                        if row["content"] == nil then
-                            user_input = vim.fn.input("Note: ")
-                        else
-                            user_input = vim.fn.input("Note: ", row["content"])
+                        local existing_note = ""
+                        if row["content"] ~= nil then
+                            existing_note = row["content"]
                         end
-                        qfnotes_utils.csv_update_line_by_columns_from_csv(
-                            notesdb, row["filename"], row["line_number"],
-                            user_input)
+                        user_input = vim.fn.input("Note: ", existing_note)
+                        lib.csv_update_line_by_columns_from_csv(notesdb,
+                                                                row["filename"],
+                                                                row["line_number"],
+                                                                user_input)
                         found_note = true
                     end)
                     if not success then
@@ -83,55 +85,14 @@ function open_note()
         if found_note == false then
             create_note()
             user_input = vim.fn.input("Note: ")
-            qfnotes_utils.csv_update_line_by_columns_from_csv(notesdb,
-                                                              current_buffer_path,
-                                                              current_line_number,
-                                                              user_input)
+            lib.csv_update_line_by_columns_from_csv(notesdb,
+                                                    current_buffer_path,
+                                                    current_line_number,
+                                                    user_input)
         end
     else
         print("Note not found")
     end
-end
-
--- Calculate the center position, used when opening a new window
-local function calculate_center_pos(width, height)
-    local win_width = vim.api.nvim_get_option("columns")
-    local win_height = vim.api.nvim_get_option("lines")
-    local row = math.floor((win_height - height) / 2)
-    local col = math.floor((win_width - width) / 2)
-    return {row = row, col = col}
-end
-
--- Open a new buffer in a floating window and center it
-function open_floating_buffer(file_path)
-    -- Create a new empty buffer
-    local bufnr = vim.api.nvim_create_buf(true, false)
-    -- Set the buffer options as needed
-    vim.api.nvim_buf_set_option(bufnr, 'bufhidden', 'wipe')
-    -- Define the dimensions of the floating window
-    local float_width = math.floor(vim.api.nvim_get_option("columns") * 0.7)
-    local float_height = math.floor(vim.api.nvim_get_option("lines") * 0.7)
-    -- Calculate the center position for the floating window
-    local center_pos = calculate_center_pos(float_width, float_height)
-    -- Open a new floating window with the created buffer
-    local win_config = {
-        relative = 'editor',
-        width = float_width,
-        height = float_height,
-        row = center_pos.row,
-        col = center_pos.col,
-        style = 'minimal',
-        border = 'single'
-    }
-    local win_id = vim.api.nvim_open_win(bufnr, true, win_config)
-    -- Set the 'winhighlight' option to match the colorscheme
-    vim.api.nvim_win_set_option(win_id, 'winhighlight',
-                                'Normal:NormalNC,NormalNC:Normal,NormalNC:NormalNC')
-    -- If a file path is provided, load the file into the buffer
-    if file_path then
-        vim.api.nvim_command('silent edit ' .. vim.fn.fnameescape(file_path))
-    end
-    return bufnr, win_id
 end
 
 -- Create a new note
@@ -139,7 +100,7 @@ function create_note()
     local current_buffer_path = get_current_buffer_path()
     local current_line_number = get_current_line_number()
     local data = {{current_buffer_path, current_line_number, ""}}
-    qfnotes_utils.csv_append(notesdb, data)
+    lib.csv_append(notesdb, data)
     draw_existing_note_symbols()
 end
 
@@ -147,9 +108,8 @@ end
 function delete_note()
     local current_buffer_path = get_current_buffer_path()
     local current_line_number = tostring(get_current_line_number())
-    qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb,
-                                                      current_buffer_path,
-                                                      current_line_number)
+    lib.csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path,
+                                            current_line_number)
     symbols_clear_in_buffer()
     draw_existing_note_symbols()
 end
@@ -168,6 +128,11 @@ function draw_existing_note_symbols()
     else
         print("Current buffer does not have a valid path")
     end
+    -- Also make sure to set the previous line count every time we enter a
+    -- buffer and draw symbols. I think this could technically be it's own
+    -- thing but I'll keep it here for now until I have a better reason to not
+    -- couple it to drawing existing symbols.
+    previous_line_count = get_line_count()
 end
 
 -- Put all the notes in the location list
@@ -198,41 +163,41 @@ function clear_notes()
     draw_existing_note_symbols()
 end
 
-function gogogo(line_number)
-    if line_number == nil then return end
+function gogogo(current_line_num)
+    if current_line_num == nil then return end
+    lib.log("gogogo current line number: " .. current_line_num)
+    lib.log("previous line count" .. previous_line_count)
 
     local new_line_count = get_line_count()
+    lib.log("gogogo new_line_count: " .. new_line_count)
     local current_buffer_path = get_current_buffer_path()
     local code_note_table = get_code_note_data()
+
     for _, row in ipairs(code_note_table) do
-        if line_number <= tonumber(row["line_number"]) then
-            qfnotes_utils.csv_remove_line_by_columns_from_csv(notesdb,
-                                                              current_buffer_path,
-                                                              row["line_number"])
+        symbol_line_num = row["line_number"]
+        symbol_content = row["content"]
+        if lib.symbol_should_move(current_line_num, tonumber(symbol_line_num)) then
             if new_line_count > previous_line_count then
-                local data = {
-                    {
-                        current_buffer_path,
-                        tonumber(row["line_number"]) +
-                            (new_line_count - previous_line_count), ""
-                    }
-                }
-                qfnotes_utils.csv_append(notesdb, data)
+                lib.csv_remove_line_by_columns_from_csv(notesdb,
+                                                        current_buffer_path,
+                                                        symbol_line_num)
+                local new_line = tonumber(symbol_line_num) +
+                                     (new_line_count - previous_line_count)
+                local data = {{current_buffer_path, new_line, symbol_content}}
+                lib.csv_append(notesdb, data)
             elseif new_line_count < previous_line_count then
-                local data = {
-                    {
-                        current_buffer_path,
-                        tonumber(row["line_number"]) -
-                            (previous_line_count - new_line_count), ""
-                    }
-                }
-                qfnotes_utils.csv_append(notesdb, data)
-            else
+                lib.csv_remove_line_by_columns_from_csv(notesdb,
+                                                        current_buffer_path,
+                                                        symbol_line_num)
+                local new_line = tonumber(symbol_line_num) -
+                                     (previous_line_count - new_line_count)
+                local data = {{current_buffer_path, new_line, symbol_content}}
+                lib.csv_append(notesdb, data)
             end
-            previous_line_count = new_line_count
-            symbols_clear_in_buffer()
-            draw_existing_note_symbols()
         end
+        previous_line_count = new_line_count
+        symbols_clear_in_buffer()
+        draw_existing_note_symbols()
     end
 end
 
