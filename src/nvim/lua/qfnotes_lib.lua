@@ -208,6 +208,34 @@ function min_concat_two(array)
     return res
 end
 
+-- Function for serializing a lua table to a file
+-- It's meant to handle a simple use case of serializing a k,v table where both
+-- are strings.
+function serialize_table_to_file(t, filename)
+
+    local function serialize(o)
+        local result = "{"
+        for k, v in pairs(o) do
+            result = result .. "[" .. string.format("%q", k) .. "]=" ..
+                         string.format("%q", v) .. ","
+        end
+        return result .. "}"
+    end
+
+    local file, err = io.open(filename, "w")
+    if not file then error("Could not open file for writing: " .. err) end
+
+    file:write("return " .. serialize(t))
+    file:close()
+end
+
+-- Function to load a Lua table from a file
+function load_table_from_file(filename)
+    local func, err = loadfile(filename)
+    if not func then error("Failed to load table from file: " .. err) end
+    return func()
+end
+
 -- Exporting for module use
 local M = {}
 
@@ -229,5 +257,7 @@ M.csv_update_line_by_columns_from_csv = csv_update_line_by_columns_from_csv
 M.log = log
 M.symbol_should_move = symbol_should_move
 M.min_concat_two = min_concat_two
+M.serialize_table_to_file = serialize_table_to_file
+M.load_table_from_file = load_table_from_file
 
 return M

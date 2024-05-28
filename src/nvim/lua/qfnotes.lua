@@ -1,4 +1,3 @@
--- Lua qfnotes module
 --
 -- A little plugin I made to quickly drop notes around in code when I'm exploring or doing refactoring.
 -- You can then list all the notes in the quick fix window.
@@ -20,18 +19,17 @@ function get_line_count() return vim.fn.line('$') end
 -- Function to get the current line number, return type string
 function get_current_buffer_path() return vim.fn.expand('%:p') end
 
-local notesdb = os.getenv("HOME") .. "/.notesdb.csv"
 local symbol_group = "myGroup"
 local sign_name = "mySign"
 local previous_line_count = get_line_count()
-local csv_headers = "filename,line_number,content"
 
 -- Hardcoding directory, so ugly
 package.path = os.getenv("HOME") .. "/.nixpkgs/src/nvim/lua/?.lua;" ..
                    package.path
 -- Import the utils file
 local lib = require('qfnotes_lib')
-lib.log("previous line count " .. previous_line_count)
+local CodeNote = require('qfnotes_codenote')
+local persist = require('qfnotes_persist')
 
 -- Add a symbol to the neovim gutter
 function symbols_add_to_gutter(file_path, line_num)
@@ -50,29 +48,37 @@ end
 -- Read the code note data from the db
 -- Centralize all access here
 -- Creates the file if it doesn't already exist
-function get_code_note_data() return
-    lib.csv_read_or_create(notesdb, csv_headers) end
+function get_code_notes()
+    local res = {}
+    for k, v in pairs(persist.get_table()) do
+        local matches = string.gmatch(k, "([^::]+)")
+        local filepath = matches()
+        local line_number = matches()
+        local contents = v
+        local code_note = CodeNote:new(filepath, line_number, contents)
+        table.insert(res, code_note)
+    end
+    return res
+end
 
 -- Open a note
 function open_note()
-    local current_buffer_path = get_current_buffer_path()
+    local current_filepath = get_current_buffer_path()
     local current_line_number = get_current_line_number()
-    if current_buffer_path ~= '' then
+    if current_filepath ~= '' then
         local found_note = false
-        local code_note_table = get_code_note_data()
-        for _, row in ipairs(code_note_table) do
-            if row["filename"] == current_buffer_path then
-                if tonumber(row["line_number"]) == current_line_number then
+        local code_notes = get_code_notes()
+        for _, code_note in ipairs(code_notes) do
+            if code_note:get_filepath() == current_filepath then
+                local line_num = tonumber(code_note:get_line_number())
+                if line_num == current_line_number then
                     local success, error_message = pcall(function()
                         local existing_note = ""
-                        if row["content"] ~= nil then
-                            existing_note = row["content"]
+                        if code_note:get_contents() ~= "" then
+                            existing_note = code_note:get_contents()
                         end
                         user_input = vim.fn.input("Note: ", existing_note)
-                        lib.csv_update_line_by_columns_from_csv(notesdb,
-                                                                row["filename"],
-                                                                row["line_number"],
-                                                                user_input)
+                        persist.update_table(code_note:get_key(), user_input)
                         found_note = true
                     end)
                     if not success then
@@ -83,50 +89,51 @@ function open_note()
         end
         -- If no note was found, then create a new one
         if found_note == false then
-            create_note()
             user_input = vim.fn.input("Note: ")
-            lib.csv_update_line_by_columns_from_csv(notesdb,
-                                                    current_buffer_path,
-                                                    current_line_number,
-                                                    user_input)
+            _create_note(current_filepath, current_line_number, user_input)
+            draw_existing_note_symbols()
         end
     else
         print("Note not found")
     end
 end
 
--- Create a new note
+-- Create a new note function for internal use
+function _create_note(filepath, line_number, contents)
+    local code_note = CodeNote:new(filepath, line_number, contents)
+    persist.update_table(code_note:get_key(), code_note:get_value())
+end
+
+-- Create a new note function for vim mapping
 function create_note()
-    local current_buffer_path = get_current_buffer_path()
-    local current_line_number = get_current_line_number()
-    local data = {{current_buffer_path, current_line_number, ""}}
-    lib.csv_append(notesdb, data)
+    local filepath = get_current_buffer_path()
+    local line_number = get_current_line_number()
+    local contents = ""
+    _create_note(filepath, line_number, contents)
     draw_existing_note_symbols()
 end
 
 -- Delete a note
 function delete_note()
-    local current_buffer_path = get_current_buffer_path()
-    local current_line_number = tostring(get_current_line_number())
-    lib.csv_remove_line_by_columns_from_csv(notesdb, current_buffer_path,
-                                            current_line_number)
+    local filepath = get_current_buffer_path()
+    local line_number = get_current_line_number()
+    local code_note = CodeNote:new(filepath, line_number)
+    persist.remove_key(code_note:get_key())
     symbols_clear_in_buffer()
     draw_existing_note_symbols()
 end
 
 -- Loop through and add any note symbols to the current buffer
 function draw_existing_note_symbols()
-    local current_buffer_path = get_current_buffer_path()
-    if current_buffer_path ~= '' then
-        local code_note_table = get_code_note_data()
-        for _, row in ipairs(code_note_table) do
-            if row["filename"] == current_buffer_path then
-                line_number = row["line_number"]
-                symbols_add_to_gutter(current_buffer_path, line_number)
+    local current_filepath = get_current_buffer_path()
+    if current_filepath ~= '' then
+        local code_notes = get_code_notes()
+        for _, code_note in ipairs(code_notes) do
+            if code_note:get_filepath() == current_filepath then
+                line_num = code_note:get_line_number()
+                symbols_add_to_gutter(current_filepath, line_num)
             end
         end
-    else
-        print("Current buffer does not have a valid path")
     end
     -- Also make sure to set the previous line count every time we enter a
     -- buffer and draw symbols. I think this could technically be it's own
@@ -138,64 +145,59 @@ end
 -- Put all the notes in the location list
 function list_notes()
     local quicklist_items = {}
-    for _, row in ipairs(get_code_note_data()) do
-        local quicklist_item = {
-            filename = row["filename"],
-            lnum = row["line_number"],
-            col = 0,
-            text = row["content"]
-        }
-        table.insert(quicklist_items, quicklist_item)
+    for _, code_note in ipairs(get_code_notes()) do
+        table.insert(quicklist_items, code_note:to_quicklist_item())
     end
     local current_buf = get_current_buffer()
     local replace_items = 'r'
-    -- Set the quickfix list
     vim.fn.setqflist(quicklist_items, replace_items)
     vim.cmd('copen')
 end
 
 -- Clear all existing notes
 function clear_notes()
-    local file = io.open(notesdb, "w") -- Open the file in write mode
-    file:write(csv_headers .. "\n")
-    file:close()
+    local blank_notes = {}
+    persist.set_table(blank_notes)
     symbols_clear_in_buffer()
     draw_existing_note_symbols()
 end
 
-function gogogo(current_line_num)
+function tick(current_line_num)
     if current_line_num == nil then return end
-    lib.log("gogogo current line number: " .. current_line_num)
-    lib.log("previous line count" .. previous_line_count)
 
     local new_line_count = get_line_count()
-    lib.log("gogogo new_line_count: " .. new_line_count)
     local current_buffer_path = get_current_buffer_path()
-    local code_note_table = get_code_note_data()
+    local code_notes = get_code_notes()
 
-    for _, row in ipairs(code_note_table) do
-        symbol_line_num = row["line_number"]
-        symbol_content = row["content"]
-        if lib.symbol_should_move(current_line_num, tonumber(symbol_line_num)) then
+    for _, code_note in ipairs(code_notes) do
+        local changes = false
+        symbol_filepath = code_note:get_filepath()
+        symbol_line_num = tonumber(code_note:get_line_number())
+        symbol_content = code_note:get_contents()
+        key = code_note:get_key()
+
+        local same_file = symbol_filepath == current_buffer_path
+        local should_move = lib.symbol_should_move(current_line_num,
+                                                   symbol_line_num)
+        if same_file and should_move then
             if new_line_count > previous_line_count then
-                lib.csv_remove_line_by_columns_from_csv(notesdb,
-                                                        current_buffer_path,
-                                                        symbol_line_num)
-                local new_line = tonumber(symbol_line_num) +
+                persist.remove_key(key)
+                local new_line = symbol_line_num +
                                      (new_line_count - previous_line_count)
-                local data = {{current_buffer_path, new_line, symbol_content}}
-                lib.csv_append(notesdb, data)
+                _create_note(current_buffer_path, new_line, symbol_content)
+                changes = true
             elseif new_line_count < previous_line_count then
-                lib.csv_remove_line_by_columns_from_csv(notesdb,
-                                                        current_buffer_path,
-                                                        symbol_line_num)
-                local new_line = tonumber(symbol_line_num) -
+                persist.remove_key(key)
+                local new_line = symbol_line_num -
                                      (previous_line_count - new_line_count)
-                local data = {{current_buffer_path, new_line, symbol_content}}
-                lib.csv_append(notesdb, data)
+                _create_note(current_buffer_path, new_line, symbol_content)
+                changes = true
             end
         end
-        previous_line_count = new_line_count
+    end
+
+    previous_line_count = new_line_count
+    if changes == true then
         symbols_clear_in_buffer()
         draw_existing_note_symbols()
     end
@@ -207,7 +209,7 @@ vim.cmd([[
         autocmd!
         autocmd BufRead * lua draw_existing_note_symbols()
         autocmd VimEnter * lua draw_existing_note_symbols()
-        autocmd TextChanged,TextChangedI <buffer> lua if vim.fn.getline(vim.fn.line('.')) == '' and vim.fn.col('.') == 1 then gogogo(vim.fn.line('.')) end
+        autocmd TextChanged,TextChangedI * lua if vim.fn.getline(vim.fn.line('.')) == '' and vim.fn.col('.') == 1 then tick(vim.fn.line('.')) end
     augroup END
 ]])
 vim.api.nvim_set_keymap('n', '<leader>eno', '<cmd>lua open_note()<cr>',

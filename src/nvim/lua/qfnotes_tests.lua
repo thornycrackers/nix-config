@@ -1,6 +1,7 @@
 local lib = require('qfnotes_lib')
+local CodeNote = require('qfnotes_codenote')
 
-describe('qfntoes_utils testing', function()
+describe('qfnotes testing', function()
     describe('should be awesome', function()
 
         it('should be able to detect if a file exists', function()
@@ -151,6 +152,30 @@ describe('qfntoes_utils testing', function()
             assert.same(lib.min_concat_two(my_array), "a,b,")
             my_array = {"a", "b", "c"}
             assert.same(lib.min_concat_two(my_array), "a,b,c")
+        end)
+
+        it('should serialize a table to a file and deserialize', function()
+            local tmpfile = os.tmpname()
+            local tmpfile = "asdfasdf.lua"
+            local data = {fruit = "apple"}
+            lib.serialize_table_to_file(data, tmpfile)
+            local file = io.open(tmpfile, "r")
+            local res = file:read("*all")
+            assert.same(res, "return {[\"fruit\"]=\"apple\",}")
+            local res2 = lib.load_table_from_file(tmpfile)
+            assert.same(data, res2)
+        end)
+
+        it('Be able to use a code note', function()
+            local filepath = "/my/abs/path/file.txt"
+            local line_number = 43
+            local contents = "My note for line 43"
+            local code_note = CodeNote:new(filepath, line_number, contents)
+            assert.same(code_note:get_filepath(), filepath)
+            assert.same(code_note:get_line_number(), line_number)
+            assert.same(code_note:get_contents(), contents)
+            assert.same(code_note:get_key(), "/my/abs/path/file.txt::43")
+            assert.same(code_note:get_value(), contents)
         end)
 
     end)
