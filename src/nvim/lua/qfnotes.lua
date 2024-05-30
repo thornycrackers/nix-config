@@ -203,13 +203,36 @@ function tick(current_line_num)
     end
 end
 
+local function setup_changedtick_listener(bufnr)
+    lib.log("Setting up listener for buffer " .. tostring(bufnr))
+    vim.api.nvim_buf_attach(0, false, {
+        -- I don't use all the variables but I name all here for ease of reference.
+        on_lines = function(lines, buf_handle, changed_tick, first_line_changed,
+                            last_line_changed, last_line_in_updated_range)
+            local current_line_number = get_current_line_number()
+            tick(current_line_number)
+        end
+    })
+end
+
+local setup_listener_callback = function(args)
+    setup_changedtick_listener(args.buf)
+end
+
+-- After creating a new buffer (except during startup, see VimEnter) or renaming an existing buffer.
+vim.api.nvim_create_autocmd("BufNew", {callback = setup_listener_callback})
+-- The above autocommand will not trigger on enter
+vim.api.nvim_create_autocmd("VimEnter", {callback = setup_listener_callback})
+
+-- Old command
+-- autocmd TextChanged,TextChangedI * lua if vim.fn.getline(vim.fn.line('.')) == '' and vim.fn.col('.') == 1 then tick(vim.fn.line('.')) end
+
 -- Register
 vim.cmd([[
     augroup MyAutoCommands
         autocmd!
         autocmd BufRead * lua draw_existing_note_symbols()
         autocmd VimEnter * lua draw_existing_note_symbols()
-        autocmd TextChanged,TextChangedI * lua if vim.fn.getline(vim.fn.line('.')) == '' and vim.fn.col('.') == 1 then tick(vim.fn.line('.')) end
     augroup END
 ]])
 vim.api.nvim_set_keymap('n', '<leader>eno', '<cmd>lua open_note()<cr>',
