@@ -102,6 +102,7 @@ alias dri='docker rmi -f $(docker images -q)'
 alias hugodate="date --utc +%FT%H:%M:%SZ"
 alias rmvenvs="find . -name '.venv' -type d | xargs rm -rf"
 alias chx="chmod +x"
+alias ap="ansible-playbook"
 
 # cdspell If set, minor errors in the spelling of a directory component in a cd command will be corrected.
 shopt -s cdspell
