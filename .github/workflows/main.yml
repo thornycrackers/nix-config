@@ -20,4 +20,4 @@ jobs:
       - name: Lint python with ruff
         run: nix develop --command ruff check .
       - name: Lint Ansible code
-        run: cd cd playground/ansible-playbooks && ansible-lint
+        run: cd playground/ansible-playbooks && ansible-lint
