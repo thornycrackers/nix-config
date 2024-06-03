@@ -19,3 +19,5 @@ jobs:
         run: find . -name "*.sh" -print0 | xargs -0 shellcheck --format=gcc
       - name: Lint python with ruff
         run: nix develop --command ruff check .
+      - name: Lint Ansible code
+        run: cd cd playground/ansible-playbooks && ansible-lint
