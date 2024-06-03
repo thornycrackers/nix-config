@@ -19,7 +19,7 @@ IFS=$'\n\t'
 # list all the current vms. If nothing shows up it is probably due to LIBVIRT_DEFAULT_URI
 # not set to the correct host.
 function list_vms {
-    virsh net-list --all
+    virsh list --all
 }
 
 function list_networks {
