@@ -1,0 +1,57 @@
+---
+- name: Install Nomad on Ubuntu 24.04
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure required packages are installed
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+        update_cache: true
+
+    - name: Add Nomad GPG key
+      ansible.builtin.apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+
+    - name: Add Nomad Repository
+      ansible.builtin.apt_repository:
+        repo: deb https://apt.releases.hashicorp.com noble main
+        state: present
+
+    - name: Update apt and install Nomad
+      ansible.builtin.apt:
+        name: nomad
+        state: present
+        update_cache: true
+
+    - name: Ensure Nomad is running
+      ansible.builtin.systemd:
+        name: nomad.service
+        state: started
+        enabled: false
+
+    - name: Update apt and install Consul
+      ansible.builtin.apt:
+        name: consul
+        state: present
+        update_cache: true
+
+    - name: Copy over consul single node config
+      ansible.builtin.copy:
+        src: files/consul.hcl
+        dest: /etc/consul.d/consul.hcl
+        mode: '0644'
+
+    - name: Ensure Consul is running
+      ansible.builtin.systemd:
+        name: consul.service
+        state: started
+        enabled: false
+        # Consul takes forever to register as running
+        # This command works so just ignore blocking
+        no_block: true
