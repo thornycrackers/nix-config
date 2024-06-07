@@ -36,6 +36,12 @@ job "hello-world" {
         name = "hello-world"
         port = "hello-world"
         provider = "consul"
+
+        tags = [
+          "traefik.enable=true",
+          "traefik.http.routers.http.rule=Host(`example.com`)",
+        ]
+
       }
     }
   }
