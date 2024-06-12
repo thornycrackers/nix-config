@@ -23,6 +23,8 @@ ansible-playbook -i inventory test-playbook.yml
 export ANSIBLE_INVENTORY=$(realpath inventory)
 # If you get sick of typing in the sudo password (adding -kK to commands)
 export ANSIBLE_BECOME_PASSWORD_FILE=$(realpath passwordfile.txt)
+# Set this to the IP of the nomad server to make running commands easier
+export NOMAD_ADDR=http://192.168.0.1:4646
 ```
 
 ## Playbooks
@@ -40,9 +42,20 @@ ansible-playbook install-docker.yml
 ansible all --become -m ansible.builtin.user -a "name=myuser groups=docker append=yes"
 # Get nomad and consul installed
 ansible-playbook install-nomad-and-consul.yml
+# There are also two sample nomad jobs that can be deployed. The first one is a
+# hello world http server and the second runs traefik. Running the following
+# commands depends on NOMAD_ADDR being set.
+nomad job run jobs/hello_world.nomad.hcl
+
 ```
 
-Now you're ready to either host your applications or test out this local setup.
+Nomad is port 4646, consul is 8500, traefik ui is 8081 and lb is 8080.
+You can run the following to make sure everything works as expected:
+
+```bash
+curl -H "Host: example.com" http://192.168.0.1:8080
+Hello World!
+```
 
 # References
 
