@@ -181,7 +181,7 @@ nixc() {
 
 # Function for loading different versions of python
 lkjh() {
-    CHOICE=$(echo -ne "python311\npython310\npython39" | fzf)
+    CHOICE=$(echo -ne "python312\npython311\npython310\npython39" | fzf)
     [ -z "$CHOICE" ] && echo "no choice" && return 1
     nix develop "$HOME"/.nixpkgs#"$CHOICE" -c "$SHELL"
 }

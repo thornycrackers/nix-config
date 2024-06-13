@@ -120,6 +120,10 @@
             myPkgs = pkgs;
             pythonVersion = pkgs.python311;
           };
+          python312 = pythonShell {
+            myPkgs = pkgs;
+            pythonVersion = pkgs.python312;
+          };
         }
       );
 
