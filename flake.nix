@@ -122,7 +122,8 @@
           };
           python312 = pythonShell {
             myPkgs = pkgs;
-            pythonVersion = pkgs.python312;
+            # Stable has a bug with babel 2.12.1 and needs updating to 2.13.1
+            pythonVersion = pkgs.unstable.python312;
           };
         }
       );
