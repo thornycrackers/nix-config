@@ -5,6 +5,7 @@ pkgs: with pkgs; [
   csvkit
   curl
   direnv
+  dig
   entr
   feh
   file
