@@ -19,6 +19,12 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Use nftables
+  networking.nftables.enable = true;
+
+  # Don't block DHCP requests to the Incus network
+  networking.firewall.trustedInterfaces = [ "incusbr0" ];
+
   # Set your time zone.
   time.timeZone = "America/Edmonton";
 
@@ -40,6 +46,7 @@
       "wheel"
       "docker"
       "libvirtd"
+      "incus-admin"
     ];
     # Required for the docker rootless
     subUidRanges = [
@@ -146,6 +153,50 @@
 
   # Enable virtd for virtualization
   virtualisation.libvirtd.enable = true;
+
+  # Enable incus for better cli management of vms
+  virtualisation.incus.enable = true;
+  # Incus preseed values. Copied from the wiki page https://wiki.nixos.org/wiki/Incus
+  # They all seemed to match what I needed.
+  virtualisation.incus.preseed = {
+    networks = [
+      {
+        config = {
+          "ipv4.address" = "10.0.100.1/24";
+          "ipv4.nat" = "true";
+        };
+        name = "incusbr0";
+        type = "bridge";
+      }
+    ];
+    profiles = [
+      {
+        devices = {
+          eth0 = {
+            name = "eth0";
+            network = "incusbr0";
+            type = "nic";
+          };
+          root = {
+            path = "/";
+            pool = "default";
+            size = "35GiB";
+            type = "disk";
+          };
+        };
+        name = "default";
+      }
+    ];
+    storage_pools = [
+      {
+        config = {
+          source = "/var/lib/incus/storage-pools/default";
+        };
+        driver = "dir";
+        name = "default";
+      }
+    ];
+  };
 
   # When I shutdown the computer, docker takes forever and the default is 90s.
   # I don't feel like waiting more than 10 seconds.
