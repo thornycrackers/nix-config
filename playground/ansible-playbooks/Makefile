@@ -5,8 +5,8 @@ help:
 up: ## Build the container
 	./setup_vm.sh
 
-up: ## Build the container
-	./setup_vm.sh
+enter: ## Enter the running vm
+	incus exec ubuntu2204 -- bash
 
 clean: ## Stop and remove the container
 	incus stop ubuntu2204 && incus rm ubuntu2204
