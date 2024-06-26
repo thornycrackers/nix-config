@@ -46,7 +46,6 @@ ansible-playbook install-nomad-and-consul.yml
 # hello world http server and the second runs traefik. Running the following
 # commands depends on NOMAD_ADDR being set.
 nomad job run jobs/hello_world.nomad.hcl
-
 ```
 
 Nomad is port 4646, consul is 8500, traefik ui is 8081 and lb is 8080.
@@ -56,6 +55,11 @@ You can run the following to make sure everything works as expected:
 curl -H "Host: example.com" http://192.168.0.1:8080
 Hello World!
 ```
+
+## Setting up the VM
+
+You can run the `~/setup_vm.sh` script to create yourself and environment to run this all on.
+It assumes you have incus installed and working.
 
 # References
 
