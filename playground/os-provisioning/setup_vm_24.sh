@@ -52,6 +52,7 @@ incus exec "$container_name" -- chown -R ansible:ansible /home/ansible/.ssh
 # The IP changes every time we create a new container so I automate the
 # creation of the inventory file.
 ansible_ip=$(incus info "$container_name" | grep "10.0" | awk '{ print $2 }' | cut -d'/' -f1)
+echo "$ansible_ip"
 cat <<EOF >inventory
 [myhosts]
 myserver ansible_host=$ansible_ip ansible_user=ansible
