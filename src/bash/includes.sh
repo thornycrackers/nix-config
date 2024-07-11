@@ -19,6 +19,12 @@ _git_log_oneline_format='%C(green)%h%C(reset) %><(55,trunc)%s%C(red)%d%C(reset) 
 
 # Aliases
 alias t='tmux'
+alias c='cd'
+alias m='make'
+alias a='ack'
+alias g='grep'
+alias f='find'
+alias p='python'
 alias ta='tmux attach'
 alias n='nvim'
 alias inc='nvim ~/.nixpkgs/src/bash/includes.sh'
@@ -31,6 +37,7 @@ alias nd="nix develop"
 alias ..="cd ../"
 alias ...="cd ../.."
 alias ls="ls --color=tty"
+alias l="ls --color=tty"
 alias me="make enter"
 alias mu="make up"
 alias mc="make clean"
@@ -798,9 +805,16 @@ _ssh() {
     local cur opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    opts=$(grep '^Host' ~/.ssh/config 2>/dev/null | grep -v '[?*]' | cut -d ' ' -f 2-)
+    opts=$(grep -i '^host' ~/.ssh/config 2>/dev/null | grep -v '[?*]' | cut -d ' ' -f 2-)
     COMPREPLY=("$(compgen -W "$opts" -- "$cur")")
     return 0
 }
 complete -F _ssh ssh
 complete -F _ssh s
+complete -F _cd c
+complete -F _ls l
+complete -F _make m
+complete -F _ack a
+complete -F _grep g
+complete -F _find f
+complete -F _python p
