@@ -21,6 +21,15 @@
   networking.hostName = "enigma"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
+  # Use nftables
+  networking.nftables.enable = true;
+
+  # Don't block DHCP requests to the Incus network
+  networking.firewall.trustedInterfaces = [
+    "incusbr0"
+    "docker0"
+  ];
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -50,6 +59,7 @@
       "networkmanager"
       "wheel"
       "docker"
+      "incus-admin"
     ];
     # Required for the docker rootless
     subUidRanges = [
@@ -114,6 +124,50 @@
   virtualisation.docker.rootless = {
     enable = true;
     setSocketVariable = true;
+  };
+
+  # Enable incus for better cli management of vms
+  virtualisation.incus.enable = true;
+  # Incus preseed values. Copied from the wiki page https://wiki.nixos.org/wiki/Incus
+  # They all seemed to match what I needed.
+  virtualisation.incus.preseed = {
+    networks = [
+      {
+        config = {
+          "ipv4.address" = "10.0.100.1/24";
+          "ipv4.nat" = "true";
+        };
+        name = "incusbr0";
+        type = "bridge";
+      }
+    ];
+    profiles = [
+      {
+        devices = {
+          eth0 = {
+            name = "eth0";
+            network = "incusbr0";
+            type = "nic";
+          };
+          root = {
+            path = "/";
+            pool = "default";
+            size = "35GiB";
+            type = "disk";
+          };
+        };
+        name = "default";
+      }
+    ];
+    storage_pools = [
+      {
+        config = {
+          source = "/var/lib/incus/storage-pools/default";
+        };
+        driver = "dir";
+        name = "default";
+      }
+    ];
   };
 
   # This value determines the NixOS release from which the default
