@@ -11,19 +11,6 @@ start_echo:  ## Run the echo.py file. "Helloworld" example to test everything se
 start_uniqueid:  ## Run unique-ids file
 	./maelstrom/maelstrom test -w unique-ids --bin unique-ids.py --time-limit 30 --rate 1000 --node-count 3 --availability total --nemesis partition
 
-start_broadcast_parta:  ## Run broadcast file
-	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 1 --time-limit 20 --rate 10
-
-start_broadcast_partb:  ## Run broadcast file
-	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 5 --time-limit 20 --rate 10
-
-start_broadcast_partc:  ## Run broadcast file
-	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 5 --time-limit 20 --rate 10 --nemesis partition
-
-start_broadcast_partd:  ## Run broadcast file, check performance
-	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 25 --time-limit 20 --rate 100 --latency 100
-	cat store/broadcast/latest/results.edn | grep -A 8 ':net' | grep 'msgs-per-op' ; cat store/broadcast/latest/results.edn | grep -A 4 ':stable-latencies'
-
-start_broadcast_parte:  ## Run broadcast file, check performance
+start_broadcast:  ## Run broadcast file, grep for performance
 	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 25 --time-limit 20 --rate 100 --latency 100
 	cat store/broadcast/latest/results.edn | grep -A 8 ':net' | grep 'msgs-per-op' ; cat store/broadcast/latest/results.edn | grep -A 4 ':stable-latencies'

@@ -22,7 +22,7 @@
             myPkgs = pkgs;
             pythonVersion = pkgs.python311;
             additionalPkgs = [
-              pkgs.jdk17_headless
+              pkgs.jdk11_headless
               pkgs.gnuplot
               pkgs.graphviz
             ];
