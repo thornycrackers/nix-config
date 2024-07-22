@@ -70,6 +70,20 @@
           additionalPkgs ? [ ],
         }:
         myPkgs.mkShell {
+          shellHook =
+            with myPkgs;
+            let
+              pythonldlibpath = lib.makeLibraryPath ([
+                stdenv.cc.cc
+                xmlsec
+                libxml2
+                zlib
+              ]);
+            in
+            # Export the LD_LIBRARY_PATH so that pip can resolve shared libs when installing
+            ''
+              export LD_LIBRARY_PATH="${pythonldlibpath}"
+            '';
           nativeBuildInputs =
             with myPkgs;
             let
@@ -86,8 +100,7 @@
               devpython
               pkg-config
               libtool
-              xmlsec.dev
-              libxml2.dev
+              rdkafka
             ]
             ++ additionalPkgs;
         };
