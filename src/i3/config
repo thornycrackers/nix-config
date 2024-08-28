@@ -3,6 +3,7 @@
 
 # Use "Windows" key as modifier
 set $mod Mod4
+set $alt Mod1
 
 # Use custom font
 font pango:DejaVuSansMono Nerd Font
@@ -13,8 +14,8 @@ focus_wrapping workspace
 
 # Custome Keybinds
 bindsym $mod+p exec "CM_LAUNCHER=rofi clipmenu"
-bindsym $mod+d exec ~/.config/bash/bin/myrofi
-bindsym $mod+b exec ~/.config/i3/scripts/open_bookmarks.sh
+bindsym $mod+space exec ~/.config/bash/bin/myrofi
+bindsym $alt+space exec ~/.config/i3/scripts/open_bookmarks.sh
 bindsym $mod+Return exec kitty
 bindsym $mod+n exec kitty --class=floating
 bindsym $mod+t exec rofi-pass
