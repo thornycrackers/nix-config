@@ -54,6 +54,23 @@ curl -H "Host: example.com" http://192.168.0.1:8080
 Hello World!
 ```
 
+## Memory Oversubscription
+
+There are two nomad jobs I built for testing memory oversubscription.
+The feature is disabled by default in Nomad, it can be enabled with:
+
+```bash
+curl -s http://localhost:4646/v1/operator/scheduler/configuration | \
+  jq '.SchedulerConfig | .MemoryOversubscriptionEnabled=true' | \
+  curl -X PUT http://localhost:4646/v1/operator/scheduler/configuration -d @-
+```
+
+`jobs/memory_oversubscribe.hcl`: Will continuously use RAM until OOM
+`jobs/memory_oversubscribe2.hcl`: Statically takes up a certain amount of RAM
+
+Locally in an incus container, Nomad can sometimes go into a CPU spike when
+trying to OOM the growing task.
+
 # References
 
 I find myself referencing [Ansible Config][1] options to set certain environment variables.
