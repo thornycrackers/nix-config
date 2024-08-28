@@ -423,6 +423,30 @@ xpsh() {
     xpanes -S /tmp/tmux-$UID/default --ssh "${choices[*]}"
 }
 
+# Set the Nomad server environment variable
+nos() {
+    choice=$(fzf <"$1")
+    # Save in history for bash
+    history -s ssh "${choice}"
+    export NOMAD_ADDR="$choice"
+}
+
+# "nex /bin/bash" and then interactively select the task to jump into
+nex() {
+    nomad_jobs=$(nomad job status | tail -n +2 | awk '{ print $1 }')
+    choice=$(echo "$nomad_jobs" | fzf)
+    if [ -n "$choice" ]; then
+        # Choose the first allocation in the list because I care less about the
+        # allocation and more about the task itself.
+        nomad_job_allocation=$(nomad job status -json "$choice" | jq -r .[].Allocations[].ID | head -n 1)
+        nomad_tasks=$(nomad alloc-status -json "$nomad_job_allocation" | jq -r ".TaskStates | keys[]")
+        choice=$(echo "$nomad_tasks" | fzf)
+        if [ -n "$choice" ]; then
+            nomad alloc exec -i -t -task "$choice" "$nomad_job_allocation" "$1"
+        fi
+    fi
+}
+
 # Find and print all of the python imports in a directory
 findreqs() {
     find . -name "*.py" -not -path '*/.venv/*' -print0 | xargs -0 importprinter
