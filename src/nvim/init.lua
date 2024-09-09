@@ -124,77 +124,76 @@ autocmd VimEnter * Abolish perf performance
 ]]
 
 -- Keymaps
+noremap = {noremap = true}
 -- noh gets rid of highlighted search results
-kmap('n', '<leader><leader>', ':noh<cr>', {noremap = true})
+kmap('n', '<leader><leader>', ':noh<cr>', noremap)
 -- `jj` maps to escape
-kmap('i', 'jj', '<esc>', {noremap = true})
+kmap('i', 'jj', '<esc>', noremap)
 -- Visually select last copied text
-kmap('n', 'gp', "`[v`]", {noremap = true})
+kmap('n', 'gp', "`[v`]", noremap)
 -- Changelist navigation
-kmap('n', '<leader>co', '<cmd>copen<cr>', {noremap = true})
-kmap('n', '<leader>cc', '<cmd>cclose<cr>', {noremap = true})
-kmap('n', '<leader>cp', "<cmd>cprev<cr>", {noremap = true})
-kmap('n', '<leader>cn', "<cmd>cnext<cr>", {noremap = true})
-kmap('n', '<leader>lp', "<cmd>lprev<cr>", {noremap = true})
-kmap('n', '<leader>ln', "<cmd>lnext<cr>", {noremap = true})
-kmap('n', '<leader>lo', "<cmd>lopen<cr>", {noremap = true})
-kmap('n', '<leader>lc', "<cmd>lclose<cr>", {noremap = true})
-kmap('n', '<leader>ll', "<Plug>(Luadev-Run)", {noremap = true})
+kmap('n', '<leader>co', '<cmd>copen<cr>', noremap)
+kmap('n', '<leader>cc', '<cmd>cclose<cr>', noremap)
+kmap('n', '<leader>cp', "<cmd>cprev<cr>", noremap)
+kmap('n', '<leader>cn', "<cmd>cnext<cr>", noremap)
+kmap('n', '<leader>lp', "<cmd>lprev<cr>", noremap)
+kmap('n', '<leader>ln', "<cmd>lnext<cr>", noremap)
+kmap('n', '<leader>lo', "<cmd>lopen<cr>", noremap)
+kmap('n', '<leader>lc', "<cmd>lclose<cr>", noremap)
+kmap('n', '<leader>ll', "<Plug>(Luadev-Run)", noremap)
 -- Shorcut to insert pudb statements for python
 kmap('n', '<leader>epu', 'ofrom pudb import set_trace; set_trace()<esc>',
-     {noremap = true})
+     noremap)
 -- Shorcut to embed ipython
 kmap('n', '<leader>epi',
      'ofrom IPython import embed<cr>from traitlets.config import get_config<cr>c = get_config()<cr>c.InteractiveShellEmbed.colors = "Linux"<cr>embed(config=c)<esc>',
-     {noremap = true})
+     noremap)
 -- yank current word and make print statement on next line
-kmap('n', '<leader>epp', 'yiwoprint("<esc>pa: ", <esc>pa)<esc>V=',
-     {noremap = true})
+kmap('n', '<leader>epp', 'yiwoprint("<esc>pa: ", <esc>pa)<esc>V=', noremap)
 -- Easy new tab creation
-kmap('n', '<c-w>t', "<cmd>tabnew<cr>", {noremap = true})
-kmap('n', '<c-w><c-f>', '<c-w>f<c-w>T', {noremap = true})
-kmap('n', '<c-w><c-]>', '<c-w>v<c-]><c-w>T', {noremap = true})
-kmap('n', '<c-w><c-t>', '<c-w>v<c-w>T', {noremap = true})
-kmap('n', '<c-w><c-w>', '<cmd>w<cr>', {noremap = true})
-kmap('n', '<c-w><c-a>', '<cmd>wa<cr>', {noremap = true})
-kmap('n', '<c-q><c-a>', '<cmd>qa!<cr>', {noremap = true})
-kmap('n', '<leader>ee', '<cmd>e!<cr>', {noremap = true})
-kmap('n', '<expr> k', [[(v:count > 1 ? "m'" . v:count : '') . 'k']],
-     {noremap = true})
-kmap('n', '<expr> j', [[(v:count > 1 ? "m'" . v:count : '') . 'j']],
-     {noremap = true})
+kmap('n', '<c-w>t', "<cmd>tabnew<cr>", noremap)
+kmap('n', '<c-w><c-f>', '<c-w>f<c-w>T', noremap)
+kmap('n', '<c-w><c-]>', '<c-w>v<c-]><c-w>T', noremap)
+kmap('n', '<c-w><c-t>', '<c-w>v<c-w>T', noremap)
+kmap('n', '<c-w><c-w>', '<cmd>w<cr>', noremap)
+kmap('n', '<c-w><c-a>', '<cmd>wa<cr>', noremap)
+kmap('n', '<c-q><c-a>', '<cmd>qa!<cr>', noremap)
+kmap('n', '<leader>ee', '<cmd>e!<cr>', noremap)
+kmap('n', '<expr> k', [[(v:count > 1 ? "m'" . v:count : '') . 'k']], noremap)
+kmap('n', '<expr> j', [[(v:count > 1 ? "m'" . v:count : '') . 'j']], noremap)
 -- Call Ale Fix
-kmap('n', '<leader>ef', '<cmd>ALEFix<cr>', {noremap = true})
-kmap('n', '<leader>el', '<cmd>ALELint<cr>', {noremap = true})
-kmap('n', '<leader>et', '<cmd>lua toggle_ale_linting()<cr>', {noremap = true})
+kmap('n', '<leader>ef', '<cmd>ALEFix<cr>', noremap)
+kmap('n', '<leader>el', '<cmd>ALELint<cr>', noremap)
+kmap('n', '<leader>et', '<cmd>lua toggle_ale_linting()<cr>', noremap)
 -- Markdown functions
 kmap('n', '<leader>po',
-     '<cmd>AngryReviewer<cr><c-w>k<cmd>ALELint<cr><cmd>lopen<cr><c-w>k',
-     {noremap = true})
-kmap('n', '<leader>pse', '<cmd>LanguageToolSetUp<cr>', {noremap = true})
-kmap('n', '<leader>psc', '<cmd>LanguageToolCheck<cr>', {noremap = true})
-kmap('n', '<leader>psu', '<cmd>LanguageToolSummary<cr>', {noremap = true})
-kmap('n', '<leader>psl', '<cmd>LanguageToolClear<cr>', {noremap = true})
-kmap('n', '<leader>pc', '<cmd>cclose<cr><cmd>lclose<cr>', {noremap = true})
-kmap('n', '<leader>pg', '<cmd>Goyo<cr>', {noremap = true})
-kmap('n', '<leader>pp', 'vipJVgq', {noremap = true})
+     '<cmd>AngryReviewer<cr><c-w>k<cmd>ALELint<cr><cmd>lopen<cr><c-w>k', noremap)
+kmap('n', '<leader>pse', '<cmd>LanguageToolSetUp<cr>', noremap)
+kmap('n', '<leader>psc', '<cmd>LanguageToolCheck<cr>', noremap)
+kmap('n', '<leader>psu', '<cmd>LanguageToolSummary<cr>', noremap)
+kmap('n', '<leader>psl', '<cmd>LanguageToolClear<cr>', noremap)
+kmap('n', '<leader>pc', '<cmd>cclose<cr><cmd>lclose<cr>', noremap)
+kmap('n', '<leader>pg', '<cmd>Goyo<cr>', noremap)
+kmap('n', '<leader>pp', 'vipJVgq', noremap)
 -- <leader>pl defined in nix CustomRC
 -- Add "il" text object to mean "in line"
-kmap('x', 'il', 'g_o^', {noremap = true})
-kmap('o', 'il', '<cmd>normal vil<cr>', {noremap = true})
-kmap('n', '<leader>v', '^vg_o^', {noremap = true})
+kmap('x', 'il', 'g_o^', noremap)
+kmap('o', 'il', '<cmd>normal vil<cr>', noremap)
+kmap('n', '<leader>v', '^vg_o^', noremap)
 -- Shortcuts to help take notes
 -- Print current filepath with line number to reference
 kmap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>',
-     {noremap = true});
+     noremap);
 kmap('n', '<leader>,i',
      '<Cmd>edit ' .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>',
-     {noremap = true});
+     noremap);
 kmap('n', '<leader>,n',
      '<Cmd>edit ' .. vim.fn.expand('~') .. '/Obsidian/MyVault/notes.md<CR>',
-     {noremap = true});
+     noremap);
 -- Search and replace word under cursor
 kmap('n', '<Leader>r', ':%s/<c-r><c-w>/', {noremap = true, silent = true})
+-- In insert mode, insert a timestamp with the current time
+kmap('i', '<F5>', '<c-r>=strftime("%x %H:%M:%S")<cr>', noremap)
 
 -- Build a custom status line
 local status_line = {
@@ -438,8 +437,8 @@ vim.g.ale_fixers = {
     nix = {"nixfmt"},
     lua = {"lua-format"}
 }
--- Use 4 spaces for shfmt, not tabs
-vim.g.ale_sh_shfmt_options = '-i 4'
+-- Use 4 spaces for shfmt, not tabs. Indent case statements
+vim.g.ale_sh_shfmt_options = '-i 4 -ci'
 
 -- osc-yank
 kmap('n', '<leader>y', '<cmd>OSCYankRegister 0<cr>', {noremap = true})
