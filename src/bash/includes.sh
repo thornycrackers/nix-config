@@ -43,6 +43,7 @@ alias mu="make up"
 alias mc="make clean"
 alias vin="virtualenv .venv && source .venv/bin/activate"
 alias vout="deactivate && rm -rf .venv"
+alias rmve="rm -rf .venv"
 alias ns="nix-shell -p"
 alias tf="terraform"
 alias tfi="terraform init"
@@ -719,6 +720,13 @@ gf() {
     git fetch "$1" "$BRANCH"
 }
 
+ghu() {
+    # Build the github url for a file
+    base_url=$(grep github .git/config | cut -d'@' -f 2 | sed 's/.git//g' | tr ':' '/')
+    repo_url="https://$base_url"
+    echo "$repo_url/blob/$(gcb)/$1"
+}
+
 ########
 # !aws
 ########
@@ -838,7 +846,5 @@ complete -F _ssh s
 complete -F _cd c
 complete -F _ls l
 complete -F _make m
-complete -F _ack a
 complete -F _grep g
-complete -F _find f
 complete -F _python p

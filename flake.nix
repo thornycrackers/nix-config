@@ -78,6 +78,7 @@
                 xmlsec
                 libxml2
                 zlib
+                rdkafka
               ]);
             in
             # Export the LD_LIBRARY_PATH so that pip can resolve shared libs when installing
