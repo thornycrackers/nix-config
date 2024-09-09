@@ -20,4 +20,4 @@ jobs:
       - name: Lint python with ruff
         run: nix develop --command ruff check .
       - name: Lint Ansible code
-        run: nix develop --command ansible-lint playground/os_provisioning/
+        run: nix develop --command ansible-lint playground/os-provisioning/
