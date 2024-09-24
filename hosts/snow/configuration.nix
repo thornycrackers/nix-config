@@ -14,7 +14,8 @@
     '';
   };
 
-  networking.hostName = "snow"; # Define your hostname.
+  # Define your hostname.
+  networking.hostName = "snow";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -91,111 +92,109 @@
     ];
 
   # Graphical settings. Use i3 to manage windows but xfce as a desktop manager.
-  services.xserver = {
-    enable = true;
+  services = {
     displayManager = {
       defaultSession = "xfce+i3";
     };
-    windowManager = {
-      i3 = {
-        enable = true;
-        package = pkgs.i3-gaps;
+    xserver = {
+      enable = true;
+      windowManager = {
+        i3 = {
+          enable = true;
+          package = pkgs.i3-gaps;
+        };
       };
-    };
-    desktopManager = {
-      xterm.enable = false;
-      xfce = {
-        enable = true;
-        noDesktop = true;
-        enableXfwm = false;
+      desktopManager = {
+        xterm.enable = false;
+        xfce = {
+          enable = true;
+          noDesktop = true;
+          enableXfwm = false;
+        };
       };
+      videoDrivers = [ "nvidia" ];
     };
-    videoDrivers = [ "nvidia" ];
-  };
-
-  # Enable ssh
-  services.openssh = {
-    enable = true;
-  };
-
-  # Enable pipewire to take care of everything
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
-
-  # Setup printing
-  services.printing = {
-    enable = true;
-    drivers = [ pkgs.hplip ];
+    openssh = {
+      enable = true;
+    };
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      jack.enable = true;
+    };
+    printing = {
+      enable = true;
+      drivers = [ pkgs.hplip ];
+    };
+    tailscale.enable = true;
   };
 
   # gtk2 is the most reliable out all the other flavors that I've tried so far
   # so I stick with it
   programs.gnupg.agent = {
     enable = true;
-    pinentryFlavor = "gtk2";
+    pinentryPackage = pkgs.pinentry-gtk2;
     enableSSHSupport = true;
   };
 
-  # Setup tailscale private network
-  services.tailscale.enable = true;
-
-  # Enable docker
-  virtualisation.docker.enable = true;
-  virtualisation.docker.rootless = {
-    enable = true;
-    setSocketVariable = true;
-  };
-
-  # Enable virtd for virtualization
-  virtualisation.libvirtd.enable = true;
-
-  # Enable incus for better cli management of vms
-  virtualisation.incus.enable = true;
-  # Incus preseed values. Copied from the wiki page https://wiki.nixos.org/wiki/Incus
-  # They all seemed to match what I needed.
-  virtualisation.incus.preseed = {
-    networks = [
-      {
-        config = {
-          "ipv4.address" = "10.0.100.1/24";
-          "ipv4.nat" = "true";
-        };
-        name = "incusbr0";
-        type = "bridge";
-      }
-    ];
-    profiles = [
-      {
-        devices = {
-          eth0 = {
-            name = "eth0";
-            network = "incusbr0";
-            type = "nic";
-          };
-          root = {
-            path = "/";
-            pool = "default";
-            size = "35GiB";
-            type = "disk";
-          };
-        };
-        name = "default";
-      }
-    ];
-    storage_pools = [
-      {
-        config = {
-          source = "/var/lib/incus/storage-pools/default";
-        };
-        driver = "dir";
-        name = "default";
-      }
-    ];
+  # virtualisation stuff I want enabled
+  virtualisation = {
+    docker = {
+      enable = true;
+      rootless = {
+        enable = true;
+        setSocketVariable = true;
+      };
+    };
+    # Enable virtd for virtualization
+    libvirtd.enable = true;
+    # Enable incus for easier
+    incus = {
+      enable = true;
+      # Incus preseed values. Copied from the wiki page https://wiki.nixos.org/wiki/Incus
+      # They all seemed to match what I needed.
+      preseed = {
+        networks = [
+          {
+            config = {
+              "ipv4.address" = "10.0.100.1/24";
+              "ipv4.nat" = "true";
+            };
+            name = "incusbr0";
+            type = "bridge";
+          }
+        ];
+        profiles = [
+          {
+            devices = {
+              eth0 = {
+                name = "eth0";
+                network = "incusbr0";
+                type = "nic";
+              };
+              root = {
+                path = "/";
+                pool = "default";
+                size = "35GiB";
+                type = "disk";
+              };
+            };
+            name = "default";
+          }
+        ];
+        storage_pools = [
+          {
+            config = {
+              source = "/var/lib/incus/storage-pools/default";
+            };
+            driver = "dir";
+            name = "default";
+          }
+        ];
+      };
+    };
   };
 
   # When I shutdown the computer, docker takes forever and the default is 90s.
@@ -203,6 +202,12 @@
   systemd.extraConfig = ''
     DefaultTimeoutStopSec=10s
   '';
+
+  programs.steam = {
+    enable = true;
+    # Let pipewire handle the sound
+    package = pkgs.steam.override { extraLibraries = pkgs: [ pkgs.pipewire ]; };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

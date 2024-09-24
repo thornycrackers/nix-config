@@ -2,12 +2,12 @@
   description = "Development Machine's flake";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-23.11";
+    nixpkgs.url = "nixpkgs/nixos-24.05";
     # Unstable for select packages
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     # Home manager for dotfiles
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Wrapper manager for wrapping applications (careful updating)
