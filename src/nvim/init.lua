@@ -103,24 +103,18 @@ au BufLeave *.py call clearmatches()
 -- Custom commands
 vim.cmd [[
 command! MakeTagsPython !ctags --exclude=venv --exclude=.venv --languages=python --python-kinds=-i -R .
-autocmd VimEnter * Abolish prod production
 autocmd VimEnter * Abolish deve development
 autocmd VimEnter * Abolish devs developers
 autocmd VimEnter * Abolish reqs requirements
-autocmd VimEnter * Abolish app{s,} application{}
-autocmd VimEnter * Abolish ver{s,} version{}
 autocmd VimEnter * iabbrev psql PostgreSQL
 autocmd VimEnter * iabbrev soa Service-oriented architecture
 autocmd VimEnter * Abolish dmint deploymint
-autocmd VimEnter * Abolish infra infrastructure
 autocmd VimEnter * Abolish envi environment
 autocmd VimEnter * Abolish vuln vulnerability
 autocmd VimEnter * Abolish vulns vulnerabilities
 autocmd VimEnter * Abolish mods modifications
 autocmd VimEnter * Abolish dle dreamline express
 autocmd VimEnter * Abolish swe{ing,} software engineer{}
-autocmd VimEnter * Abolish deps dependencies
-autocmd VimEnter * Abolish perf performance
 ]]
 
 -- Keymaps

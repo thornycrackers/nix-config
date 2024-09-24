@@ -22,7 +22,7 @@ let
           gruvbox-nvim
 
           # Syntax coloring
-          nvim-ts-rainbow
+          rainbow-delimiters-nvim
           nvim-treesitter.withAllGrammars
 
           # Autocompletes
