@@ -3,6 +3,8 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-24.05";
+    # For Darwin until https://github.com/NixOS/nixpkgs/pull/298070 fixed
+    nixpkgs2311.url = "nixpkgs/nixos-23.11";
     # Unstable for select packages
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     # Home manager for dotfiles
@@ -15,10 +17,14 @@
       url = "github:viperML/wrapper-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Darwin for macbook
+    # Darwin for macbook, follow 2311 till fixed
     darwin = {
       url = "github:lnl7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs2311";
+    };
+    home-manager2311 = {
+      url = "github:nix-community/home-manager/release-23.11";
+      inputs.nixpkgs.follows = "nixpkgs2311";
     };
   };
 
@@ -27,6 +33,7 @@
       self,
       nixpkgs,
       home-manager,
+      home-manager2311,
       ...
     }@inputs:
     let
@@ -45,6 +52,15 @@
       nixpkgsFor = forAllSystems (
         system:
         import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [ my-custom-overlay ];
+        }
+      );
+
+      nixpkgsFor2311 = forAllSystems (
+        system:
+        import inputs.nixpkgs2311 {
           inherit system;
           config.allowUnfree = true;
           overlays = [ my-custom-overlay ];
@@ -317,6 +333,7 @@
           specialArgs = with inputs; {
             inherit wrapper-manager flakePkgs;
           };
+          pkgs = nixpkgsFor2311.${system};
           modules = [
             # Overlays-module makes "pkgs.unstable" available in configuration.nix
             # This makes my custom overlay available for others to use.
@@ -360,7 +377,7 @@
               }
             )
             ./hosts/macbookwork/darwin-configuration.nix
-            home-manager.darwinModules.home-manager
+            home-manager2311.darwinModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
