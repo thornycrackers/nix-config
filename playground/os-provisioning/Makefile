@@ -19,3 +19,12 @@ enter18: ## Enter Ubuntu 18.04
 
 clean18: ## Stop and remove Ubuntu 18.04
 	incus stop ubuntu1804 && incus rm ubuntu1804
+
+up9: ## Build Centos 9
+	./setup_vm_centos_9_stream.sh
+
+enter9: ## Enter Centos 9
+	incus exec centos9 -- bash
+
+clean9: ## Stop and remove Centos 9
+	incus stop centos9 && incus rm centos9
