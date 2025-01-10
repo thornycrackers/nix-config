@@ -11,6 +11,7 @@
   nix = {
     extraOptions = ''
       experimental-features = nix-command flakes
+      trusted-users = root thorny
     '';
   };
 
@@ -48,6 +49,7 @@
       "docker"
       "libvirtd"
       "incus-admin"
+      "openrazer"
     ];
     # Required for the docker rootless
     subUidRanges = [

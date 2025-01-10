@@ -41,6 +41,11 @@
     fsType = "vfat";
   };
 
+  hardware.openrazer.enable = true;
+  hardware.openrazer.users = [ "thorny" ];
+  hardware.ledger.enable = true;
+  hardware.keyboard.zsa.enable = true;
+
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

@@ -23,6 +23,7 @@ in
   discord
   # Signal complains when it's out of date. Need to use unstable.
   unstable.signal-desktop
+  obsidian
   # Sound
   qjackctl
   playerctl
@@ -33,6 +34,9 @@ in
   # Unstable to install latest distros
   unstable.virt-manager
   # Misc
+  activitywatch
+  polychromatic
+  openrazer-daemon
   remmina
   (pass.withExtensions (ext: with ext; [ pass-otp ]))
   pinentry-gtk2
