@@ -56,7 +56,6 @@ let
           tagbar
           vim-markdown
           vim-go
-          vim-abolish
           vim-fetch
           nvim-luadev
         ];
