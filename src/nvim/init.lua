@@ -118,6 +118,26 @@ function NumberSelectedLines()
 end
 vim.api.nvim_create_user_command("Number", NumberSelectedLines, {range = true})
 
+-- Function to take the current paragraph and split it into separate lines
+-- It also handles the use case of the paragraph being the very last line in
+-- the file. A use case that my old function using vip would not handle. A very
+-- annoying edgecase to hit while in mid flow.
+local function split_paragraph()
+    -- I don't know if this is the most efficient way of doing things, but I
+    -- think it makes things easier to put everything on one line and then
+    -- process the single line. Most paragraphs I'm working with are not that
+    -- big so I can't see this being too much of a big deal.
+    vim.cmd('normal! vipJ')
+    local line = vim.api.nvim_get_current_line()
+    local sentences = {}
+    for sentence in string.gmatch(line, '[^%.!?]+[%.!?]*') do
+        table.insert(sentences, vim.trim(sentence))
+    end
+    local current_line = vim.fn.line('.')
+    vim.api.nvim_buf_set_lines(0, current_line - 1, current_line, false,
+                               sentences)
+end
+
 -- Keymaps
 noremap = {noremap = true}
 -- noh gets rid of highlighted search results
@@ -170,7 +190,8 @@ kmap('n', '<leader>psl', '<cmd>LanguageToolClear<cr>', noremap)
 kmap('n', '<leader>pc', '<cmd>cclose<cr><cmd>lclose<cr>', noremap)
 kmap('n', '<leader>pg', '<cmd>Goyo<cr>', noremap)
 kmap('n', '<leader>pp', 'vipJVgq', noremap)
--- <leader>pl defined in nix CustomRC
+vim.keymap.set('n', '<leader>pl', split_paragraph, noremap)
+
 -- Add "il" text object to mean "in line"
 kmap('x', 'il', 'g_o^', noremap)
 kmap('o', 'il', '<cmd>normal vil<cr>', noremap)
@@ -470,3 +491,27 @@ kmap('n', '<leader>bd', '<cmd>BD<cr>', {noremap = true})
 -- vim-markdown
 vim.g.vim_markdown_auto_insert_bullets = 0
 vim.g.vim_markdown_new_list_item_indent = 0
+
+-- mini.nvim
+-- Mini align provides nice interactive alignments, similar to terraform fmt.
+require("mini.align").setup()
+-- Hints for bindings
+local miniclue = require('mini.clue')
+require('mini.clue').setup({
+    triggers = {{mode = 'n', keys = '<leader>'}},
+    clues = {
+        {mode = 'n', keys = '<leader>ep', desc = 'Extra python things'},
+        {mode = 'n', keys = '<leader>p', desc = 'Writing things'}
+    },
+    debug = true -- Enables debug messages
+})
+
+-- Typically, I think you're supposed to define these as clues, but they
+-- weren't working for me. I could only get this level to print correctly in
+-- the box with this function
+local set_desc = miniclue.set_mapping_desc
+set_desc('n', '<leader>epp', 'Yank word, create print statement')
+set_desc('n', '<leader>epu', 'pudb set trace')
+set_desc('n', '<leader>epi', 'embed ipython')
+set_desc('n', '<leader>pl', 'Split paragraph into lines')
+set_desc('n', '<leader>pp', 'Word-wrap paragraph')

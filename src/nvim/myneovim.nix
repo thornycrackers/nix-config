@@ -11,9 +11,6 @@ let
         dofile('${./lua/qfnotes.lua}')
         dofile('${./lua/utils.lua}')
         EOF
-        " lua doesn't like the special characters in some maps so I define them here.
-        " Too lazy to figure out right now.
-        nnoremap <leader>pl vipJV:s/\v[.!?:] */\0\r/g<cr>k:noh<cr>
         let g:languagetool_server_command = '${pkgs.languagetool}/bin/languagetool-http-server'
       '';
       packages.myPlugins = with pkgs.vimPlugins; {
@@ -58,6 +55,7 @@ let
           vim-go
           vim-fetch
           nvim-luadev
+          mini-nvim
         ];
       };
     };
