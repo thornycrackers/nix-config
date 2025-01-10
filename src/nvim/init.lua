@@ -117,6 +117,19 @@ autocmd VimEnter * Abolish dle dreamline express
 autocmd VimEnter * Abolish swe{ing,} software engineer{}
 ]]
 
+-- Custom function to number visually selected lines
+function NumberSelectedLines()
+    local start_line = vim.fn.getpos("'<")[2]
+    local end_line = vim.fn.getpos("'>")[2]
+    for i = start_line, end_line do
+        local line_content = vim.fn.getline(i)
+        local new_content = string.format("%d. %s", i - start_line + 1,
+                                          line_content)
+        vim.fn.setline(i, new_content)
+    end
+end
+vim.api.nvim_create_user_command("Number", NumberSelectedLines, {range = true})
+
 -- Keymaps
 noremap = {noremap = true}
 -- noh gets rid of highlighted search results

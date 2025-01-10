@@ -235,7 +235,7 @@ vim.cmd([[
         autocmd VimEnter * lua draw_existing_note_symbols()
     augroup END
 ]])
-vim.api.nvim_set_keymap('n', '<leader>eno', '<cmd>lua open_note()<cr>',
+vim.api.nvim_set_keymap('n', '<leader>enc', '<cmd>lua open_note()<cr>',
                         {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>enn', '<cmd>lua create_note()<cr>',
                         {noremap = true})
@@ -243,5 +243,5 @@ vim.api.nvim_set_keymap('n', '<leader>end', '<cmd>lua delete_note()<cr>',
                         {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>enl', '<cmd>lua list_notes()<cr>',
                         {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>enc', '<cmd>lua clear_notes()<cr>',
-                        {noremap = true})
+-- vim.api.nvim_set_keymap('n', '<leader>enc', '<cmd>lua clear_notes()<cr>',
+--                         {noremap = true})
