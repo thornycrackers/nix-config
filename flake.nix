@@ -92,7 +92,10 @@
               pythonldlibpath = lib.makeLibraryPath ([
                 stdenv.cc.cc
                 xmlsec
-                libxml2
+                libxml2.dev # lxml
+                libxslt.dev # lxml
+                xmlsec.dev # xmlsec
+                postgresql # psycopg2
                 zlib
                 rdkafka
               ]);
@@ -118,6 +121,10 @@
               pkg-config
               libtool
               rdkafka
+              libxml2.dev # lxml
+              libxslt.dev # lxml
+              xmlsec.dev # xmlsec
+              postgresql # psycopg2
             ]
             ++ additionalPkgs;
         };
