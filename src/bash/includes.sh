@@ -432,8 +432,11 @@ nos() {
     export NOMAD_ADDR="$choice"
 }
 
-# "nex /bin/bash" and then interactively select the task to jump into
+# "nex" and then interactively select the task to jump into
+# Defaults to /bin/bash, some images don't have that though so first arg can
+# specify a differnent interpreter
 nex() {
+    shell=${1:-/bin/bash}
     nomad_jobs=$(nomad job status | tail -n +2 | awk '{ print $1 }')
     choice=$(echo "$nomad_jobs" | fzf)
     if [ -n "$choice" ]; then
@@ -443,7 +446,7 @@ nex() {
         nomad_tasks=$(nomad alloc-status -json "$nomad_job_allocation" | jq -r ".TaskStates | keys[]")
         choice=$(echo "$nomad_tasks" | fzf)
         if [ -n "$choice" ]; then
-            nomad alloc exec -i -t -task "$choice" "$nomad_job_allocation" "$1"
+            nomad alloc exec -i -t -task "$choice" "$nomad_job_allocation" "$shell"
         fi
     fi
 }
