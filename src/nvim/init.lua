@@ -180,6 +180,7 @@ kmap('n', '<expr> j', [[(v:count > 1 ? "m'" . v:count : '') . 'j']], noremap)
 kmap('n', '<leader>ef', '<cmd>ALEFix<cr>', noremap)
 kmap('n', '<leader>el', '<cmd>ALELint<cr>', noremap)
 kmap('n', '<leader>et', '<cmd>lua toggle_ale_linting()<cr>', noremap)
+kmap('n', '<leader>ei', '<cmd>lua toggle_vale_info_statements()<cr>', noremap)
 -- Markdown functions
 kmap('n', '<leader>po',
      '<cmd>AngryReviewer<cr><c-w>k<cmd>ALELint<cr><cmd>lopen<cr><c-w>k', noremap)
@@ -453,6 +454,20 @@ vim.g.ale_fixers = {
     nix = {"nixfmt"},
     lua = {"lua-format"}
 }
+-- Function for temporarily toggling vale's alert level while writing.
+-- Mostly used for because write-good's E-Prime alert can get very noisy while
+-- editing, but is still good to consider.
+local show_info = true
+function toggle_vale_info_statements()
+    show_info = not show_info
+    if show_info then
+        vim.g.ale_markdown_vale_options = "--minAlertLevel=suggestion"
+    else
+        vim.g.ale_markdown_vale_options = "--minAlertLevel=warning"
+    end
+    vim.cmd("ALELint")
+end
+
 -- Use 4 spaces for shfmt, not tabs. Indent case statements
 vim.g.ale_sh_shfmt_options = '-i 4 -ci'
 
