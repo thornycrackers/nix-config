@@ -56,6 +56,8 @@ let
           vim-fetch
           nvim-luadev
           mini-nvim
+          # llama-vim is very recent so we need to pull from unstable.
+          pkgs.unstable.vimPlugins.llama-vim
         ];
       };
     };

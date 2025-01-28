@@ -36,6 +36,8 @@ in
   # Misc
   activitywatch
   polychromatic
+  llama-cpp
+  ollama
   openrazer-daemon
   remmina
   (pass.withExtensions (ext: with ext; [ pass-otp ]))
