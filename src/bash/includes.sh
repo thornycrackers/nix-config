@@ -36,6 +36,8 @@ alias ldo='lazydocker'
 alias nd="nix develop"
 alias ..="cd ../"
 alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
 alias ls="ls --color=tty"
 alias l="ls --color=tty"
 alias me="make enter"
