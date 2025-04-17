@@ -368,7 +368,7 @@ ghprr() {
         local my_dated_prs lines title url number
         my_dated_prs=$(
             gh pr list --repo "$repo" --author @me --state all --json number,title,headRefName,url,createdAt |
-                jq --raw-output '. | map(select((.createdAt | strptime("%Y-%m-%dT%H:%M:%SZ")) > ("2024-09-12T00:00:00Z" | strptime("%Y-%m-%dT%H:%M:%SZ")))) | map(del(.createdAt))'
+                jq --raw-output '. | map(select((.createdAt | strptime("%Y-%m-%dT%H:%M:%SZ")) > ("2024-12-12T00:00:00Z" | strptime("%Y-%m-%dT%H:%M:%SZ")))) | map(del(.createdAt))'
         )
         # Skip if there are no PRs
         if [[ '[]' == "$my_dated_prs" ]]; then
@@ -517,6 +517,15 @@ tfa() {
         terraform apply -var-file="$_var_file"
     else
         terraform apply
+    fi
+}
+tfd() {
+    local _var_file
+    _var_file="$(terraform workspace show).tfvars"
+    if [[ -f $_var_file ]]; then
+        terraform destroy -var-file="$_var_file"
+    else
+        terraform destroy
     fi
 }
 

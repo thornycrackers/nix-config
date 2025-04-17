@@ -27,4 +27,5 @@ pkgs: with pkgs; [
   wget
   unzip
   zip
+  unstable.himalaya
 ]

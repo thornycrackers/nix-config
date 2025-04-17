@@ -92,6 +92,27 @@ endfunction
 autocmd! User GoyoLeave call <SID>goyo_leave()
 ]]
 
+-- Preserve the location in the location list after saving
+local function preserve_loclist_position()
+    local loclist = vim.fn.getloclist(0, {idx = 0})
+    vim.b.loclist_idx = loclist.idx
+end
+local function restore_loclist_position()
+    local idx = vim.b.loclist_idx
+    if idx then
+        vim.defer_fn(function()
+            vim.fn.setloclist(0, {}, 'r', {idx = idx})
+        end, 100)
+    end
+end
+vim.api.nvim_create_autocmd("User", {
+    pattern = "LintFinished",
+    callback = function()
+        preserve_loclist_position()
+        vim.defer_fn(restore_loclist_position, 200)
+    end
+})
+
 -- Along with the highlight definition for ColorColumn above, these options
 -- will set colored marks at certain line lengths
 vim.cmd [[
