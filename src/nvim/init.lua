@@ -551,3 +551,10 @@ set_desc('n', '<leader>epu', 'pudb set trace')
 set_desc('n', '<leader>epi', 'embed ipython')
 set_desc('n', '<leader>pl', 'Split paragraph into lines')
 set_desc('n', '<leader>pp', 'Word-wrap paragraph')
+
+require("codecompanion").setup({
+    strategies = {
+        chat = {adapter = "githubmodels"},
+        inline = {adapter = "githubmodels"}
+    }
+})

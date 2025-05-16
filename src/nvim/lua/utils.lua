@@ -117,6 +117,34 @@ function yank_replace_url()
     vim.api.nvim_feedkeys('WC', "n", true)
 end
 
+local function get_github_url()
+    local git_config = vim.fn.systemlist(
+                           "grep github .git/config | cut -d'@' -f 2 | sed 's/.git//g' | tr ':' '/'")
+    if #git_config == 0 then
+        print("Not a GitHub repository")
+        return
+    end
+    local base_url = "https://" .. git_config[1]
+    local branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
+    if branch == "" then
+        print("Could not determine current branch")
+        return
+    end
+    local file_path = vim.fn.expand("%")
+    if file_path == "" then
+        print("No file currently open")
+        return
+    end
+    local final_url =
+        string.format("%s/blob/%s/%s", base_url, branch, file_path)
+    vim.fn.system(string.format("xdg-open '%s' &", final_url))
+    print("Opened URL: " .. final_url)
+end
+-- Create the Neovim command
+vim.api.nvim_create_user_command("OpenInGitHub", get_github_url, {
+    desc = "Open the current file in GitHub at the current branch"
+})
+
 vim.api.nvim_set_keymap('v', '<leader>em', '<cmd>lua markdown_link_wrap()<cr>',
                         {noremap = true, silent = true})
 vim.api.nvim_set_keymap('v', '<leader>en',
