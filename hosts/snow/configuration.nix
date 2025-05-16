@@ -130,6 +130,9 @@
       enable = true;
       drivers = [ pkgs.hplip ];
     };
+    protonmail-bridge = {
+      enable = true;
+    };
     tailscale.enable = true;
   };
 
