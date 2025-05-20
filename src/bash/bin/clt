@@ -1,0 +1,4 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p python3 python3Packages.requests
+#
+python3 ~/.config/bash/scripts/create_linear_ticket.py "$@"
