@@ -16,4 +16,5 @@ in
   openvpn
   terraform-mine
   wander
+  packer
 ]

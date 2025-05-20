@@ -27,5 +27,6 @@ pkgs: with pkgs; [
   wget
   unzip
   zip
+  # wanted at least v1.1.0 for recent config format
   unstable.himalaya
 ]
