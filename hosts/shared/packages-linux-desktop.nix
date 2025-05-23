@@ -19,7 +19,8 @@ in
   chromium
   # Was getting notices about it being out of date
   unstable.slack
-  spotify
+  # At one point the spotify app search just stopped working.
+  unstable.spotify
   discord
   # Signal complains when it's out of date. Need to use unstable.
   unstable.signal-desktop
