@@ -17,11 +17,37 @@ in
   # GUI Apps
   myfirefox
   chromium
-  # Was getting notices about it being out of date
-  unstable.slack
   # At one point the spotify app search just stopped working.
   unstable.spotify
-  discord
+  ## The following wrap chat applications in timers so that they automatically
+  #close after 5 minutes. Helps keep distractions in check.
+  (writeShellApplication {
+    name = "slack";
+    # Use unstable slack because I was getting errors on being out of date
+    text = ''
+      setsid ${unstable.slack}/bin/slack "$@" &
+      pid=$!
+
+      TIMEOUT_SECONDS="''${SLACK_TIMEOUT:-300}"
+      sleep "$TIMEOUT_SECONDS"
+
+      echo "Timeout reached. Sending SIGTERM to process group..."
+      kill -TERM -"$(ps -o pgid= "$pid" | tr -d ' ')"
+    '';
+  })
+  (writeShellApplication {
+    name = "discord";
+    text = ''
+      setsid ${unstable.discord}/bin/Discord "$@" &
+      pid=$!
+
+      TIMEOUT_SECONDS="''${DISCORD_TIMEOUT:-300}"
+      sleep "$TIMEOUT_SECONDS"
+
+      echo "Timeout reached. Sending SIGTERM to process group..."
+      kill -TERM -"$(ps -o pgid= "$pid" | tr -d ' ')"
+    '';
+  })
   # Signal complains when it's out of date. Need to use unstable.
   unstable.signal-desktop
   obsidian
