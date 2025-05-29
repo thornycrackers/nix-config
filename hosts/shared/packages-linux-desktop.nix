@@ -36,7 +36,7 @@ in
     '';
   })
   (writeShellApplication {
-    name = "discord";
+    name = "Discord";
     text = ''
       setsid ${unstable.discord}/bin/Discord "$@" &
       pid=$!
