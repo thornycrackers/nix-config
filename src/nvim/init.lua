@@ -499,20 +499,11 @@ kmap('n', '<leader>y', '<cmd>OSCYankRegister 0<cr>', {noremap = true})
 vim.g.AngryReviewerEnglish = 'american'
 
 -- ack.vim
-vim.cmd([[
-  nnoremap <leader>/ :call AckSearch()<CR><c-w><c-p>
-  function! AckSearch()
-    call inputsave()
-    let term = input('Search: ')
-    call inputrestore()
-    if !empty(term)
-        execute "Ack! " . term
-    endif
-  endfunction
-  " Setting better default settings
-  let g:ackprg =
-      \ "ack -s -H --nocolor --nogroup --column --ignore-dir=.venv/ --ignore-dir=.vimcache/ --ignore-dir=migrations/ --ignore-dir=.mypy_cache/ --ignore-file=is:tags --nojs --nocss --nosass"
-]])
+vim.api.nvim_create_user_command("AckFzf", function(opts)
+    local fzf = require("fzf-lua")
+    fzf.grep({search = opts.args, cmd = "ack --nogroup --nocolor --smart-case"})
+end, {nargs = 1})
+kmap('n', '<leader>/', ':AckFzf ', {noremap = true, silent = false})
 
 -- vim-oscyank
 -- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1145673058

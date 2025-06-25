@@ -9,6 +9,7 @@ let
 in
 [
   my-lua
+  ack
   unstable.nixfmt-rfc-style
   ansible
   ansible-language-server

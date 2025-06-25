@@ -36,6 +36,7 @@ let
           vim-surround
           vim-repeat
           fzf-vim
+          fzf-lua
           vim-argwrap
           vim-fugitive
           indent-blankline-nvim
