@@ -1,5 +1,6 @@
 pkgs: with pkgs; [
   ack
+  asciinema
   blesh
   btop
   csvkit
