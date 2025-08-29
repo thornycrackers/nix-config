@@ -19,7 +19,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:lnl7/nix-darwin/master";
+      url = "github:lnl7/nix-darwin/nix-darwin-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -357,8 +357,8 @@
           ];
         };
 
-      # Darwin config for macbookwork
-      darwinConfigurations."Codys-MacBook-Pro-Work" =
+      # Darwin config for other macbook
+      darwinConfigurations."flipper" =
         let
           system = "aarch64-darwin";
           flakePkgs = self.packages."${system}";
@@ -377,7 +377,7 @@
                 nixpkgs.overlays = [ my-custom-overlay ];
               }
             )
-            ./hosts/macbookwork/darwin-configuration.nix
+            ./hosts/flipper/darwin-configuration.nix
             home-manager.darwinModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

@@ -83,6 +83,7 @@
       "vlc"
       "openshot-video-editor"
       "google-chrome"
+      "firefox"
       "zoom"
       "karabiner-elements"
       "slack"
@@ -90,10 +91,12 @@
       "rectangle"
       "utm"
       "font-dejavu-sans-mono-nerd-font"
-      "docker"
       "raycast"
+      "obsidian"
+      "discord"
+      "whatsapp"
+      "signal"
     ];
-    taps = [ "homebrew/cask-fonts" ];
     onActivation.cleanup = "zap";
   };
 
@@ -108,6 +111,9 @@
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
+
+  # Setup tailscale private network
+  services.tailscale.enable = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

@@ -2,7 +2,7 @@
 
 # If I need and custom overides, make them here
 # With bash on darwin I needed /bin/stty to resolve first for instance.
-export PATH=~/.local/bin:$PATH
+# export PATH=~/.local/bin:$PATH
 # Add my custom bash scripts to the path
 export PATH=$PATH:~/.config/bash/bin
 # Add hombrew to the tail end for macbooks
@@ -11,7 +11,7 @@ if [[ $(uname -s) == "Darwin" ]]; then
 fi
 
 # shellcheck disable=SC1091
-[[ $- == *i* ]] && source "$(blesh-share)/ble.sh" --noattach
+[[ $- == *i* ]] && source -- "$(blesh-share)"/ble.sh --attach=none
 
 # Git log formats
 _git_log_medium_format='%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%w(80,1,2)%+B'
@@ -133,9 +133,7 @@ export PAGER='less -S'
 # it. Default to this, customize when needed
 export TERM='xterm-256color'
 export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
-# For some reason, docker client is expecting in a different location
-# (unix:///run/user/1000/docker.sock) but hardcode for now
-export DOCKER_HOST="unix:///run/docker.sock"
+
 # This avoids having to use sudo with virsh commands
 # I'll specify a different one if required
 export LIBVIRT_DEFAULT_URI="qemu:///system"

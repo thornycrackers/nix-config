@@ -3,5 +3,5 @@
 THIS_CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Just symlink the whole damn directory
-mv /etc/nixos /etc/nixos-bck
-ln -s "$THIS_CURRENT_DIR" /etc/nixos
+mv /etc/nix-darwin /etc/nix-darwin-bck
+ln -s "$THIS_CURRENT_DIR" /etc/nix-darwin
