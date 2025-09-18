@@ -13,7 +13,8 @@ start_uniqueid:  ## Run unique-ids file
 
 start_broadcast:  ## Run broadcast file, grep for performance
 	./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 25 --time-limit 20 --rate 100 --latency 100
-	cat store/broadcast/latest/results.edn | grep -A 8 ':net' | grep 'msgs-per-op' ; cat store/broadcast/latest/results.edn | grep -A 4 ':stable-latencies'
+	# ./maelstrom/maelstrom test -w broadcast --bin broadcast.py --node-count 25 --time-limit 20 --rate 100 --latency 100
+	# cat store/broadcast/latest/results.edn | grep -A 8 ':net' | grep 'msgs-per-op' ; cat store/broadcast/latest/results.edn | grep -A 4 ':stable-latencies'
 
 test_lin_kv:  ## Run the lin_kv workload against my implementation
 	./maelstrom/maelstrom test -w lin-kv --bin kv.py --concurrency 2 --node-count 1 --time-limit 5
