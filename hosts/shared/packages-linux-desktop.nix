@@ -59,6 +59,7 @@ in
   # Virtualization
   qemu
   guestfs-tools
+  vagrant
   # Unstable to install latest distros
   unstable.virt-manager
   # Misc

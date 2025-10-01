@@ -24,8 +24,20 @@
   # Use nftables
   networking.nftables.enable = true;
 
-  # Don't block DHCP requests to the Incus network
-  networking.firewall.trustedInterfaces = [ "incusbr0" ];
+  # Don't block DHCP requests to the Incus network and allow for Vagrant DHCP
+  networking.firewall.trustedInterfaces = [
+    "incusbr0"
+    "virbr0"
+    "virbr1"
+    "virbr2"
+  ];
+
+  # Don't let NetworkManager manage libvirt bridges (prevents conflicts)
+  networking.networkmanager.unmanaged = [
+    "virbr0"
+    "virbr1"
+    "virbr2"
+  ];
 
   # Set your time zone.
   time.timeZone = "America/Edmonton";
@@ -154,7 +166,12 @@
       };
     };
     # Enable virtd for virtualization
-    libvirtd.enable = true;
+    libvirtd = {
+      enable = true;
+      # Auto-start networks
+      onBoot = "start";
+      onShutdown = "shutdown";
+    };
     # Enable incus for easier
     incus = {
       enable = true;
