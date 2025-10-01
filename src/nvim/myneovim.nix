@@ -2,7 +2,7 @@
 # I keep this in a file simply to keep the top level flake a bit cleaner to read.
 # Defines my neovim with it's config file, vim plugins, and all packages (such as language servers and linters)
 let
-  neovimOverride = pkgs.neovim.override {
+  neovimOverride = pkgs.unstable.neovim.override {
     configure = {
       # customRC expects vimscript but I've already converted to lua
       customRC = ''

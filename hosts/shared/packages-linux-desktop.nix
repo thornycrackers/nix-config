@@ -51,6 +51,7 @@ in
   # Signal complains when it's out of date. Need to use unstable.
   unstable.signal-desktop
   obsidian
+  obs-studio
   # Sound
   qjackctl
   playerctl
@@ -74,4 +75,5 @@ in
   xsel
   zbar
   zathura
+  zoom-us
 ]
