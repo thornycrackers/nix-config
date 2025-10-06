@@ -157,6 +157,10 @@
             # Stable has a bug with babel 2.12.1 and needs updating to 2.13.1
             pythonVersion = pkgs.unstable.python312;
           };
+          python313 = pythonShell {
+            myPkgs = pkgs;
+            pythonVersion = pkgs.unstable.python313;
+          };
         }
       );
 

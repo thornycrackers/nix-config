@@ -49,6 +49,7 @@
   fonts.packages = with pkgs; [ (nerdfonts.override { fonts = [ "DejaVuSansMono" ]; }) ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.groups.thorny.gid = 1000;
   users.users.thorny = {
     home = "/home/thorny";
     isNormalUser = true;
@@ -160,10 +161,8 @@
   virtualisation = {
     docker = {
       enable = true;
-      rootless = {
-        enable = true;
-        setSocketVariable = true;
-      };
+      # Be aware that if you try running namespaced docker with nomad, nomad can run into issues
+      extraOptions = "--userns-remap=thorny:100";
     };
     # Enable virtd for virtualization
     libvirtd = {
