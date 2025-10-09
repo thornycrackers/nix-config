@@ -468,6 +468,7 @@ vim.g.ale_linters = {
     nix = {"nix"},
     ansible = {"ansible-lint"}
 }
+vim.g.ale_python_flake8_options = "--max-line-length=88"
 vim.g.ale_fixers = {
     sh = {"shfmt"},
     python = {"isort", "ruff_format"},
