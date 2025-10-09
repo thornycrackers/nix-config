@@ -3,6 +3,7 @@ pkgs: with pkgs; [
   asciinema
   blesh
   btop
+  unstable.claude-code
   csvkit
   curl
   direnv

@@ -470,7 +470,7 @@ vim.g.ale_linters = {
 }
 vim.g.ale_fixers = {
     sh = {"shfmt"},
-    python = {"isort", "black"},
+    python = {"isort", "ruff_format"},
     terraform = {"terraform"},
     nix = {"nixfmt"},
     lua = {"lua-format"}

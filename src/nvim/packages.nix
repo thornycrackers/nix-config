@@ -29,6 +29,7 @@ in
   nodejs
   pyright
   ruff
+  isort
   shellcheck
   shfmt
   terraform-ls
