@@ -12,6 +12,10 @@ let
         dofile('${./lua/utils.lua}')
         EOF
         let g:languagetool_server_command = '${pkgs.languagetool}/bin/languagetool-http-server'
+        " Hardcode these executables so virtualenvs dont mess with things
+        let g:ale_python_flake8_executable = '${pkgs.python312Packages.flake8}/bin/flake8'
+        let g:ale_python_isort_executable = '${pkgs.isort}/bin/isort'
+        let g:ale_python_ruff_executable = '${pkgs.ruff}/bin/ruff'
       '';
       packages.myPlugins = with pkgs.vimPlugins; {
         start = [
