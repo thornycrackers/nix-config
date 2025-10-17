@@ -459,6 +459,10 @@ function _G.toggle_ale_linting()
         vim.g.ale_fix_on_save = 0
     end
 end
+-- I actually don't want neovim to look for tools inside of .venvs because that
+-- tooling doesn't work on nix. Instead I hardcode the references to tools I
+-- want.
+vim.g.ale_virtualenv_dir_names = {'neverfindingthis'}
 vim.g.ale_linters = {
     sh = {"shellcheck"},
     python = {"flake8"},
