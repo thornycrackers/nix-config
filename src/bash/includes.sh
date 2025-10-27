@@ -122,8 +122,8 @@ alias ap="ansible-playbook"
 # cdspell If set, minor errors in the spelling of a directory component in a cd command will be corrected.
 shopt -s cdspell
 
-# Bind ^l to `clear -x` to preserve buffer history
-bind -x $'"\C-l":clear -x;'
+# Bind ^l to `clear -x` to preserve buffer history (only in interactive shells)
+[[ $- == *i* ]] && bind -x $'"\C-l":clear -x;'
 
 # Environment Variables
 export EDITOR='nvim'
