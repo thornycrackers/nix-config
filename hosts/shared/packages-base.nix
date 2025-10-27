@@ -20,6 +20,7 @@ pkgs: with pkgs; [
   keychain
   lazydocker
   lazygit
+  moreutils
   # Want at least version 31 for dupfilefmt
   unstable.lf
   neofetch

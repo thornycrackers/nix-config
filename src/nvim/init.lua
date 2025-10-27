@@ -365,7 +365,7 @@ kmap('n', '<leader>ft', "<cmd>Tags<cr>", {noremap = true})
 kmap('n', '<leader>fm', "<cmd>Marks<cr>", {noremap = true})
 kmap('n', '<leader>fg', "<cmd>GF?<cr>", {noremap = true})
 vim.cmd(
-    [[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.ruff_cache/*" -not -path "*/\.cache/uv/*" -not -path "*/\.git/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
+    [[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.pytest_cache/*" -not -path "*/\__pycache__/*" -not -path "*/\.ruff_cache/*" -not -path "*/\.cache/uv/*" -not -path "*/\.git/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
 vim.cmd([[
 nnoremap <leader>ff :call FilesDefault()<cr>
 function! FilesDefault()

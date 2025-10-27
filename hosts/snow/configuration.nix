@@ -147,6 +147,7 @@
       enable = true;
     };
     tailscale.enable = true;
+    espanso.enable = true;
   };
 
   # gtk2 is the most reliable out all the other flavors that I've tried so far

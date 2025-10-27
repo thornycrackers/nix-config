@@ -482,7 +482,7 @@ sl() {
 
 # Clean
 clean_nix_generations() {
-    sudo nix-env -p /nix/var/nix/profiles/system --delete-generations +5
+    sudo nix-env -p /nix/var/nix/profiles/system --delete-generations +3
     sudo nix-collect-garbage
 }
 
@@ -672,7 +672,7 @@ gbxr() {
 # Interactively remove local branches
 gbxb() {
     local BRANCHES
-    BRANCHES=("$(git branch | cut -c 3- | fzf --multi --reverse)")
+    mapfile -t BRANCHES < <(git branch | cut -c 3- | fzf --multi --reverse)
     for BRANCH in "${BRANCHES[@]}"; do
         git branch -D "$BRANCH"
     done

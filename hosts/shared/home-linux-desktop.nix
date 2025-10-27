@@ -42,7 +42,7 @@
     theme = "gruvbox-dark";
   };
 
-  # I like the a very small amount of opacity
+  # I like a very small amount of opacity
   services.picom = {
     enable = true;
     opacityRules = [
@@ -68,6 +68,10 @@
 
   # tridactyl config
   xdg.configFile."tridactyl/tridactylrc".source = ../../src/tridactyl/tridactylrc;
+
+  # espanso configs
+  xdg.configFile."espanso/config/default.yml".source = ../../src/espanso/config/default.yml;
+  xdg.configFile."espanso/match/base.yml".source = ../../src/espanso/match/base.yml;
 
   services.flameshot = {
     enable = true;

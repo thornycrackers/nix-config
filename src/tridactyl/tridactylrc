@@ -37,3 +37,8 @@ js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = os.os=="l
 
 "" New reddit is bad
 autocmd DocStart www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
+
+" Let proton mail handle certain things
+autocmd DocStart mail.proton.me unbind x
+autocmd DocStart mail.proton.me unbind ?
+autocmd DocStart mail.proton.me unbind t
