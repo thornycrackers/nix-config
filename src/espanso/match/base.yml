@@ -9,7 +9,7 @@
 # it gets replaced by the "replace" string.
 matches:
   # "@" sign doesn't work in kitty still
-  - trigger: ",,e1"
+  - trigger: ",e1"
     replace: "admin@example.com"
   - trigger: ",mds"
     replace: "make dj-shell"

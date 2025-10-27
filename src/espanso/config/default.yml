@@ -1,0 +1,3 @@
+# This fixes the "@" sign issue
+# https://github.com/espanso/espanso/issues/281#issuecomment-2375285187
+disable_x11_fast_inject: true
