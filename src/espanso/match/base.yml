@@ -13,3 +13,10 @@ matches:
     replace: "admin@example.com"
   - trigger: ",mds"
     replace: "make dj-shell"
+  - trigger: ",date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y-%m-%d"
