@@ -364,6 +364,7 @@ kmap('n', '<leader>fb', "<cmd>let g:fzf_buffers_jump = 0<cr><cmd>Buffers<cr>",
 kmap('n', '<leader>ft', "<cmd>Tags<cr>", {noremap = true})
 kmap('n', '<leader>fm', "<cmd>Marks<cr>", {noremap = true})
 kmap('n', '<leader>fg', "<cmd>GF?<cr>", {noremap = true})
+kmap('n', '<leader>fd', "<cmd>call GitFilesDiff()<cr>", {noremap = true})
 vim.cmd(
     [[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.pytest_cache/*" -not -path "*/\__pycache__/*" -not -path "*/\.ruff_cache/*" -not -path "*/\.cache/uv/*" -not -path "*/\.git/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
 vim.cmd([[
@@ -382,6 +383,32 @@ function! BufferTabJump()
   let g:fzf_buffers_jump = 1
   execute 'Buffers'
 endfunction
+
+function! OpenFileAndDiff(file)
+  " Strip git status symbols if present (e.g., "M  file.txt" -> "file.txt")
+  let clean_file = substitute(a:file, '^\s*[A-Z?]\+\s\+', '', '')
+
+  " Check if we're already in diff mode
+  if &diff
+    " If in diff mode, close current diff and open new one
+    execute 'diffoff!'
+    execute 'only'
+    execute 'edit ' . clean_file
+    execute 'Gdiffsplit'
+  else
+    " Not in diff mode, proceed normally
+    execute 'edit ' . clean_file
+    execute 'Gdiffsplit'
+  endif
+endfunction
+
+function! GitFilesDiff()
+  call fzf#run(fzf#wrap({
+    \ 'source': 'git -c color.status=always status --short',
+    \ 'sink': function('OpenFileAndDiff'),
+    \ 'options': '--expect=enter --ansi'
+  \ }))
+endfunction
 ]])
 
 -- vim-argwrap
@@ -393,6 +420,81 @@ kmap('n', '<leader>dd', '<cmd>diffget<cr>', {noremap = true})
 kmap('n', '<leader>df', '<cmd>diffput<cr>', {noremap = true})
 kmap('n', '<leader>dn', ']c', {noremap = true})
 kmap('n', '<leader>dp', '[c', {noremap = true})
+
+-- Git diff mode for easier diffing
+local git_diff_mode_active = false
+local git_diff_ns = vim.api.nvim_create_namespace('git_diff_mode')
+
+function _G.enter_git_diff_mode()
+    if not vim.opt.diff:get() then
+        vim.notify("Not in diff mode", vim.log.levels.WARN)
+        return
+    end
+
+    if git_diff_mode_active then return end
+
+    git_diff_mode_active = true
+
+    -- Set up temporary keymaps
+    local keymaps = {
+        ['d'] = function() vim.cmd('diffget') end,
+        ['f'] = function() vim.cmd('diffput') end,
+        ['n'] = function() vim.cmd('normal! ]c') end,
+        ['p'] = function() vim.cmd('normal! [c') end,
+        ['u'] = function() vim.cmd('diffupdate') end,
+        ['w'] = function()
+            -- Will be defined below
+        end
+    }
+
+    -- Exit keymaps
+    local function exit_diff_mode()
+        git_diff_mode_active = false
+        for key, _ in pairs(keymaps) do
+            vim.keymap.del('n', key, {buffer = true})
+        end
+        vim.keymap.del('n', '<Esc>', {buffer = true})
+        vim.keymap.del('n', 'q', {buffer = true})
+        vim.notify("Exited Git Diff Mode")
+    end
+
+    -- Now define the 'w' function properly
+    keymaps['w'] = function()
+        exit_diff_mode()
+        vim.cmd('wq')
+    end
+
+    for key, func in pairs(keymaps) do
+        vim.keymap.set('n', key, func, {
+            buffer = true,
+            nowait = true,
+            desc = 'Git diff: ' .. key
+        })
+    end
+
+    vim.keymap.set('n', '<Esc>', exit_diff_mode,
+                   {buffer = true, desc = 'Exit git diff mode'})
+    vim.keymap.set('n', 'q', exit_diff_mode,
+                   {buffer = true, desc = 'Exit git diff mode'})
+
+    vim.notify(
+        "Git Diff Mode: d=get f=put n=next p=prev u=update w=save/quit ESC/q=exit")
+end
+
+-- Auto-enter mode when opening git diff files
+function _G.auto_git_diff_mode()
+    if vim.opt.diff:get() then
+        vim.keymap.set('n', '<leader>g', enter_git_diff_mode,
+                       {buffer = true, noremap = true})
+        vim.cmd('echo "Git diff detected. Use <leader>g for Git Diff Mode"')
+    end
+end
+
+-- Auto-trigger on diff files
+vim.api.nvim_create_autocmd("BufEnter", {callback = auto_git_diff_mode})
+
+-- Manual trigger
+kmap('n', '<leader>gm', '<cmd>lua enter_git_diff_mode()<cr>', {noremap = true})
 kmap('n', '<leader>gs', '<cmd>Git<cr>', {noremap = true})
 kmap('n', '<leader>gc', '<cmd>Git commit<cr>', {noremap = true})
 vim.cmd([[
