@@ -16,3 +16,8 @@ git:
   paging:
     colorArg: always
     pager: delta --24-bit-color always --paging=never
+
+keybinding:
+  universal:
+    push: 'P'
+    pull: 'p'
