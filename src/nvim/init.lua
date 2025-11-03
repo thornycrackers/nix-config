@@ -72,10 +72,10 @@ vim.o.foldlevel = 99
 -- My Highlights
 vim.cmd [[
 au VimEnter * hi Search ctermfg=166
-au VimEnter * hi DiffAdd    cterm=BOLD ctermfg=NONE ctermbg=22
-au VimEnter * hi DiffDelete cterm=BOLD ctermfg=NONE ctermbg=52
-au VimEnter * hi DiffChange cterm=BOLD ctermfg=NONE ctermbg=23
-au VimEnter * hi DiffText   cterm=BOLD ctermfg=NONE ctermbg=23
+au VimEnter * hi DiffAdd    cterm=BOLD ctermfg=NONE ctermbg=22 gui=BOLD guifg=NONE guibg=#2d5016
+au VimEnter * hi DiffDelete cterm=BOLD ctermfg=NONE ctermbg=52 gui=BOLD guifg=NONE guibg=#5f1f1f
+au VimEnter * hi DiffChange cterm=BOLD ctermfg=NONE ctermbg=58 gui=BOLD guifg=NONE guibg=#4a3c1a
+au VimEnter * hi DiffText   cterm=BOLD ctermfg=NONE ctermbg=94 gui=BOLD guifg=NONE guibg=#9d8540
 au VimEnter * hi Normal guibg=NONE ctermbg=NONE
 au VimEnter * hi Search ctermbg=None ctermfg=166
 au VimEnter * hi PrimaryBlock   ctermfg=06 ctermbg=NONE
