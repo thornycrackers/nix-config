@@ -557,7 +557,8 @@ function gbds() {
 # Use fzf to select multiple files to checkout
 # Running checkout will undo your changes to the file
 gcoo() {
-    local FILES=("$(git diff --name-only | fzf --multi --reverse)")
+    local FILES=()
+    mapfile -t FILES < <(git diff --name-only | fzf --multi --reverse)
     for FILE in "${FILES[@]}"; do
         git checkout "$FILE"
     done
