@@ -19,5 +19,5 @@ git:
 
 keybinding:
   universal:
-    push: 'P'
-    pull: 'p'
+    pushFiles: 'p'
+    pullFiles: 'P'
