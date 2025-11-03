@@ -446,50 +446,10 @@ function _G.enter_git_diff_mode()
         ['n'] = function() vim.cmd('normal! ]c') end,
         ['p'] = function() vim.cmd('normal! [c') end,
         ['u'] = function() vim.cmd('diffupdate') end,
-        ['1'] = function()
-            local function create_commit_float()
-                local buf = vim.api.nvim_create_buf(false, true)
-                local width = 60
-                local height = 10
-                local row = math.floor((vim.o.lines - height) / 2)
-                local col = math.floor((vim.o.columns - width) / 2)
-
-                local win = vim.api.nvim_open_win(buf, true, {
-                    relative = 'editor',
-                    width = width,
-                    height = height,
-                    row = row,
-                    col = col,
-                    style = 'minimal',
-                    border = 'rounded',
-                    title = 'Commit Message',
-                    title_pos = 'center'
-                })
-
-                vim.api.nvim_buf_set_lines(buf, 0, -1, false, {''})
-                vim.cmd('startinsert')
-
-                vim.keymap.set('n', '<CR>', function()
-                    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-                    local message = table.concat(lines, '\n'):gsub('^%s*(.-)%s*$', '%1')
-                    vim.api.nvim_win_close(win, true)
-
-                    if message ~= '' then
-                        vim.fn.system('git commit -m ' .. vim.fn.shellescape(message))
-                        vim.notify('Committed: ' .. message)
-                    else
-                        vim.notify('Empty commit message, cancelled')
-                    end
-                end, {buffer = buf})
-
-                vim.keymap.set('n', '<Esc>', function()
-                    vim.api.nvim_win_close(win, true)
-                    vim.notify('Commit cancelled')
-                end, {buffer = buf})
-            end
-            create_commit_float()
-        end,
         ['w'] = function()
+            -- Will be defined below
+        end,
+        ['q'] = function()
             -- Will be defined below
         end
     }
@@ -501,7 +461,6 @@ function _G.enter_git_diff_mode()
             vim.keymap.del('n', key, {buffer = true})
         end
         vim.keymap.del('n', '<Esc>', {buffer = true})
-        vim.keymap.del('n', 'q', {buffer = true})
         vim.notify("Exited Git Diff Mode")
     end
 
@@ -509,6 +468,11 @@ function _G.enter_git_diff_mode()
     keymaps['w'] = function()
         exit_diff_mode()
         vim.cmd('wq')
+    end
+
+    keymaps['q'] = function()
+        exit_diff_mode()
+        vim.cmd('wqa')
     end
 
     for key, func in pairs(keymaps) do
@@ -521,11 +485,8 @@ function _G.enter_git_diff_mode()
 
     vim.keymap.set('n', '<Esc>', exit_diff_mode,
                    {buffer = true, desc = 'Exit git diff mode'})
-    vim.keymap.set('n', 'q', exit_diff_mode,
-                   {buffer = true, desc = 'Exit git diff mode'})
-
     vim.notify(
-        "Git Diff Mode: d=get f=put n=next p=prev u=update 1=commit w=save/quit ESC/q=exit")
+        "Git Diff Mode: d=get f=put n=next p=prev u=update 1=commit w=save/quit q=save/quitall ESC=exit")
 end
 
 -- Auto-enter mode when opening git diff files
@@ -543,13 +504,12 @@ function _G.auto_git_diff_mode()
 end
 
 -- Auto-trigger on diff files
-vim.api.nvim_create_autocmd({"BufEnter", "WinEnter"}, {callback = auto_git_diff_mode})
+vim.api.nvim_create_autocmd({"BufEnter", "WinEnter"},
+                            {callback = auto_git_diff_mode})
 vim.api.nvim_create_autocmd("OptionSet", {
     pattern = "diff",
     callback = function()
-        if vim.v.option_new == "1" then
-            auto_git_diff_mode()
-        end
+        if vim.v.option_new == "1" then auto_git_diff_mode() end
     end
 })
 
@@ -569,7 +529,9 @@ vim.cmd([[
   nnoremap <leader>gs :call ToggleGStatus()<CR>
 ]])
 kmap('n', '<leader>gb', '<cmd>Git blame<cr>', {noremap = true})
-kmap('n', '<leader>gd', '<cmd>Gdiffsplit<cr><cmd>lua vim.defer_fn(function() enter_git_diff_mode() end, 400)<cr>', {noremap = true})
+kmap('n', '<leader>gd',
+     '<cmd>Gdiffsplit<cr><cmd>lua vim.defer_fn(function() enter_git_diff_mode() end, 400)<cr>',
+     {noremap = true})
 
 -- indent-blankline-nvim
 require("ibl").setup()
