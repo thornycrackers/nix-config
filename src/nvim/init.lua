@@ -532,10 +532,7 @@ function _G.enter_git_diff_mode()
     end
 
     -- Now define the 'w' function properly
-    keymaps['w'] = function()
-        exit_diff_mode()
-        vim.cmd('w')
-    end
+    keymaps['w'] = function() vim.cmd('w') end
 
     keymaps['q'] = function()
         exit_diff_mode()
@@ -544,6 +541,9 @@ function _G.enter_git_diff_mode()
 
     keymaps['1'] = function()
         exit_diff_mode()
+        vim.cmd('diffoff!')
+        vim.cmd('wincmd l') -- Move to right window (working file)
+        vim.cmd('only')
         vim.cmd(':tab Git commit --verbose')
     end
 
