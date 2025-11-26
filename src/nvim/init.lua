@@ -155,6 +155,7 @@ local function split_paragraph()
         table.insert(sentences, vim.trim(sentence))
     end
     local current_line = vim.fn.line('.')
+    table.insert(sentences, '')
     vim.api.nvim_buf_set_lines(0, current_line - 1, current_line, false,
                                sentences)
 end
