@@ -18,6 +18,7 @@ bindsym $mod+space exec ~/.config/bash/bin/myrofi
 bindsym $alt+space exec ~/.config/i3/scripts/open_bookmarks.sh
 bindsym $mod+Return exec kitty
 bindsym $mod+n exec kitty --class=floating
+bindsym $mod+v exec ~/.config/i3/scripts/edit_clipboard.sh
 bindsym $mod+t exec rofi-pass
 bindsym $mod+q kill
 bindsym $mod+f fullscreen toggle

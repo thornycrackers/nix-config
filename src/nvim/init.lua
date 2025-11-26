@@ -695,6 +695,8 @@ vim.g.ale_sh_shfmt_options = '-i 4 -ci'
 
 -- osc-yank
 kmap('n', '<leader>y', '<cmd>OSCYankRegister 0<cr>', {noremap = true})
+kmap('n', '<leader>py', '<cmd>%y<cr><cmd>OSCYankRegister 0<cr>',
+     {noremap = true})
 
 -- vim-angry-reviewer
 vim.g.AngryReviewerEnglish = 'american'
