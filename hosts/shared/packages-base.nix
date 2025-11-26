@@ -34,4 +34,7 @@ pkgs: with pkgs; [
   zip
   # wanted at least v1.1.0 for recent config format
   unstable.himalaya
+  # For testing
+  unstable.uv
+  unstable.python3
 ]
