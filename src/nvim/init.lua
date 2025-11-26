@@ -194,6 +194,7 @@ kmap('n', '<c-w><c-]>', '<c-w>v<c-]><c-w>T', noremap)
 kmap('n', '<c-w><c-t>', '<c-w>v<c-w>T', noremap)
 kmap('n', '<c-w><c-w>', '<cmd>w<cr>', noremap)
 kmap('n', '<c-w><c-a>', '<cmd>wa<cr>', noremap)
+kmap('n', '<c-w><c-q>', '<cmd>wq<cr>', noremap)
 kmap('n', '<c-q>', '<cmd>qa!<cr>', noremap)
 kmap('n', '<leader>ee', '<cmd>e!<cr>', noremap)
 kmap('n', '<expr> k', [[(v:count > 1 ? "m'" . v:count : '') . 'k']], noremap)
@@ -277,9 +278,9 @@ kmap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>',
 kmap('n', '<leader>,i',
      '<Cmd>edit ' .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>',
      noremap);
-kmap('n', '<leader>,n',
-     '<Cmd>edit ' .. vim.fn.expand('~') .. '/Obsidian/MyVault/notes.md<CR>',
-     noremap);
+vim.keymap.set('n', '<leader>,n',
+               function() vim.cmd('edit ' .. get_project_notes_path()) end,
+               noremap);
 -- Search and replace word under cursor
 kmap('n', '<Leader>r', ':%s/<c-r><c-w>/', {noremap = true, silent = true})
 -- In insert mode, insert a timestamp with the current time
@@ -370,7 +371,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 -- Setup language servers
 for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
+    local config = {
         on_attach = on_attach,
         flags = {debounce_text_changes = 150},
         capabilities = capabilities
@@ -579,7 +580,7 @@ vim.api.nvim_create_autocmd("OptionSet", {
 -- Manual trigger
 kmap('n', '<leader>gm', '<cmd>lua enter_git_diff_mode()<cr>', {noremap = true})
 kmap('n', '<leader>gs', '<cmd>Git<cr>', {noremap = true})
-kmap('n', '<leader>gc', '<cmd>Git commit<cr>', {noremap = true})
+kmap('n', '<leader>gc', '<cmd>:tab Git commit --verbose<cr>', {noremap = true})
 vim.cmd([[
   function! ToggleGStatus()
     if buflisted(bufname('.git/index'))
@@ -740,4 +741,15 @@ require("codecompanion").setup({
         chat = {adapter = "githubmodels"},
         inline = {adapter = "githubmodels"}
     }
+})
+
+-- Obsidian
+-- conceal for pretty stuff (only in markdown)
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "markdown",
+    callback = function() vim.opt_local.conceallevel = 2 end
+})
+require("obsidian").setup({
+    workspaces = {{name = "MyVault", path = "~/Obsidian/MyVault"}},
+    ui = {enable = true, ignore_conceal_warn = true}
 })
