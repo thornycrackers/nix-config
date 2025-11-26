@@ -62,6 +62,10 @@ in
   vagrant
   # Unstable to install latest distros
   unstable.virt-manager
+  # Video recording/cutting/editing
+  ffmpeg
+  simplescreenrecorder
+  losslesscut-bin
   # Misc
   activitywatch
   polychromatic
