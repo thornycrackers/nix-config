@@ -510,6 +510,9 @@ function _G.enter_git_diff_mode()
         ['n'] = function() vim.cmd('normal! ]c') end,
         ['p'] = function() vim.cmd('normal! [c') end,
         ['u'] = function() vim.cmd('diffupdate') end,
+        ['1'] = function()
+            -- Will be defined below
+        end,
         ['w'] = function()
             -- Will be defined below
         end,
@@ -531,12 +534,17 @@ function _G.enter_git_diff_mode()
     -- Now define the 'w' function properly
     keymaps['w'] = function()
         exit_diff_mode()
-        vim.cmd('wq')
+        vim.cmd('w')
     end
 
     keymaps['q'] = function()
         exit_diff_mode()
-        vim.cmd('wqa')
+        vim.cmd('q!')
+    end
+
+    keymaps['1'] = function()
+        exit_diff_mode()
+        vim.cmd(':tab Git commit --verbose')
     end
 
     for key, func in pairs(keymaps) do
