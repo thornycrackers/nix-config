@@ -231,22 +231,26 @@ local function get_project_notes_path()
         -- Parse git config for remote URL
         for _, line in ipairs(git_config) do
             -- Match SSH URLs like git@github.com:org/repo.git
-            local org, repo = line:match('url%s*=%s*git@[^:]+:([^/]+)/(.+)%.git')
+            local org, repo =
+                line:match('url%s*=%s*git@[^:]+:([^/]+)/(.+)%.git')
             if not org then
                 -- Match HTTPS URLs like https://github.com/org/repo.git
-                org, repo = line:match('url%s*=%s*https?://[^/]+/([^/]+)/(.+)%.git')
+                org, repo = line:match(
+                                'url%s*=%s*https?://[^/]+/([^/]+)/(.+)%.git')
             end
             if not org then
                 -- Match URLs without .git suffix
                 org, repo = line:match('url%s*=%s*git@[^:]+:([^/]+)/([^%s]+)')
                 if not org then
-                    org, repo = line:match('url%s*=%s*https?://[^/]+/([^/]+)/([^%s]+)')
+                    org, repo = line:match(
+                                    'url%s*=%s*https?://[^/]+/([^/]+)/([^%s]+)')
                 end
             end
 
             if org and repo then
                 local notes_dir = vim.fn.expand('~') ..
-                                      '/Obsidian/MyVault/codenotes/' .. org .. '/' .. repo
+                                      '/Obsidian/MyVault/codenotes/' .. org ..
+                                      '/' .. repo
                 local notes_file = notes_dir .. '/index.md'
 
                 -- Create directory if it doesn't exist
@@ -371,6 +375,17 @@ for _, lsp in ipairs(servers) do
         flags = {debounce_text_changes = 150},
         capabilities = capabilities
     }
+
+    -- Special configuration for nil_ls to disable flake input prompts
+    if lsp == 'nil_ls' then
+        config.settings = {
+            ['nil'] = {
+                nix = {flake = {autoArchive = false, autoEvalInputs = false}}
+            }
+        }
+    end
+
+    nvim_lsp[lsp].setup(config)
 end
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
