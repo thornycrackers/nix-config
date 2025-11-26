@@ -157,10 +157,10 @@ mermaidlink2htmlclip() {
 # Jump to a project diredtory
 j() { # Jump to project code
     proj=$(find "$HOME/Work" -mindepth 2 -maxdepth 2 -type d -name "$1")
-    if [[ -d "$proj/code" ]]; then
-        cd "$proj/code" || exit
+    if [[ -d "$proj" ]]; then
+        cd "$proj" || exit
     else
-        echo "$proj/code does not exist"
+        echo "$proj does not exist"
     fi
 }
 
@@ -649,8 +649,7 @@ gpb() {
 # git@github.com:user/repo.git
 # https://github.com/user/repo
 #
-# It will just clone the repo to `repo/code` because I like the nested
-# directory structure
+# It will just clone the repo to repo
 gfcc() {
     PROTOCOL=$(echo "$1" | cut -c1-3)
     if [[ "$PROTOCOL" == 'git' ]]; then
@@ -658,7 +657,7 @@ gfcc() {
     elif [[ "$PROTOCOL" == 'htt' ]]; then
         REPO=$(echo "$1" | cut -d'/' -f5)
     fi
-    git clone "$1" "$REPO"/code
+    git clone "$1" "$REPO"
 }
 
 # Clear out remote refs branches
@@ -792,19 +791,16 @@ tlo() {
     fi
     # Remove trailing slashes from autocomplete if they exist
     desired_proj_name="${1%/}"
-    mapfile -t proj_dirs < <(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d)
-    for dir in "${proj_dirs[@]}"; do
-        proj_name=$(basename "$dir")
-        if [[ "$proj_name" == "$desired_proj_name" ]]; then
-            proj_dir="$dir/code"
-            tmux new-session -d -c "$proj_dir" -s "$proj_name"
-            tmux split-window -v -c "$proj_dir" -t "$proj_name"
-            tmux resize-pane -t "$proj_name":1.1 -y 30%
-            tmux attach-session -t "$proj_name"
-            return
-        fi
-    done
-    echo "Project '${1}' was not found"
+    proj_dir=$(find "$HOME/Work" -mindepth 2 -maxdepth 2 -type d -name "$desired_proj_name")
+    if [[ -d "$proj_dir" ]]; then
+        proj_name=$(basename "$proj_dir")
+        tmux new-session -d -c "$proj_dir" -s "$proj_name"
+        tmux split-window -v -c "$proj_dir" -t "$proj_name"
+        tmux resize-pane -t "$proj_name":1.1 -y 30%
+        tmux attach-session -t "$proj_name"
+    else
+        echo "Project '${1}' was not found"
+    fi
 }
 
 # Launch a session for mynixpkgs
