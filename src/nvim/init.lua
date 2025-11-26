@@ -219,6 +219,53 @@ vim.keymap.set('n', '<leader>pl', split_paragraph, noremap)
 kmap('x', 'il', 'g_o^', noremap)
 kmap('o', 'il', '<cmd>normal vil<cr>', noremap)
 kmap('n', '<leader>v', '^vg_o^', noremap)
+-- Function to get project-specific notes path within Obsidian vault
+local function get_project_notes_path()
+    local cwd = vim.fn.getcwd()
+    local git_config_path = cwd .. '/.git/config'
+
+    -- Try to read git config
+    local success, git_config = pcall(vim.fn.readfile, git_config_path)
+
+    if success and #git_config > 0 then
+        -- Parse git config for remote URL
+        for _, line in ipairs(git_config) do
+            -- Match SSH URLs like git@github.com:org/repo.git
+            local org, repo = line:match('url%s*=%s*git@[^:]+:([^/]+)/(.+)%.git')
+            if not org then
+                -- Match HTTPS URLs like https://github.com/org/repo.git
+                org, repo = line:match('url%s*=%s*https?://[^/]+/([^/]+)/(.+)%.git')
+            end
+            if not org then
+                -- Match URLs without .git suffix
+                org, repo = line:match('url%s*=%s*git@[^:]+:([^/]+)/([^%s]+)')
+                if not org then
+                    org, repo = line:match('url%s*=%s*https?://[^/]+/([^/]+)/([^%s]+)')
+                end
+            end
+
+            if org and repo then
+                local notes_dir = vim.fn.expand('~') ..
+                                      '/Obsidian/MyVault/codenotes/' .. org .. '/' .. repo
+                local notes_file = notes_dir .. '/index.md'
+
+                -- Create directory if it doesn't exist
+                vim.fn.mkdir(notes_dir, 'p')
+
+                return notes_file
+            end
+        end
+    end
+
+    -- If no .git/config, use "mine/<directory>" as fallback
+    local dir_name = vim.fn.fnamemodify(cwd, ':t')
+    local notes_dir = vim.fn.expand('~') .. '/Obsidian/MyVault/codenotes/mine'
+    local notes_file = notes_dir .. '/' .. dir_name .. '.md'
+
+    vim.fn.mkdir(notes_dir, 'p')
+    return notes_file
+end
+
 -- Shortcuts to help take notes
 -- Print current filepath with line number to reference
 kmap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>',
