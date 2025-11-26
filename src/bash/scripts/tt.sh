@@ -36,7 +36,7 @@ get_screen_height() {
 time="$1"
 
 kitty --class=floating --title termdown-floating bash -c "sleep 0.2; termdown $time; exit" &
-sleep 0.2
+sleep 0.5
 window_id=$(xdotool search --name termdown-floating)
 window_border=5
 window_width=800
