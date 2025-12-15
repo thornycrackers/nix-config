@@ -25,7 +25,7 @@ set smoothscroll true
 set searchengine duckduckgo
 set newtab https://duckduckgo.com
 
-set hintchars fjdksla
+set hintchars fjdkslagh
 set colourscheme dark
 
 js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = os.os=="linux" ? "kitty vim" : "auto"; tri.config.set("editorcmd", editorcmd)})
