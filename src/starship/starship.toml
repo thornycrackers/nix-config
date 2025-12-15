@@ -24,6 +24,7 @@ $gcloud\
 $openstack\
 $env_var\
 $custom\
+$cmd_duration\
 $line_break\
 $lua\
 $jobs\
@@ -54,3 +55,9 @@ format = '[$state( \($name\))]($style) '
 [hostname]
 ssh_only = true
 ssh_symbol = ""
+
+[cmd_duration]
+disabled = false
+min_time = 2000
+format = "⏱ [$duration]($style) "
+show_milliseconds = false
