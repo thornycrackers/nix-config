@@ -8,6 +8,7 @@
 --ignore-dir=migrations/
 --ignore-dir=.mypy_cache/
 --ignore-dir=.venv/
+--ignore-dir=.cache/
 
 # Ignore .map files
 --ignore-file=is:tags
