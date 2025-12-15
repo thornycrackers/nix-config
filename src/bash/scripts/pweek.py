@@ -1,4 +1,5 @@
-"""Script for computing weeks/quarters since joining parsely."""
+"""Script for computing weeks/quarters since joining PX."""
+
 import datetime
 import math
 import sys
@@ -6,7 +7,7 @@ import sys
 format_data = "%Y-%m-%d"
 date1 = datetime.datetime.strptime(sys.argv[1], format_data).date()
 
-date2 = datetime.date(2021, 9, 13)
+date2 = datetime.date(2025, 10, 1)
 
 delta = date1 - date2
 weeks = math.ceil(delta.days / 7)
