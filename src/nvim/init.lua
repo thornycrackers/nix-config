@@ -304,7 +304,7 @@ colorscheme gruvbox
 -- nvim-treesitter
 require('nvim-treesitter.configs').setup {
     highlight = {enable = true},
-    indent = {enable = true},
+    indent = {enable = true, disable = {"markdown"}},
     rainbow = {
         enable = true
         -- I use termcolors but this errors if left blank
