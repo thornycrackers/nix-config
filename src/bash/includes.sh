@@ -731,12 +731,16 @@ gf() {
     # If no remote was passed in, assume origin
     if [[ -z "$1" ]]; then
         remote="origin"
+    else
+        remote="$1"
     fi
 
     # If no branch was passed in, assume that the current branch is the one we
     # want to fetch.
     if [[ -z "$2" ]]; then
         branch="$(gcb)"
+    else
+        remote="$2"
     fi
 
     if [[ "$branch" == "master" ]]; then
