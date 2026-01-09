@@ -740,7 +740,7 @@ gf() {
     if [[ -z "$2" ]]; then
         branch="$(gcb)"
     else
-        remote="$2"
+        branch="$2"
     fi
 
     if [[ "$branch" == "master" ]]; then
