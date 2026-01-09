@@ -45,6 +45,7 @@ autocmd BufNewFile,BufRead *.nomad setfiletype hcl
 autocmd BufNewFile,BufRead *.yaml setfiletype yaml.ansible
 autocmd BufNewFile,BufRead *.yml setfiletype yaml.ansible
 autocmd BufNewFile,BufRead *.tfvars setfiletype terraform
+autocmd BufNewFile,BufRead *.tf setfiletype terraform
 autocmd FileType nix setlocal commentstring=#\ %s
 autocmd FileType terraform setlocal commentstring=#\ %s
 ]]
