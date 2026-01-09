@@ -36,6 +36,7 @@ let
           vim-floaterm
 
           # The rest
+          plenary-nvim
           vim-commentary
           vim-surround
           vim-repeat
@@ -62,9 +63,6 @@ let
           nvim-luadev
           mini-nvim
           (pkgs.callPackage ./nix/obsidian-nvim.nix { })
-          # llama-vim is very recent so we need to pull from unstable.
-          pkgs.unstable.vimPlugins.llama-vim
-          pkgs.unstable.vimPlugins.codecompanion-nvim
         ];
       };
     };

@@ -666,7 +666,6 @@ gbxr() {
     rm -rf .git/refs/remotes/origin/*
     rm -rf .git/refs/tags/*
     rm -rf .git/packed-refs
-    git fetch origin master
 }
 
 # Interactively remove local branches
@@ -726,15 +725,24 @@ gsr() {
 }
 
 gf() {
-    # Use name rev to figure out what the master branch is called.
-    # Running gsr above sets the ref
-    local BRANCH
-    if [[ "$2" == "master" ]]; then
-        BRANCH="$(git name-rev --name-only master)"
-    else
-        BRANCH="$2"
+    local branch
+    local remote
+
+    # If no remote was passed in, assume origin
+    if [[ -z "$1" ]]; then
+        remote="origin"
     fi
-    git fetch "$1" "$BRANCH"
+
+    # If no branch was passed in, assume that the current branch is the one we
+    # want to fetch.
+    if [[ -z "$2" ]]; then
+        branch="$(gcb)"
+    fi
+
+    if [[ "$branch" == "master" ]]; then
+        branch="$(git name-rev --name-only master)"
+    fi
+    git fetch "$remote" "$branch"
 }
 
 ghu() {

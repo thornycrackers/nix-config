@@ -9,6 +9,7 @@
 --ignore-dir=.mypy_cache/
 --ignore-dir=.venv/
 --ignore-dir=.cache/
+--ignore-dir=htmlcov/
 
 # Ignore .map files
 --ignore-file=is:tags
