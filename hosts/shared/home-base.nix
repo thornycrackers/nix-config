@@ -29,6 +29,12 @@
             local __git_cmd_idx=0
             _git_checkout
           } && __git_complete gco _comp_gco
+          # Completions for aliases that depend on bash-completion functions
+          complete -F _cd c
+          complete -F _ls l
+          complete -F _make m
+          complete -F _grep g
+          complete -F _python p
           # Direnv needs to be loaded just before ble.sh. If I leave it to home
           # manager then it will put direnv after blesh and it doesn't work.
           eval "$(direnv hook bash)"

@@ -869,8 +869,5 @@ _ssh() {
 }
 complete -F _ssh ssh
 complete -F _ssh s
-complete -F _cd c
-complete -F _ls l
-complete -F _make m
-complete -F _grep g
-complete -F _python p
+# Note: Completions for c, l, m, g, and p aliases are in home-base.nix
+# They must be loaded after bash-completion is enabled
