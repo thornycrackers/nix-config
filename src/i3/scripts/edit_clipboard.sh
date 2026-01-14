@@ -7,8 +7,12 @@ temp_file="$HOME/scratch.md"
 xsel --clipboard --output >"$temp_file"
 
 # Get screen dimensions
-screen_width=$(xrandr | grep '*' | awk '{print $1}' | cut -d 'x' -f1 | head -n1)
-screen_height=$(xrandr | grep '*' | awk '{print $1}' | cut -d 'x' -f2 | head -n1)
+screen_width=$(
+  xrandr | awk '/\*/ { split($1, a, "x"); print a[1]; exit }'
+)
+screen_height=$(
+  xrandr | awk '/\*/ { split($1, a, "x"); print a[2]; exit }'
+)
 
 # Calculate 80% of screen dimensions
 width=$((screen_width * 80 / 100))
