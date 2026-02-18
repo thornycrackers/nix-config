@@ -847,8 +847,10 @@ function __projects_completion() {
     suggestions=("$(find "$HOME"/Work/* -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -n1 basename)")
     mapfile -t COMPREPLY < <(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[COMP_CWORD]}")
 }
-complete -F __projects_completion j
-complete -F __projects_completion tlo
+if [[ $- == *i* ]]; then
+    complete -F __projects_completion j
+    complete -F __projects_completion tlo
+fi
 
 # Completions for jumping around marked directory
 function __engineering_folders_completion() {
@@ -856,7 +858,9 @@ function __engineering_folders_completion() {
     suggestions=("$(find "$MARKED_DIR" -maxdepth 1 -type d -not -name '.*' -print0 2>/dev/null | xargs -0 -n1 basename)")
     mapfile -t COMPREPLY < <(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[COMP_CWORD]}")
 }
-complete -F __engineering_folders_completion jp
+if [[ $- == *i* ]]; then
+    complete -F __engineering_folders_completion jp
+fi
 
 # ssh completions
 _ssh() {
@@ -867,7 +871,9 @@ _ssh() {
     COMPREPLY=("$(compgen -W "$opts" -- "$cur")")
     return 0
 }
-complete -F _ssh ssh
-complete -F _ssh s
+if [[ $- == *i* ]]; then
+    complete -F _ssh ssh
+    complete -F _ssh s
+fi
 # Note: Completions for c, l, m, g, and p aliases are in home-base.nix
 # They must be loaded after bash-completion is enabled
