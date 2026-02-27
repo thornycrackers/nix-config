@@ -172,8 +172,8 @@ kmap('n', 'gp', "`[v`]", noremap)
 -- Changelist navigation
 kmap('n', '<leader>co', '<cmd>copen<cr>', noremap)
 kmap('n', '<leader>cc', '<cmd>cclose<cr>', noremap)
-kmap('n', '<leader>cp', "<cmd>cprev<cr>", noremap)
-kmap('n', '<leader>cn', "<cmd>cnext<cr>", noremap)
+kmap('n', '<c-p>', "<cmd>cprev<cr>", noremap)
+kmap('n', '<c-n>', "<cmd>cnext<cr>", noremap)
 kmap('n', '<leader>lp', "<cmd>lprev<cr>", noremap)
 kmap('n', '<leader>ln', "<cmd>lnext<cr>", noremap)
 kmap('n', '<leader>lo', "<cmd>lopen<cr>", noremap)
@@ -364,9 +364,7 @@ end
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
 -- local servers = { 'pyls', 'rust_analyzer', 'tsserver' }
-local servers = {
-    'jedi_language_server', 'bashls', 'terraformls', 'ansiblels', 'nil_ls'
-}
+local servers = {'pyright', 'bashls', 'terraformls', 'ansiblels', 'nil_ls'}
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -707,7 +705,8 @@ vim.api.nvim_create_user_command("AckFzf", function(opts)
     local fzf = require("fzf-lua")
     fzf.grep({search = opts.args, cmd = "ack --nogroup --nocolor --smart-case"})
 end, {nargs = 1})
-kmap('n', '<leader>/', ':AckFzf ', {noremap = true, silent = false})
+kmap('n', '<leader>/', ':Ack! ', {noremap = true, silent = false})
+kmap('n', '<leader>ga', 'yiw:Ack! <c-r>0<cr>', {noremap = true})
 
 -- vim-oscyank
 -- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1145673058
