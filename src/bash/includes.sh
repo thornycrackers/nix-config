@@ -793,6 +793,25 @@ awsecrlogin() {
 }
 
 ########
+# !glcoud
+########
+
+# These commands work when you've specified a project via environment variables
+# export GCLOUD_PROJECT="my-fun-project"
+
+# Watch current status of vms on gcloud
+gcloud_watch() {
+    watch -n 30 gcloud compute instances list
+}
+
+# Interactively delete running instances
+gcloud_delete() {
+    gcloud compute instances list --format="table(name,zone)" | tail -n +2 | fzf --multi | while read -r name zone; do
+        gcloud compute instances delete "$name" --zone="$zone" --quiet
+    done
+}
+
+########
 # !tmux
 ########
 
