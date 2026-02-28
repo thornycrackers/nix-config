@@ -96,6 +96,7 @@
       "discord"
       "whatsapp"
       "signal"
+      "spotify"
     ];
     onActivation.cleanup = "zap";
   };

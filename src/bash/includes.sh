@@ -356,6 +356,11 @@ patha() {
     export "$CHOICE=$(pwd)"
 }
 
+# Command to compute average
+average() {
+    awk '{ sum += $1; count++ } END { if (count > 0) print sum/count }'
+}
+
 # Command for finding all my ghprs across multiple repos since a specific time.
 # I use this to figure out what I've worked on in the last quarter
 #
