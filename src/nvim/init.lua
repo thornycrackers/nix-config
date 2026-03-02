@@ -124,7 +124,7 @@ au BufLeave *.py call clearmatches()
 
 -- Custom commands
 vim.cmd [[
-command! MakeTagsPython !ctags --exclude=venv --exclude=.venv --languages=python --python-kinds=-i -R .
+command! MakeTagsPython !ctags --exclude=venv --exclude=.cache --exclude=.venv --languages=python --python-kinds=-i -R .
 ]]
 
 -- Custom function to number visually selected lines
