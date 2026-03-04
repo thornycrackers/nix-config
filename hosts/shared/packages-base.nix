@@ -25,6 +25,8 @@ pkgs: with pkgs; [
   ncdu
   # Want at least version 31 for dupfilefmt
   unstable.lf
+  unstable.nodejs
+  rclone
   neofetch
   nixos-rebuild
   tailscale
@@ -34,7 +36,6 @@ pkgs: with pkgs; [
   zip
   # wanted at least v1.1.0 for recent config format
   unstable.himalaya
-  # For testing
-  unstable.uv
-  unstable.python3
+  google-cloud-sdk
+  google-cloud-sdk-gce
 ]
