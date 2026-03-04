@@ -7,6 +7,7 @@
       (pkgs.writeShellScriptBin "rolodex.sh" (builtins.readFile ./rolodex.sh))
       (pkgs.writeShellScriptBin "tmux_switch_session.sh" (builtins.readFile ./tmux_switch_sessions.sh))
       (pkgs.writeShellScriptBin "tmux-move-pane.sh" (builtins.readFile ./tmux-move-pane.sh))
+      (pkgs.writeShellScriptBin "tmux-move-pane-to-session.sh" (builtins.readFile ./tmux-move-pane-to-session.sh))
     ];
   };
 }
