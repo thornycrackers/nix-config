@@ -81,4 +81,10 @@ in
   zbar
   zathura
   zoom-us
+  (retroarch.override {
+    cores = with libretro; [
+      snes9x
+      nestopia
+    ];
+  })
 ]
