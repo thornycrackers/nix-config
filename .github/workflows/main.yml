@@ -13,11 +13,5 @@ jobs:
         uses: DeterminateSystems/flake-checker-action@v4
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v3
-      - name: Lint nix files
-        run: nix develop --command nixfmt --check .
-      - name: Lint bash files
-        run: find . -name "*.sh" -print0 | xargs -0 shellcheck --format=gcc
-      - name: Lint python with ruff
-        run: nix develop --command ruff check .
-      - name: Lint Ansible code
-        run: nix develop --command ansible-lint playground/os-provisioning/
+      - name: Run linting pipeline
+        run: nix develop --command make ci
