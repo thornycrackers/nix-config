@@ -81,10 +81,10 @@ in
   zbar
   zathura
   zoom-us
-  (retroarch.override {
-    cores = with libretro; [
+  (retroarch.withCores (
+    cores: with cores; [
       snes9x
       nestopia
-    ];
-  })
+    ]
+  ))
 ]

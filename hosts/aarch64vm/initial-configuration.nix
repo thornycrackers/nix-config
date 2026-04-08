@@ -12,7 +12,7 @@
   environment.systemPackages = with pkgs; [
     bash
     git
-    gitAndTools.delta
+    delta
     fzf
     vim
   ];

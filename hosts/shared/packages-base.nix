@@ -13,7 +13,7 @@ pkgs: with pkgs; [
   file
   gh
   git
-  gitAndTools.delta
+  delta
   gnumake
   htop
   jq

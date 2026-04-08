@@ -93,12 +93,10 @@
     with pkgs;
     let
       basePackages = import ../../hosts/shared/packages-base.nix pkgs;
-      parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
       localPackages = [ flakePkgs.myneovim ];
     in
     lib.mkMerge [
       basePackages
-      parselyPackages
       localPackages
     ];
 

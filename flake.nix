@@ -2,12 +2,12 @@
   description = "Development Machine's flake";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-24.11";
+    nixpkgs.url = "nixpkgs/nixos-25.11";
     # Unstable for select packages
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     # Home manager for dotfiles
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Wrapper manager for wrapping applications (careful updating)
@@ -54,7 +54,7 @@
       # configs as `pkgs.unstable.<package-name>`
       my-custom-overlay = final: prev: {
         unstable = import inputs.nixpkgs-unstable {
-          system = "${prev.system}";
+          system = prev.stdenv.hostPlatform.system;
           config.allowUnfree = true;
         };
       };

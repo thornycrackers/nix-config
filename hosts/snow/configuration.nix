@@ -46,7 +46,7 @@
   i18n.defaultLocale = "en_CA.UTF-8";
 
   # Instal DejaVuSansMono nerd font
-  fonts.packages = with pkgs; [ (nerdfonts.override { fonts = [ "DejaVuSansMono" ]; }) ];
+  fonts.packages = [ pkgs.nerd-fonts.dejavu-sans-mono ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.groups.thorny.gid = 1000;
@@ -95,13 +95,11 @@
     with pkgs;
     let
       basePackages = import ../../hosts/shared/packages-base.nix pkgs;
-      parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
       desktopPackages = import ../../hosts/shared/packages-linux-desktop.nix pkgs;
       localPackages = [ flakePkgs.myneovim ];
     in
     lib.mkMerge [
       basePackages
-      parselyPackages
       localPackages
       desktopPackages
     ];
@@ -116,7 +114,6 @@
       windowManager = {
         i3 = {
           enable = true;
-          package = pkgs.i3-gaps;
         };
       };
       desktopManager = {
@@ -221,9 +218,11 @@
 
   # When I shutdown the computer, docker takes forever and the default is 90s.
   # I don't feel like waiting more than 10 seconds.
-  systemd.extraConfig = ''
-    DefaultTimeoutStopSec=10s
-  '';
+  systemd.settings.Manager = {
+    DefaultIOAccounting = true;
+    DefaultIPAccounting = true;
+    DefaultTimeoutStopSec = "10s";
+  };
 
   programs.steam = {
     enable = true;

@@ -22,7 +22,6 @@
     let
       basePackages = import ../../hosts/shared/packages-base.nix pkgs;
       darwinPackages = import ../../hosts/shared/packages-darwin.nix pkgs;
-      parselyPackages = import ../../hosts/shared/packages-parsely.nix pkgs;
       localPackages = [
         flakePkgs.myneovim
         (wrapper-manager.lib.build {
@@ -41,7 +40,6 @@
     lib.mkMerge [
       basePackages
       darwinPackages
-      parselyPackages
       localPackages
     ];
 
