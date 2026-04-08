@@ -3,9 +3,6 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-24.11";
-    # Python39 complains about time-machine 2.15. Keep this nixpkgs for older
-    # python versions that some projects require.
-    nixpkgs2405.url = "nixpkgs/nixos-24.05";
     # Unstable for select packages
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     # Home manager for dotfiles
@@ -47,15 +44,6 @@
       nixpkgsFor = forAllSystems (
         system:
         import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-          overlays = [ my-custom-overlay ];
-        }
-      );
-
-      nixpkgsFor2405 = forAllSystems (
-        system:
-        import inputs.nixpkgs2405 {
           inherit system;
           config.allowUnfree = true;
           overlays = [ my-custom-overlay ];
@@ -135,19 +123,11 @@
       devShells = forAllSystems (
         system:
         let
-          pkgs = nixpkgsFor2405.${system};
+          pkgs = nixpkgsFor.${system};
           nvimPackages = import ./src/nvim/packages.nix pkgs;
         in
         {
           default = pkgs.mkShell { buildInputs = nvimPackages; };
-          python39 = pythonShell {
-            myPkgs = pkgs;
-            pythonVersion = pkgs.python39;
-          };
-          python310 = pythonShell {
-            myPkgs = pkgs;
-            pythonVersion = pkgs.python310;
-          };
           python311 = pythonShell {
             myPkgs = pkgs;
             pythonVersion = pkgs.python311;
