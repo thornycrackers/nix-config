@@ -8,8 +8,6 @@ in
   my-lua
   ack
   unstable.nixfmt
-  ansible
-  ansible-lint
   ctags
   gcc
   go
@@ -23,6 +21,7 @@ in
   luaformatter
   nodejs
   pyright
+  ripgrep
   ruff
   isort
   shellcheck

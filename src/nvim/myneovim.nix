@@ -3,6 +3,7 @@
 # Defines my neovim with it's config file, vim plugins, and all packages (such as language servers and linters)
 let
   neovimOverride = pkgs.unstable.neovim.override {
+    withPython3 = true;
     configure = {
       # customRC expects vimscript but I've already converted to lua
       customRC = ''
