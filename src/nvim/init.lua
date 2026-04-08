@@ -196,7 +196,8 @@ kmap('n', '<c-w><c-t>', '<c-w>v<c-w>T', noremap)
 kmap('n', '<c-w><c-w>', '<cmd>w<cr>', noremap)
 kmap('n', '<c-w><c-a>', '<cmd>wa<cr>', noremap)
 kmap('n', '<c-w><c-q>', '<cmd>wq<cr>', noremap)
-kmap('n', '<c-q>', '<cmd>qa!<cr>', noremap)
+kmap('n', '<c-q><c-q>', '<cmd>qa!<cr>', noremap)
+kmap('n', '<c-q><c-w>', '<cmd>q!<cr>', noremap)
 kmap('n', '<leader>ee', '<cmd>e!<cr>', noremap)
 kmap('n', '<expr> k', [[(v:count > 1 ? "m'" . v:count : '') . 'k']], noremap)
 kmap('n', '<expr> j', [[(v:count > 1 ? "m'" . v:count : '') . 'j']], noremap)
@@ -349,8 +350,9 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>',
                    opts)
     buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', '<space>e',
-                   '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',
+    buf_set_keymap('n', '<leader>ed',
+                   '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+    buf_set_keymap('n', '<leader>er', '<cmd>lua vim.diagnostic.setqflist()<CR>',
                    opts)
     buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',
                    opts)
