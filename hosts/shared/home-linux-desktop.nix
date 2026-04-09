@@ -69,9 +69,30 @@
   # tridactyl config
   xdg.configFile."tridactyl/tridactylrc".source = ../../src/tridactyl/tridactylrc;
 
+  # warpd config
+  xdg.configFile."warpd/config".text = ''
+    hint_oneshot_key: C-;
+  '';
+
   # espanso configs
   xdg.configFile."espanso/config/default.yml".source = ../../src/espanso/config/default.yml;
   xdg.configFile."espanso/match/base.yml".source = ../../src/espanso/match/base.yml;
+
+  systemd.user.services.warpd = {
+    Unit = {
+      Description = "Warpd - keyboard-driven mouse navigation";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.warpd}/bin/warpd --foreground";
+      Restart = "on-failure";
+      RestartSec = 3;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
 
   services.flameshot = {
     enable = true;
