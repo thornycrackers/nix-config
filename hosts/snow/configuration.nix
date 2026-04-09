@@ -221,6 +221,22 @@
     };
   };
 
+  # Try and save a bit of $$$ when idle
+  powerManagement.cpuFreqGovernor = "schedutil";
+
+  # Disable idle suspend
+  systemd.targets.sleep.enable = false;
+  systemd.targets.suspend.enable = false;
+  systemd.targets.hibernate.enable = false;
+  systemd.targets.hybrid-sleep.enable = false;
+  services.logind = {
+    lidSwitch = "ignore";
+    settings.Login = {
+      IdleAction = "ignore";
+      IdleActionSec = 0;
+    };
+  };
+
   # When I shutdown the computer, docker takes forever and the default is 90s.
   # I don't feel like waiting more than 10 seconds.
   systemd.settings.Manager = {
