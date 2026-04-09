@@ -730,3 +730,11 @@ require("obsidian").setup({
     ui = {enable = true, ignore_conceal_warn = true},
     legacy_commands = false
 })
+
+-- octo nvim
+require("telescope").setup({
+    -- Override vim.ui.select to use telescope instead
+    extensions = {["ui-select"] = {require("telescope.themes").get_dropdown()}}
+})
+require("telescope").load_extension("ui-select")
+require("octo").setup({picker = "telescope", enable_builtin = true})

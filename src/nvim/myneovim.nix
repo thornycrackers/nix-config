@@ -39,6 +39,8 @@ let
           vim-repeat
           fzf-vim
           fzf-lua
+          telescope-nvim
+          telescope-ui-select-nvim
           vim-argwrap
           vim-fugitive
           indent-blankline-nvim
@@ -60,6 +62,9 @@ let
           nvim-luadev
           mini-nvim
           (pkgs.callPackage ./nix/obsidian-nvim.nix { })
+          # Octo and Deps
+          octo-nvim
+          nvim-web-devicons
         ];
       };
     };
