@@ -76,9 +76,11 @@ in
   (pass.withExtensions (ext: with ext; [ pass-otp ]))
   pinentry-gtk2
   wineWowPackages.staging
+  sox
   xdotool
   xsel
   zbar
+  warpd
   zathura
   zoom-us
   (retroarch.withCores (
