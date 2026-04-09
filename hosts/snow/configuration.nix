@@ -230,8 +230,8 @@
   systemd.targets.hibernate.enable = false;
   systemd.targets.hybrid-sleep.enable = false;
   services.logind = {
-    lidSwitch = "ignore";
     settings.Login = {
+      HandleLidSwitch = "ignore";
       IdleAction = "ignore";
       IdleActionSec = 0;
     };
