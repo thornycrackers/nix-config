@@ -406,7 +406,6 @@ kmap('n', '<leader>fb', "<cmd>let g:fzf_buffers_jump = 0<cr><cmd>Buffers<cr>",
      {noremap = true})
 kmap('n', '<leader>ft', "<cmd>Tags<cr>", {noremap = true})
 kmap('n', '<leader>fm', "<cmd>Marks<cr>", {noremap = true})
-kmap('n', '<leader>fg', "<cmd>GF?<cr>", {noremap = true})
 kmap('n', '<leader>fd', "<cmd>call GitFilesDiff()<cr>", {noremap = true})
 vim.cmd(
     [[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.pytest_cache/*" -not -path "*/\__pycache__/*" -not -path "*/\.ruff_cache/*" -not -path "*/\.cache/uv/*" -not -path "*/\.git/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
@@ -461,13 +460,6 @@ endfunction
 -- vim-argwrap
 kmap('n', '<leader>ew', '<cmd>ArgWrap<cr>', {noremap = true})
 
--- vim-fugitive
-kmap('n', '<leader>du', '<cmd>diffupdate<cr>', {noremap = true})
-kmap('n', '<leader>dd', '<cmd>diffget<cr>', {noremap = true})
-kmap('n', '<leader>df', '<cmd>diffput<cr>', {noremap = true})
-kmap('n', '<leader>dn', ']c', {noremap = true})
-kmap('n', '<leader>dp', '[c', {noremap = true})
-
 -- Git diff mode for easier diffing
 local git_diff_mode_active = false
 local git_diff_ns = vim.api.nvim_create_namespace('git_diff_mode')
@@ -511,7 +503,7 @@ function _G.enter_git_diff_mode()
     end
 
     -- Now define the 'w' function properly
-    keymaps['w'] = function() vim.cmd('w') end
+    keymaps['w'] = function() vim.cmd('wa') end
 
     keymaps['q'] = function()
         exit_diff_mode()
@@ -580,7 +572,8 @@ vim.cmd([[
   nnoremap <leader>gs :call ToggleGStatus()<CR>
 ]])
 kmap('n', '<leader>gb', '<cmd>Git blame<cr>', {noremap = true})
-kmap('n', '<leader>gd',
+kmap('n', '<leader>df', "<cmd>GF?<cr>", {noremap = true})
+kmap('n', '<leader>dd',
      '<cmd>Gdiffsplit<cr><cmd>lua vim.defer_fn(function() enter_git_diff_mode() end, 400)<cr>',
      {noremap = true})
 
