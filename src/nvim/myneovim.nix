@@ -59,7 +59,7 @@ let
           vim-fetch
           nvim-luadev
           mini-nvim
-          obsidian-nvim
+          (pkgs.callPackage ./nix/obsidian-nvim.nix { })
         ];
       };
     };
