@@ -75,6 +75,11 @@
 
   services.flameshot = {
     enable = true;
+    # https://github.com/NixOS/nixpkgs/pull/473788
+    # When using the stable flameshot from 25.11 I was not able to save files. There error message said:
+    # "No GSettings schemas are installed on the system"
+    # So I believe the above pull request is what resolves that issue.
+    package = pkgs.unstable.flameshot;
   };
 
   # This value determines the Home Manager release that your
