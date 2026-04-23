@@ -38,4 +38,5 @@ pkgs: with pkgs; [
   unstable.himalaya
   google-cloud-sdk
   google-cloud-sdk-gce
+  gh-dash
 ]

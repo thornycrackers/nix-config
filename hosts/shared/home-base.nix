@@ -73,4 +73,7 @@
 
   # lazgit config
   xdg.configFile."lazygit/config.yml".source = ../../src/lazygit/config.yml;
+
+  # gh-dash config
+  xdg.configFile."gh-dash/config.yml".source = ../../src/gh-dash/config.yml;
 }
