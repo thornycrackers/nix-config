@@ -149,6 +149,13 @@
     };
     tailscale.enable = true;
     espanso.enable = true;
+    syncthing = {
+      enable = true;
+      user = "thorny";
+      group = "users";
+      configDir = "/home/thorny/.config/syncthing";
+      openDefaultPorts = true;
+    };
   };
 
   # gtk2 is the most reliable out all the other flavors that I've tried so far
