@@ -243,5 +243,5 @@ vim.api.nvim_set_keymap('n', '<leader>end', '<cmd>lua delete_note()<cr>',
                         {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>enl', '<cmd>lua list_notes()<cr>',
                         {noremap = true})
--- vim.api.nvim_set_keymap('n', '<leader>enc', '<cmd>lua clear_notes()<cr>',
---                         {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>enx', '<cmd>lua clear_notes()<cr>',
+                        {noremap = true})
