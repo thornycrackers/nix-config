@@ -13,6 +13,7 @@ in
   xfce.xfce4-panel
   xfce.xfce4-i3-workspaces-plugin
   xfce.xfce4-screensaver
+  xfce.xfce4-screenshooter
   nitrogen
   # GUI Apps
   myfirefox
@@ -76,6 +77,7 @@ in
   (pass.withExtensions (ext: with ext; [ pass-otp ]))
   pinentry-gtk2
   wineWowPackages.staging
+  keymapp
   sox
   xdotool
   xsel
