@@ -72,6 +72,7 @@
   # warpd config
   xdg.configFile."warpd/config".text = ''
     hint_oneshot_key: C-;
+    hint_chars: asdflkj;
   '';
 
   # espanso configs
