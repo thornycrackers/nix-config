@@ -538,25 +538,31 @@ tfd() {
 
 # get the name of the current branch
 gcb() {
-    git rev-parse --abbrev-ref HEAD
+    _grb "$(git rev-parse --abbrev-ref HEAD)"
 }
 
-# Show all the differences in your current branch since it diverged from master
+# git resolve branch
+_grb() {
+    branch="$1"
+    if [[ "$branch" == "master" ]]; then
+        git name-rev --name-only master
+    else
+        echo "$branch"
+    fi
+}
+
+# Show all the differences in your current branch since it diverged from merge_base
 function gbd() {
-    if [[ -z "$1" ]]; then
-        git diff "$(git merge-base master HEAD)"...HEAD
-    else
-        git diff "$(git merge-base "$1" HEAD)"...HEAD
-    fi
+    branch="${VAR:-master}"
+    merge_base=$(git merge-base "$branch" HEAD)
+    git diff "$merge_base"...HEAD
 }
 
-# Same as above but just show stat
+# Show all the stat differences in your current branch since it diverged from merge_base
 function gbds() {
-    if [[ -z "$1" ]]; then
-        git diff --stat "$(git merge-base master HEAD)"...HEAD
-    else
-        git diff --stat "$(git merge-base "$1" HEAD)"...HEAD
-    fi
+    branch="${VAR:-master}"
+    merge_base=$(git merge-base "$branch" HEAD)
+    git diff --stat "$merge_base"...HEAD
 }
 
 # Use fzf to select multiple files to checkout
@@ -629,11 +635,10 @@ gpl() {
 # to be on that branch
 gup() {
     orig_head="$(gcb)"
-    for var in "$@"; do
-        git checkout "$var"
-        git fetch origin "$var"
-        git reset --hard origin/"$var"
-    done
+    branch=$(_grb "$1")
+    git checkout "$branch"
+    git fetch origin "$branch"
+    git reset --hard origin/"$branch"
     git checkout "$orig_head"
 }
 
@@ -667,7 +672,6 @@ gfcc() {
 
 # Clear out remote refs branches
 gbxr() {
-    setopt localoptions rmstarsilent
     rm -rf .git/refs/remotes/origin/*
     rm -rf .git/refs/tags/*
     rm -rf .git/packed-refs
@@ -686,13 +690,13 @@ gbxb() {
 # where I'm the only one contributing
 gpp() {
     MESSAGE=${1:-auto}
-    git commit -m "$MESSAGE" && git push origin master
+    git commit -m "$MESSAGE" && git push origin "$(gcb)"
 }
 
 gppa() {
     MESSAGE=${1:-auto}
     git add -A
-    git commit -m "$MESSAGE" && git push origin master
+    git commit -m "$MESSAGE" && git push origin "$(gcb)"
 }
 
 # Fetch and checkout
@@ -700,6 +704,7 @@ gfco() {
     git fetch origin "$1"
     git checkout "$1"
 }
+
 gbcc() {
     local BRANCH
     BRANCH="$(git branch | cut -c 3- | fzf)"
@@ -745,12 +750,9 @@ gf() {
     if [[ -z "$2" ]]; then
         branch="$(gcb)"
     else
-        branch="$2"
+        branch=$(_grb "$2")
     fi
 
-    if [[ "$branch" == "master" ]]; then
-        branch="$(git name-rev --name-only master)"
-    fi
     git fetch "$remote" "$branch"
 }
 
