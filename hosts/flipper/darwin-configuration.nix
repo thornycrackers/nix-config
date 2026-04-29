@@ -95,6 +95,7 @@
       "whatsapp"
       "signal"
       "spotify"
+      "screen-studio"
     ];
     onActivation.cleanup = "zap";
   };
