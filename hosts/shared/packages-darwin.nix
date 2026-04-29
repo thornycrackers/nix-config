@@ -6,5 +6,6 @@ pkgs: with pkgs; [
   # coreutils
   watch
   docker
-  colima
+  # Stable was complaining about being out of date
+  unstable.colima
 ]

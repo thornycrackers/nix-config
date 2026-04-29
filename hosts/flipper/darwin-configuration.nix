@@ -9,6 +9,7 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+    enable = true;
   };
 
   # Enable unfree packages
@@ -109,11 +110,14 @@
   # I had to manually run `chsh` to get the shell to change.
   environment.shells = [ pkgs.bashInteractive ];
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-
   # Setup tailscale private network
   services.tailscale.enable = true;
+
+  # Make sure things like homebrew run as my osx user rather than root
+  system.primaryUser = "codyhiar";
+
+  # Fix "The default Nix build user group ID was changed from 30000 to 350." error
+  ids.gids.nixbld = 350;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

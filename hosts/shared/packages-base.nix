@@ -6,7 +6,8 @@ pkgs: with pkgs; [
   unstable.claude-code
   csvkit
   curl
-  direnv
+  # Regular direnv was failing on osx build
+  unstable.direnv
   dig
   entr
   feh
@@ -37,6 +38,5 @@ pkgs: with pkgs; [
   # wanted at least v1.1.0 for recent config format
   unstable.himalaya
   google-cloud-sdk
-  google-cloud-sdk-gce
   gh-dash
 ]

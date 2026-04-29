@@ -174,7 +174,7 @@ nrs() {
     if [[ $(uname -s) == "Linux" ]]; then
         sudo -i nixos-rebuild switch
     elif [[ $(uname -s) == "Darwin" ]]; then
-        darwin-rebuild switch --flake ~/.nixpkgs
+        sudo darwin-rebuild switch --flake ~/.nixpkgs
     else
         echo "unknown platform"
     fi
