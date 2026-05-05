@@ -43,6 +43,8 @@
     "virbr2"
   ];
 
+  networking.firewall.allowedTCPPorts = [ 11434 ];
+
   # Set your time zone.
   time.timeZone = "America/Edmonton";
 
@@ -168,6 +170,19 @@
 
   # virtualisation stuff I want enabled
   virtualisation = {
+    oci-containers.backend = "docker";
+    oci-containers.containers = {
+      open-webui = {
+        image = "ghcr.io/open-webui/open-webui:main";
+        ports = [ "8080:8080" ];
+        volumes = [ "/var/lib/open-webui:/app/backend/data" ];
+        environment = {
+          OLLAMA_BASE_URL = "http://host.docker.internal:11434";
+          WEBUI_AUTH = "False";
+        };
+        extraOptions = [ "--add-host=host.docker.internal:host-gateway" ];
+      };
+    };
     docker = {
       enable = true;
       # Be aware that if you try running namespaced docker with nomad, nomad can run into issues
