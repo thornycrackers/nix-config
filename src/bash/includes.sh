@@ -637,7 +637,7 @@ gpl() {
 # to be on that branch
 gup() {
     orig_head="$(gcb)"
-    branch=$(_grb "$1")
+    branch=$(_grb "${1:-master}")
     git checkout "$branch"
     git fetch origin "$branch"
     git reset --hard origin/"$branch"
@@ -763,6 +763,37 @@ ghu() {
     base_url=$(grep github .git/config | cut -d'@' -f 2 | sed 's/.git//g' | tr ':' '/')
     repo_url="https://$base_url"
     echo "$repo_url/blob/$(gcb)/$1"
+}
+
+# Create a branch from updated base (default master) with current changes
+gbp() {
+    if [[ -z "$1" ]]; then
+        echo "usage: gbp <branch-name> [base-branch]"
+        return 1
+    fi
+    local branch="$1"
+    local base orig
+    base=$(_grb "${2:-master}")
+    orig="$(gcb)"
+    mkdir -p ~/.local/state
+    echo "$orig" >~/.local/state/gitlastbranch
+    git stash --include-untracked
+    git checkout "$base"
+    git fetch origin "$base"
+    git reset --hard origin/"$base"
+    git checkout -b "$branch"
+    git stash pop --index
+}
+
+# Jump back to the branch saved by gbp
+glb() {
+    local branch
+    branch=$(cat ~/.local/state/gitlastbranch 2>/dev/null)
+    if [[ -z "$branch" ]]; then
+        echo "no saved branch"
+        return 1
+    fi
+    git checkout "$branch"
 }
 
 ########

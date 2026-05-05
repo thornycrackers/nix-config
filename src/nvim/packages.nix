@@ -19,6 +19,7 @@ in
   nil
   nodePackages.bash-language-server
   luaformatter
+  mdformat
   nodejs
   pyright
   ripgrep

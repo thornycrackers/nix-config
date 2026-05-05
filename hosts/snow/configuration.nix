@@ -54,8 +54,9 @@
   # Instal DejaVuSansMono nerd font
   fonts.packages = [ pkgs.nerd-fonts.dejavu-sans-mono ];
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Need to match group with the subgid and subuid mappings
   users.groups.thorny.gid = 1000;
+  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.thorny = {
     home = "/home/thorny";
     isNormalUser = true;
@@ -70,7 +71,8 @@
       "incus-admin"
       "openrazer"
     ];
-    # Required for the docker rootless
+    # These entries are required for docker's --userns-remapping option to
+    # create files on the host as the correct 'thorny' user
     subUidRanges = [
       {
         count = 1;
@@ -81,7 +83,6 @@
         startUid = 100001;
       }
     ];
-    # Also required for the docker rootless
     subGidRanges = [
       {
         count = 1;
@@ -93,6 +94,28 @@
       }
     ];
   };
+  # Add subgid and subuid ranges for root so the incus daemon can remap files
+  # back to "thorny"
+  users.users.root.subUidRanges = [
+    {
+      startUid = 1000000;
+      count = 1000000000;
+    }
+    {
+      startUid = 1000;
+      count = 1;
+    }
+  ];
+  users.users.root.subGidRanges = [
+    {
+      startGid = 1000000;
+      count = 1000000000;
+    }
+    {
+      startGid = 1000;
+      count = 1;
+    }
+  ];
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -157,6 +180,11 @@
       group = "users";
       configDir = "/home/thorny/.config/syncthing";
       openDefaultPorts = true;
+    };
+    ollama = {
+      enable = true;
+      acceleration = "cuda";
+      host = "0.0.0.0";
     };
   };
 
@@ -229,6 +257,32 @@
             };
             name = "default";
           }
+          {
+            name = "agent-sandbox";
+            description = "Sandbox for Claude Code with nested Docker";
+            config = {
+              "security.nesting" = "true";
+              "security.syscalls.intercept.mknod" = "true";
+              "security.syscalls.intercept.setxattr" = "true";
+              "linux.kernel_modules" = "tun";
+              "raw.idmap" = ''
+                uid 1000 1000
+                gid 1000 1000
+              '';
+            };
+            devices = {
+              eth0 = {
+                name = "eth0";
+                network = "incusbr0";
+                type = "nic";
+              };
+              root = {
+                path = "/";
+                pool = "default";
+                type = "disk";
+              };
+            };
+          }
         ];
         storage_pools = [
           {
@@ -258,6 +312,10 @@
       IdleActionSec = 0;
     };
   };
+
+  # Ensure Docker starts after nftables so its iptables chains are created properly
+  systemd.services.docker.after = [ "nftables.service" ];
+  systemd.services.docker.requires = [ "nftables.service" ];
 
   # When I shutdown the computer, docker takes forever and the default is 90s.
   # I don't feel like waiting more than 10 seconds.

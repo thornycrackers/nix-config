@@ -72,6 +72,10 @@ keybindings:
     - key: M
       name: enable auto-merge and squash
       command: gh pr merge --auto --squash --repo {{.RepoName}} {{.PrNumber}}
+    - key: u
+      name: update (rebase)
+      command: >
+        gh pr update-branch --rebase {{.PrNumber}} --repo {{.RepoName}}
   branches: []
 repoPaths: {}
 theme:
