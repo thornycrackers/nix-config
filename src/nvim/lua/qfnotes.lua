@@ -16,8 +16,8 @@ function get_current_line_number() return vim.fn.line('.') end
 -- Function to get the current line count, return type number
 function get_line_count() return vim.fn.line('$') end
 
--- Function to get the current line number, return type string
-function get_current_buffer_path() return vim.fn.expand('%:p') end
+-- Function to get the current relative buffer path
+function get_current_buffer_path() return vim.fn.expand('%:~:.') end
 
 local symbol_group = "myGroup"
 local sign_name = "mySign"
@@ -245,3 +245,20 @@ vim.api.nvim_set_keymap('n', '<leader>enl', '<cmd>lua list_notes()<cr>',
                         {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>enx', '<cmd>lua clear_notes()<cr>',
                         {noremap = true})
+-- Yank all qfnotes entries (file:line: text) via OSC
+vim.keymap.set('n', '<leader>cy', function()
+    local code_notes = get_code_notes()
+    if #code_notes == 0 then
+        vim.notify("No qfnotes entries", vim.log.levels.WARN)
+        return
+    end
+    local lines = {}
+    for _, code_note in ipairs(code_notes) do
+        table.insert(lines, string.format('%s:%s: %s', code_note:get_filepath(),
+                                          code_note:get_line_number(),
+                                          code_note:get_contents()))
+    end
+    vim.fn.setreg('0', table.concat(lines, '\n'))
+    vim.cmd('OSCYankRegister 0')
+    vim.notify(string.format("Yanked %d qfnotes entries", #code_notes))
+end, {noremap = true, desc = 'Yank qfnotes entries via OSC'})

@@ -69,14 +69,16 @@ vim.o.hidden = true
 vim.o.confirm = true
 -- If a filetype has folding enabled, make sure all folds are opened
 vim.o.foldlevel = 99
+-- Open folds when doing diffs
+vim.opt.diffopt:append("context:99999")
 
 -- My Highlights
 vim.cmd [[
 au VimEnter * hi Search ctermfg=166
-au VimEnter * hi DiffAdd    cterm=BOLD ctermfg=NONE ctermbg=22 gui=BOLD guifg=NONE guibg=#2d5016
-au VimEnter * hi DiffDelete cterm=BOLD ctermfg=NONE ctermbg=52 gui=BOLD guifg=NONE guibg=#5f1f1f
-au VimEnter * hi DiffChange cterm=BOLD ctermfg=NONE ctermbg=58 gui=BOLD guifg=NONE guibg=#4a3c1a
-au VimEnter * hi DiffText   cterm=BOLD ctermfg=NONE ctermbg=94 gui=BOLD guifg=NONE guibg=#9d8540
+au VimEnter * hi DiffAdd    cterm=BOLD ctermfg=NONE ctermbg=22 gui=BOLD guifg=NONE guibg=#2d5016 blend=20
+au VimEnter * hi DiffDelete cterm=BOLD ctermfg=NONE ctermbg=52 gui=BOLD guifg=NONE guibg=#5f1f1f blend=20
+au VimEnter * hi DiffChange cterm=BOLD ctermfg=NONE ctermbg=58 gui=BOLD guifg=NONE guibg=#241D0D blend=20
+au VimEnter * hi DiffText   cterm=BOLD ctermfg=NONE ctermbg=94 gui=BOLD guifg=NONE guibg=#534722 blend=20
 au VimEnter * hi Normal guibg=NONE ctermbg=NONE
 au VimEnter * hi Search ctermbg=None ctermfg=166
 au VimEnter * hi PrimaryBlock   ctermfg=06 ctermbg=NONE
@@ -163,6 +165,7 @@ end
 
 -- Keymaps
 noremap = {noremap = true}
+noremap_silent = {noremap = true, silent = true}
 -- noh gets rid of highlighted search results
 kmap('n', '<leader><leader>', ':noh<cr>', noremap)
 -- `jj` maps to escape
@@ -188,6 +191,7 @@ kmap('n', '<leader>epi',
      noremap)
 -- yank current word and make print statement on next line
 kmap('n', '<leader>epp', 'yiwoprint("<esc>pa: ", <esc>pa)<esc>V=', noremap)
+kmap('n', '<leader>epf', '<cmd>silent !mdformat --wrap=no %<cr>', noremap)
 -- Easy new tab creation
 kmap('n', '<c-w>t', "<cmd>tabnew<cr>", noremap)
 kmap('n', '<c-w><c-f>', '<c-w>f<c-w>T', noremap)
@@ -284,7 +288,7 @@ vim.keymap.set('n', '<leader>,n',
                function() vim.cmd('edit ' .. get_project_notes_path()) end,
                noremap);
 -- Search and replace word under cursor
-kmap('n', '<Leader>r', ':%s/<c-r><c-w>/', {noremap = true, silent = true})
+kmap('n', '<Leader>r', ':%s/<c-r><c-w>/', noremap_silent)
 -- In insert mode, insert a timestamp with the current time
 kmap('i', '<F5>', '<c-r>=strftime("%x %H:%M:%S")<cr>', noremap)
 
@@ -312,6 +316,52 @@ require('nvim-treesitter.configs').setup {
         -- I use termcolors but this errors if left blank
     }
 }
+
+-- Disable treesitter conceal on fenced code block delimiters (the ```)
+-- Override the default markdown highlights query, removing conceal/conceal_lines
+-- from fenced_code_block_delimiter and info_string nodes (lines 50-59 of the
+-- original query). Everything else is kept as-is.
+vim.treesitter.query.set("markdown", "highlights", [[
+;From MDeiml/tree-sitter-markdown & Helix
+(setext_heading
+  (paragraph) @markup.heading.1
+  (setext_h1_underline) @markup.heading.1)
+(setext_heading
+  (paragraph) @markup.heading.2
+  (setext_h2_underline) @markup.heading.2)
+(atx_heading (atx_h1_marker)) @markup.heading.1
+(atx_heading (atx_h2_marker)) @markup.heading.2
+(atx_heading (atx_h3_marker)) @markup.heading.3
+(atx_heading (atx_h4_marker)) @markup.heading.4
+(atx_heading (atx_h5_marker)) @markup.heading.5
+(atx_heading (atx_h6_marker)) @markup.heading.6
+(info_string) @label
+(pipe_table_header (pipe_table_cell) @markup.heading)
+(pipe_table_header "|" @punctuation.special)
+(pipe_table_row "|" @punctuation.special)
+(pipe_table_delimiter_row "|" @punctuation.special)
+(pipe_table_delimiter_cell) @punctuation.special
+(indented_code_block) @markup.raw.block
+((fenced_code_block) @markup.raw.block
+  (#set! priority 90))
+(fenced_code_block
+  (fenced_code_block_delimiter) @markup.raw.block)
+(fenced_code_block
+  (info_string (language) @label))
+(link_destination) @markup.link.url
+[(link_title) (link_label)] @markup.link.label
+((link_label) . ":" @punctuation.delimiter)
+[(list_marker_plus) (list_marker_minus) (list_marker_star)
+ (list_marker_dot) (list_marker_parenthesis)] @markup.list
+(thematic_break) @punctuation.special
+(task_list_marker_unchecked) @markup.list.unchecked
+(task_list_marker_checked) @markup.list.checked
+((block_quote) @markup.quote (#set! priority 90))
+([(plus_metadata) (minus_metadata)] @keyword.directive (#set! priority 90))
+[(block_continuation) (block_quote_marker)] @punctuation.special
+(backslash_escape) @string.escape
+(inline) @spell
+]])
 
 -- LSP configuration (vim.lsp.config API, nvim 0.11+)
 -- nvim-cmp
@@ -538,7 +588,6 @@ function _G.auto_git_diff_mode()
         -- Small delay to ensure diff mode is fully set up
         vim.defer_fn(function()
             if vim.opt.diff:get() and not git_diff_mode_active then
-                -- Debug: print that we're auto-entering
                 vim.notify("Auto-entering Git Diff Mode", vim.log.levels.INFO)
                 enter_git_diff_mode()
             end
@@ -572,6 +621,7 @@ vim.cmd([[
   nnoremap <leader>gs :call ToggleGStatus()<CR>
 ]])
 kmap('n', '<leader>gb', '<cmd>Git blame<cr>', {noremap = true})
+kmap('n', '<leader>ga', '<cmd>Git add %<cr>', {noremap = true})
 kmap('n', '<leader>df', "<cmd>GF?<cr>", {noremap = true})
 kmap('n', '<leader>dd',
      '<cmd>Gdiffsplit<cr><cmd>lua vim.defer_fn(function() enter_git_diff_mode() end, 400)<cr>',
@@ -589,11 +639,11 @@ kmap('n', '<leader>m', '<cmd>Lf<cr>', {noremap = true});
 kmap('n', '<leader>n', '<cmd>LfWorkingDirectory<cr>', {noremap = true});
 
 -- hop-nvim
-kmap('', '<leader>ss', '<cmd>HopChar2<cr>', {noremap = true})
+kmap('', '<leader>s', '<cmd>HopChar2<cr>', {noremap = true})
 -- set the pattern as a variable to avoid escaping issues
 vim.cmd([[
 let g:hop_file_pattern = '\v(\.\/|\.\.\/|\w+\/)+\w+(\.\w+)?'
-nnoremap <Leader>sf :lua HopToFilePath()<cr>
+nnoremap <Leader>k :lua HopToFilePath()<cr>
 ]])
 function HopToFilePath()
     -- Use hop to look for file paths and visually select, Then run "gF" to go
@@ -679,7 +729,7 @@ vim.api.nvim_create_user_command("AckFzf", function(opts)
     fzf.grep({search = opts.args, cmd = "ack --nogroup --nocolor --smart-case"})
 end, {nargs = 1})
 kmap('n', '<leader>/', ':Ack! ', {noremap = true, silent = false})
-kmap('n', '<leader>ga', 'yiw:Ack! <c-r>0<cr>', {noremap = true})
+kmap('n', '<leader>fa', 'yiw:Ack! <c-r>0<cr>', {noremap = true})
 
 -- vim-oscyank
 -- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1145673058
@@ -692,8 +742,10 @@ let g:oscyank_term = 'default'
 kmap('n', '<leader>bd', '<cmd>BD<cr>', {noremap = true})
 
 -- vim-markdown
+vim.g.vim_markdown_folding_disabled = 1
 vim.g.vim_markdown_auto_insert_bullets = 0
 vim.g.vim_markdown_new_list_item_indent = 0
+vim.g.vim_markdown_conceal_code_blocks = 0
 
 -- mini.nvim
 -- Mini align provides nice interactive alignments, similar to terraform fmt.
@@ -728,7 +780,8 @@ vim.api.nvim_create_autocmd("FileType", {
 require("obsidian").setup({
     workspaces = {{name = "MyVault", path = "~/Obsidian/MyVault"}},
     ui = {enable = true, ignore_conceal_warn = true},
-    legacy_commands = false
+    legacy_commands = false,
+    frontmatter = {enabled = false}
 })
 
 -- octo nvim
@@ -738,3 +791,4 @@ require("telescope").setup({
 })
 require("telescope").load_extension("ui-select")
 require("octo").setup({picker = "telescope", enable_builtin = true})
+kmap('n', '<leader>o', '<cmd>Octo<cr>', {noremap = true})
