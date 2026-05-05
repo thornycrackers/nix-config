@@ -113,6 +113,8 @@ alias dstop='docker stop $(docker ps -q)'
 alias drm='docker rm $(docker ps -a -q) 2> /dev/null'
 alias drv='docker volume rm $(docker volume ls -qf dangling=true)'
 alias dri='docker rmi -f $(docker images -q)'
+# Incus
+alias ils='incus ls'
 # Print the current time in format used in hugo posts
 alias hugodate="date --utc +%FT%H:%M:%SZ"
 alias rmvenvs="find . -name '.venv' -type d | xargs rm -rf"
@@ -861,6 +863,34 @@ tloo() {
     tmux new-session -d -c "$session_dir" -s "$session_name"
     tmux split-window -v -c "$session_dir" -t "$session_name"
     tmux attach-session -t "$session_name"
+}
+
+############
+# !incus
+############
+
+# Interactively enter a shell on a sandboxed container
+# Try to guess the container from the current path.
+# Else, offer an interactive menu.
+iex() {
+    project_path=$(realpath .)
+    raw_name=$(basename "$project_path")
+    # Strip out leading .'s, if they exist
+    name=${raw_name#.}
+    container="${name}-sandbox"
+    res=$(incus ls | grep "$container")
+    if [[ -z "$res" ]]; then
+        container=$(incus list --format csv -c n status=running | grep -- '-sandbox' | fzf)
+    fi
+    incus exec "$container" -t -- su - thorny
+}
+
+# Remove running sandboxed containers
+irm() {
+    mapfile -t containers < <(incus list --format csv -c n status=running | fzf --multi --reverse)
+    for container in "${containers[@]}"; do
+        incus stop "$container" && incus rm "$container"
+    done
 }
 
 ############
