@@ -76,4 +76,7 @@
 
   # gh-dash config
   xdg.configFile."gh-dash/config.yml".source = ../../src/gh-dash/config.yml;
+
+  # aichat config
+  xdg.configFile."aichat/config.yaml".source = ../../src/aichat/config.yaml;
 }

@@ -1,0 +1,20 @@
+model: ollama:qwen2.5:14b
+rag_embedding_model: ollama:nomic-embed-text:latest
+rag_reranker_model: null
+rag_top_k: 3
+rag_chunk_size: 1000
+rag_chunk_overlap: 50
+
+clients:
+  - type: openai-compatible
+    name: ollama
+    api_base: http://localhost:11434/v1
+    models:
+      - name: qwen2.5:14b
+        max_input_tokens: 32768
+        supports_function_calling: true
+      - name: nomic-embed-text:latest
+        type: embedding
+        max_tokens_per_chunk: 8192
+        default_chunk_size: 1000
+        max_batch_size: 50
