@@ -1,4 +1,4 @@
-model: ollama:qwen2.5:14b
+model: ollama:qwen3:8b
 rag_embedding_model: ollama:nomic-embed-text:latest
 rag_reranker_model: null
 rag_top_k: 3
@@ -10,7 +10,7 @@ clients:
     name: ollama
     api_base: http://localhost:11434/v1
     models:
-      - name: qwen2.5:14b
+      - name: qwen3:8b
         max_input_tokens: 32768
         supports_function_calling: true
       - name: nomic-embed-text:latest
