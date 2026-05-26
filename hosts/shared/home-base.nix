@@ -79,4 +79,7 @@
 
   # aichat config
   xdg.configFile."aichat/config.yaml".source = ../../src/aichat/config.yaml;
+
+  # jj config
+  xdg.configFile."jj/config.toml".source = ../../src/jj/config.toml;
 }

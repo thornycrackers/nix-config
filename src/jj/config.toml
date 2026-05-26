@@ -1,0 +1,14 @@
+[user]
+name = "Cody Hiar"
+email = "cody@hiar.ca"
+
+[ui]
+pager = ["less", "-FRX"]
+diff-formatter="delta"
+
+[templates]
+git_push_bookmark = '"ch/" ++ change_id.short()'
+
+[merge-tools.delta]
+diff-args=["--side-by-side", "$left", "$right", "--width=$width"]
+diff-expected-exit-codes = [0, 1]

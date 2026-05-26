@@ -67,7 +67,6 @@ alias gc='git commit --verbose'
 alias gcm='git commit --verbose --amend'
 alias ga='git add'
 alias gca='git add -A; git commit --verbose'
-alias gco='git checkout'
 alias gcp='git cherry-pick --ff'
 # Fetch (f)
 alias gfc='git clone'
@@ -76,7 +75,6 @@ alias gfta='git fetch origin "refs/tags/*:refs/tags/*"'
 # Log (l)
 alias gls='git log --topo-order --stat --pretty=format:"$_git_log_medium_format}"'
 alias gld='git log --topo-order --stat --patch --full-diff --pretty=format:"$_git_log_medium_format"'
-alias glg='git log --topo-order --all --graph --date=local --pretty=format:"$_git_log_oneline_format"'
 alias glc='git shortlog --summary --numbered'
 # Rebase (r)
 alias gr='git rebase'
@@ -86,8 +84,6 @@ alias gri='git rebase --interactive'
 alias grs='git rebase --skip'
 # Merge (m)
 alias gm='git merge'
-# Push (p)
-alias gp='git push'
 # Stash (s)
 alias gs='git stash'
 alias gsa='git stash apply'
@@ -96,9 +92,8 @@ alias gsX='git-stash-clear-interactive'
 alias gsl='git stash list'
 alias gss='git stash save --include-untracked'
 # Working Copy (w)
-alias gws='git status --short'
 alias gwS='git status'
-alias gwd='git diff --no-ext-diff'
+alias gwds='git diff --stat'
 alias gwsd='git diff --cached'
 alias gwD='git diff --no-ext-diff --word-diff'
 alias gwr='git reset'
@@ -535,8 +530,71 @@ tfd() {
 }
 
 ########
+# !jj
+########
+
+# Fetch all the remote changes in my branch and pull them locally. I run this
+# after I've pushed to github and then commits are added that I want to pull in
+# and work on top of
+jub() {
+    # There could be multiple bookmarks, but for now I only ever have bookmarks
+    # from pushing my local up, so I'm making an assumption
+    branch=$(jj log -r @ --no-graph -T 'local_bookmarks.map(|b| b.name())' | head -n1)
+    change_id=$(jj log -r @ --no-graph -T 'change_id.shortest()')
+    # Fetch the remote changes for the branch
+    jj git fetch --branch "$branch"
+    # Check for conflicts and exit if we find any.
+    conflicts=$(jj log -r 'conflicts()' --no-graph -T 'change_id ++ "\n"')
+    if [ -n "$conflicts" ]; then
+        exit 1
+    fi
+    # Squash in all the updates into the current change_id
+    jj squash --use-destination-message --from "${change_id}..${branch}" --into "${change_id}"
+}
+
+########
 # !git
 ########
+
+gws() {
+    if [ -d .jj ]; then
+        jj st
+    else
+        git status --short
+    fi
+}
+
+gwd() {
+    if [ -d .jj ]; then
+        jj diff
+    else
+        git diff --no-ext-diff
+    fi
+}
+
+gp() {
+    if [ -d .jj ]; then
+        jj git push
+    else
+        git push
+    fi
+}
+
+glg() {
+    if [ -d .jj ]; then
+        jj log
+    else
+        git log --topo-order --all --graph --date=local --pretty=format:"$_git_log_oneline_format"
+    fi
+}
+
+gco() {
+    if [ -d .jj ]; then
+        jj edit "$1"
+    else
+        git checkout "$1"
+    fi
+}
 
 # get the name of the current branch
 gcb() {
@@ -651,8 +709,12 @@ gpf() {
 }
 
 gpb() {
-    current_branch="$(gcb)"
-    git push --set-upstream origin "$current_branch"
+    if [ -d .jj ]; then
+        jj git push -c @
+    else
+        current_branch="$(gcb)"
+        git push --set-upstream origin "$current_branch"
+    fi
 }
 
 # This function assumes urls of one of the following formats. All others
@@ -739,6 +801,10 @@ gsr() {
 gf() {
     local branch
     local remote
+
+    if [ -d .jj ]; then
+        jj git fetch
+    fi
 
     # If no remote was passed in, assume origin
     if [[ -z "$1" ]]; then

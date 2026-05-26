@@ -25,6 +25,7 @@ pkgs: with pkgs; [
   moreutils
   tree
   ncdu
+  unstable.jujutsu
   # Want at least version 31 for dupfilefmt
   unstable.lf
   unstable.nodejs
