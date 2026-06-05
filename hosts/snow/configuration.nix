@@ -43,7 +43,10 @@
     "virbr2"
   ];
 
-  networking.firewall.allowedTCPPorts = [ 11434 ];
+  networking.firewall.allowedTCPPorts = [
+    11434
+    5000
+  ];
 
   # Set your time zone.
   time.timeZone = "America/Edmonton";
@@ -185,6 +188,12 @@
       enable = true;
       acceleration = "cuda";
       host = "0.0.0.0";
+      environmentVariables = {
+        # Faster attention kernel; also a prerequisite for KV cache quantization.
+        OLLAMA_FLASH_ATTENTION = "1";
+        # Quantize the KV cache to free VRAM at large context windows.
+        OLLAMA_KV_CACHE_TYPE = "q8_0";
+      };
     };
   };
 

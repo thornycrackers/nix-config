@@ -14,7 +14,7 @@ let
         EOF
         let g:languagetool_server_command = '${pkgs.languagetool}/bin/languagetool-http-server'
       '';
-      packages.myPlugins = with pkgs.vimPlugins; {
+      packages.myPlugins = with pkgs.unstable.vimPlugins; {
         start = [
           # Colorscheme
           gruvbox-nvim
@@ -44,7 +44,7 @@ let
           vim-argwrap
           vim-fugitive
           indent-blankline-nvim
-          hop-nvim
+          flash-nvim
           ale
           goyo-vim
           vim-oscyank

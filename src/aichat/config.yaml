@@ -13,6 +13,7 @@ clients:
       - name: qwen3:8b
         max_input_tokens: 32768
         supports_function_calling: true
+        supports_reasoning: true
       - name: nomic-embed-text:latest
         type: embedding
         max_tokens_per_chunk: 8192

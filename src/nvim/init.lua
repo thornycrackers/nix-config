@@ -306,16 +306,22 @@ vim.cmd [[
 colorscheme gruvbox
 ]]
 
--- nvim-ts-rainbow
--- nvim-treesitter
-require('nvim-treesitter.configs').setup {
-    highlight = {enable = true},
-    indent = {enable = true, disable = {"markdown"}},
-    rainbow = {
-        enable = true
-        -- I use termcolors but this errors if left blank
-    }
-}
+-- nvim-treesitter (main branch removed auto-attach; start per-buffer on FileType)
+vim.api.nvim_create_autocmd('FileType', {
+    callback = function(args)
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if not lang then return end
+        -- language.add returns false (not raise) when no parser is installed,
+        -- e.g. octo.nvim's synthetic "octo" filetype.
+        local ok, added = pcall(vim.treesitter.language.add, lang)
+        if not (ok and added) then return end
+        vim.treesitter.start(args.buf, lang)
+        if args.match ~= 'markdown' then
+            vim.bo[args.buf].indentexpr =
+                "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+    end
+})
 
 -- Disable treesitter conceal on fenced code block delimiters (the ```)
 -- Override the default markdown highlights query, removing conceal/conceal_lines
@@ -458,7 +464,7 @@ kmap('n', '<leader>ft', "<cmd>Tags<cr>", {noremap = true})
 kmap('n', '<leader>fm', "<cmd>Marks<cr>", {noremap = true})
 kmap('n', '<leader>fd', "<cmd>call GitFilesDiff()<cr>", {noremap = true})
 vim.cmd(
-    [[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.pytest_cache/*" -not -path "*/\__pycache__/*" -not -path "*/\.ruff_cache/*" -not -path "*/\.cache/uv/*" -not -path "*/\.git/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
+    [[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.pytest_cache/*" -not -path "*/\__pycache__/*" -not -path "*/\.ruff_cache/*" -not -path "*/\.cache/uv/*" -not -path "*/\.git/*" -not -path "*/\.jj/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
 vim.cmd([[
 nnoremap <leader>ff :call FilesDefault()<cr>
 function! FilesDefault()
@@ -638,20 +644,18 @@ vim.g.floaterm_height = 0.99
 kmap('n', '<leader>m', '<cmd>Lf<cr>', {noremap = true});
 kmap('n', '<leader>n', '<cmd>LfWorkingDirectory<cr>', {noremap = true});
 
--- hop-nvim
-kmap('', '<leader>s', '<cmd>HopChar2<cr>', {noremap = true})
--- set the pattern as a variable to avoid escaping issues
-vim.cmd([[
-let g:hop_file_pattern = '\v(\.\/|\.\.\/|\w+\/)+\w+(\.\w+)?'
-nnoremap <Leader>k :lua HopToFilePath()<cr>
-]])
-function HopToFilePath()
-    -- Use hop to look for file paths and visually select, Then run "gF" to go
-    -- to file. I use "gF" because vim-fetch understands line numbers
-    require'hop'.hint_patterns({}, vim.g.hop_file_pattern)
-    vim.schedule(function() vim.api.nvim_feedkeys('gF', 'n', true) end)
-end
-require'hop'.setup {keys = 'etovxqpdygfblzhckisuran'}
+-- flash-nvim
+require("flash").setup({
+    modes = {search = {enabled = false}, char = {enabled = false}}
+})
+vim.keymap.set('', '<leader>s', function()
+  require("flash").jump()
+end, { desc = "Flash jump" })
+vim.api.nvim_set_hl(0, "FlashLabel",
+                    {fg = "#000000", bg = "#00ff00", bold = true})
+vim.api.nvim_set_hl(0, "FlashMatch", {link = "Search"})
+vim.api.nvim_set_hl(0, "FlashCurrent", {link = "IncSearch"})
+vim.api.nvim_set_hl(0, "FlashBackdrop", {link = "Comment"})
 
 -- ale
 vim.g.ale_lint_on_enter = 1
