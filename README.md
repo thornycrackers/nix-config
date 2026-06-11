@@ -18,3 +18,12 @@ nix run github:thornycrackers/nix-config#myneovim
 
 Then I wanted a place to for toy projects so I created the `playground` directory.
 Projects in that directory re-use functions and packages from the root flake which helps cut down setup time.
+
+# Installing on Machine
+
+```bash
+git clone https://github.com/thornycrackers/nix-config .nixpkgs
+cd .nixpkgs
+sudo ./install
+sudo nixos-rebuild switch --flake .#<chosen_hostname>
+```

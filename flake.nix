@@ -278,6 +278,43 @@
           ];
         };
 
+      # Configuration for development machine
+      nixosConfigurations.druid =
+        let
+          system = "aarch64-linux";
+          flakePkgs = self.packages."${system}";
+        in
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit flakePkgs;
+          };
+          modules = [
+            # Overlays-module makes "pkgs.unstable" available in configuration.nix
+            # This makes my custom overlay available for others to use.
+            (
+              { config, pkgs, ... }:
+              {
+                nixpkgs.overlays = [ my-custom-overlay ];
+              }
+            )
+            # Configuration for the system
+            ./hosts/druid/configuration.nix
+            # Home manager stuff, user name needs sync with configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.thorny = import ./hosts/shared/home-linux.nix;
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+                username = "thorny";
+                homedirectory = "/home/thorny";
+              };
+            }
+          ];
+        };
+
       # Configuration for temp aarch64vm
       nixosConfigurations.aarch64vm = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
