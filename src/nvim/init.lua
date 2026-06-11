@@ -168,8 +168,8 @@ noremap = {noremap = true}
 noremap_silent = {noremap = true, silent = true}
 -- noh gets rid of highlighted search results
 kmap('n', '<leader><leader>', ':noh<cr>', noremap)
--- `jj` maps to escape
-kmap('i', 'jj', '<esc>', noremap)
+-- `ctrl + j` for quick escapes
+kmap('i', '<c-j>', '<esc>', noremap)
 -- Visually select last copied text
 kmap('n', 'gp', "`[v`]", noremap)
 -- Changelist navigation
