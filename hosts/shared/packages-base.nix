@@ -41,4 +41,5 @@ pkgs: with pkgs; [
   unstable.himalaya
   google-cloud-sdk
   gh-dash
+  unstable.jjui
 ]

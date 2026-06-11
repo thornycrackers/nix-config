@@ -1,0 +1,15 @@
+# --- New revision before the selected one ---
+[[actions]]
+name = "new_before"
+desc = "new rev before selected"
+lua = '''
+local target = context.change_id()
+jj("new", "--no-edit", "--insert-before", target)
+-- the new revision is now the parent of `target`
+revisions.refresh({selected_revision = target .. "-"})
+'''
+
+[[bindings]]
+action = "new_before"
+key = ["n"]
+scope = "revisions"

@@ -100,6 +100,11 @@ alias gwr='git reset'
 alias gwrr='git reset HEAD^'
 alias gwR='git reset --hard'
 alias gwc='git clean -f'
+# Jujutsu Aliases
+alias ja="jj abandon"
+alias js="jj squash --from @ --into @- --interactive"
+alias jgp="jj git push -c @-"
+alias ju="jjui"
 # Docker
 # Fun fact for future reference. If you try to put these aliases into functions
 # linting will complain that you need to quote them. But, quoting will
@@ -550,6 +555,17 @@ jub() {
     fi
     # Squash in all the updates into the current change_id
     jj squash --use-destination-message --from "${change_id}..${branch}" --into "${change_id}"
+}
+
+jn() {
+    jj new --before @ -m "$1" --no-edit
+}
+
+# Create a pr using the jujutsu log to determine the correct head/base.
+jpr() {
+    gh pr create \
+        --head "$(jj log --no-graph -r '@-' -T 'bookmarks.join(" ")')" \
+        --base "$(jj log --no-graph -r '@--' -T 'bookmarks.join(" ")')"
 }
 
 ########

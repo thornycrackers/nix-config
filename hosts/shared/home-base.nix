@@ -82,4 +82,7 @@
 
   # jj config
   xdg.configFile."jj/config.toml".source = ../../src/jj/config.toml;
+
+  # jjui config
+  xdg.configFile."jjui/config.toml".source = ../../src/jjui/config.toml;
 }
