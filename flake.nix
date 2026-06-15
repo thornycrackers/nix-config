@@ -156,6 +156,7 @@
             modules = [ ./src/tmux ];
           };
           myneovim = pkgs.callPackage ./src/nvim/myneovim.nix { inherit pkgs; };
+          nerd-dictation = pkgs.callPackage ./src/nerd-dictation { inherit pkgs; };
         }
       );
 
@@ -172,6 +173,11 @@
         myneovim = {
           type = "app";
           program = "${self.packages.${system}.myneovim}/bin/nvim";
+        };
+        # Runs the single-hotkey toggle (start/stop dictation).
+        nerd-dictation = {
+          type = "app";
+          program = "${self.packages.${system}.nerd-dictation}/bin/nerd-dictation-toggle";
         };
       });
 

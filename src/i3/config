@@ -20,6 +20,8 @@ bindsym $mod+Return exec kitty
 bindsym $mod+n exec kitty --class=floating
 bindsym $mod+v exec ~/.config/i3/scripts/edit_clipboard.sh
 bindsym $mod+t exec rofi-pass
+# Toggle offline speech-to-text: press to start, press again to type the result.
+bindsym $mod+d exec nerd-dictation-toggle
 bindsym $mod+q kill
 bindsym $mod+f fullscreen toggle
 bindsym $mod+Shift+space floating toggle

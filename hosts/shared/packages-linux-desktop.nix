@@ -78,6 +78,8 @@ in
   wineWowPackages.staging
   keymapp
   sox
+  # Offline speech-to-text; ships `nerd-dictation` and `nerd-dictation-toggle`.
+  (pkgs.callPackage ../../src/nerd-dictation { inherit pkgs; })
   xdotool
   xsel
   zbar
