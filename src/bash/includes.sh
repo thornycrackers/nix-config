@@ -102,9 +102,11 @@ alias gwR='git reset --hard'
 alias gwc='git clean -f'
 # Jujutsu Aliases
 alias ja="jj abandon"
-alias js="jj squash --from @ --into @- --interactive"
+alias js="jj squash --interactive --use-destination-message"
 alias jgp="jj git push -c @-"
 alias ju="jjui"
+alias jba="jj bookmark advance"
+alias jpb="jj git push -c @"
 # Docker
 # Fun fact for future reference. If you try to put these aliases into functions
 # linting will complain that you need to quote them. But, quoting will
@@ -538,6 +540,28 @@ tfd() {
 # !jj
 ########
 
+# Try to figure out which branch I'm talking about when looking at a revision,
+# based on my assumptions.
+branch_at() {
+    rev="$1"
+    num_local_branches=$(jj log --no-graph -r "$rev" -T 'local_bookmarks.len()')
+    # If there is only one local branch, then I assume it's my branch and use it
+    if [[ "$num_local_branches" == 1 ]]; then
+        branch="$(jj log -r "$rev" --no-graph -T 'local_bookmarks.map(|b| b.name())' | head -n1)"
+        echo "$branch"
+        return
+    fi
+    num_remote_branches=$(jj log --no-graph -r "$rev" -T 'remote_bookmarks.len()')
+    # If I'm running an operation, and it's not my local branch. It's probably
+    # me looking for main. I look for main and drop the `@origin`.
+    if [[ "$num_remote_branches" == 1 ]]; then
+        trunk=$(jj log --no-graph -r 'trunk()' -T 'remote_bookmarks.map(|b| b.name()).join("\n")' | head -1)
+        branch=$(jj log -r "$rev" --no-graph -T 'remote_bookmarks.map(|b| b.name())' | grep "$trunk")
+        echo "$branch"
+        return
+    fi
+}
+
 # Fetch all the remote changes in my branch and pull them locally. I run this
 # after I've pushed to github and then commits are added that I want to pull in
 # and work on top of
@@ -563,9 +587,55 @@ jn() {
 
 # Create a pr using the jujutsu log to determine the correct head/base.
 jpr() {
+    # If @- hasn't been pushed yet, push it
+    num_branches=$(jj log --no-graph -r @- -T 'local_bookmarks.len()')
+    if [[ "$num_branches" == 0 ]]; then
+        jj git push -c @-
+    fi
     gh pr create \
-        --head "$(jj log --no-graph -r '@-' -T 'bookmarks.join(" ")')" \
-        --base "$(jj log --no-graph -r '@--' -T 'bookmarks.join(" ")')"
+        --head "$(branch_at @-)" \
+        --base "$(branch_at @--)"
+}
+
+jprr() {
+    gh pr create \
+        --head "$(branch_at @)" \
+        --base "$(branch_at @-)"
+}
+
+# Get my remote branch's name. In line with jj config
+jrb() {
+    short_id=$(jj log -r @ --no-graph -T 'change_id.short()')
+    echo "ch/$short_id"
+}
+
+# Update remote branch
+jfb() {
+    jj git fetch --branch "$(jrb)"
+}
+
+# Delete a bookmark that was accidentally pushed both locally and remotely
+jdb() {
+    bookmark="$1"
+    jj git fetch --bookmark "$bookmark"
+    jj bookmark track --remote=origin "$bookmark"
+    jj bookmark delete "$bookmark"
+    jj git push --bookmark "$bookmark"
+}
+
+# Not used to summon the Joe Rogan Experience, wrapper for rebasse
+jre() {
+    jj rebase -s "$1" -d "$2"
+}
+
+# Hard reset local bookmark to where the remote one is.
+# Sometimes I accidentally do an edit while a change set is checked out and
+# want to pull the remote changes in. I'd rather just blow away and start out
+# fresh from remote.
+jwr() {
+    bookmark="$1"
+    jj git fetch --bookmark "$bookmark"
+    jj bookmark set "$bookmark" -r "$bookmark"@origin --allow-backwards
 }
 
 ########
@@ -582,7 +652,11 @@ gws() {
 
 gwd() {
     if [ -d .jj ]; then
-        jj diff
+        if [[ -n "$1" ]]; then
+            jj diff --revision "$1"
+        else
+            jj diff
+        fi
     else
         git diff --no-ext-diff
     fi
@@ -726,7 +800,15 @@ gpf() {
 
 gpb() {
     if [ -d .jj ]; then
-        jj git push -c @
+        num_branches=$(jj log --no-graph -r @ -T 'local_bookmarks.len()')
+        if [[ "$num_branches" == 0 ]]; then
+            jj git push -c @
+        elif [[ "$num_branches" == 1 ]]; then
+            bookmark=$(jj log --no-graph -r @ -T 'local_bookmarks.map(|b| b.name()).join("\n")')
+            jj git push --bookmark "$bookmark"
+        else
+            echo "too many branches, can't push"
+        fi
     else
         current_branch="$(gcb)"
         git push --set-upstream origin "$current_branch"
