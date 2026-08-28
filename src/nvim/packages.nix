@@ -27,7 +27,6 @@ in
   isort
   shellcheck
   shfmt
-  terraform-ls
   tree-sitter
   vale
 ]

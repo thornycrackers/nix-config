@@ -413,7 +413,7 @@ local shared_config = {capabilities = capabilities}
 
 vim.lsp.config('pyright', shared_config)
 vim.lsp.config('bashls', shared_config)
-vim.lsp.config('terraformls', shared_config)
+-- vim.lsp.config('terraformls', shared_config)
 vim.lsp.config('nil_ls', vim.tbl_deep_extend('force', shared_config, {
     settings = {
         ['nil'] = {
@@ -422,7 +422,8 @@ vim.lsp.config('nil_ls', vim.tbl_deep_extend('force', shared_config, {
     }
 }))
 
-vim.lsp.enable({'pyright', 'bashls', 'terraformls', 'nil_ls'})
+-- Temp disable terraformls, it complains with octo pr reviews on tf files
+vim.lsp.enable({'pyright', 'bashls', 'nil_ls'})
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 -- nvim-cmp setup
