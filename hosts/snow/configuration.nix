@@ -57,6 +57,9 @@
   # Instal DejaVuSansMono nerd font
   fonts.packages = [ pkgs.nerd-fonts.dejavu-sans-mono ];
 
+  # Create shared group for plex media
+  users.groups.media = { };
+  users.users.plex.extraGroups = [ "media" ];
   # Need to match group with the subgid and subuid mappings
   users.groups.thorny.gid = 1000;
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -73,6 +76,7 @@
       "libvirtd"
       "incus-admin"
       "openrazer"
+      "media"
     ];
     # These entries are required for docker's --userns-remapping option to
     # create files on the host as the correct 'thorny' user
@@ -118,6 +122,13 @@
       startGid = 1000;
       count = 1;
     }
+  ];
+
+  # Plex folders
+  systemd.tmpfiles.rules = [
+    "d /var/lib/media 2775 thorny media -"
+    "d /var/lib/media/movies 2775 thorny media -"
+    "d /var/lib/media/tv 2775 thorny media -"
   ];
 
   # Allow unfree packages
@@ -194,6 +205,10 @@
         # Quantize the KV cache to free VRAM at large context windows.
         OLLAMA_KV_CACHE_TYPE = "q8_0";
       };
+    };
+    plex = {
+      enable = true;
+      openFirewall = true;
     };
   };
 
