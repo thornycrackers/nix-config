@@ -21,6 +21,7 @@ pkgs: with pkgs; [
   jq
   keychain
   lazydocker
+  docker-buildx
   lazygit
   moreutils
   tree

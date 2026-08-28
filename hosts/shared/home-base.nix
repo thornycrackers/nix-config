@@ -53,6 +53,9 @@
     recursive = true;
   };
 
+  # Make file to allow docker compose to detect buildx
+  home.file.".docker/cli-plugins/docker-buildx".source = "${pkgs.docker-buildx}/bin/docker-buildx";
+
   # colors for ls
   programs.dircolors = {
     enable = true;
