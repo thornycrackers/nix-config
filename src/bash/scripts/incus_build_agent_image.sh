@@ -79,6 +79,8 @@ npm install -g agent-browser skills @anthropic-ai/claude-code
 agent-browser install --with-deps
 skills add vercel-labs/agent-browser -g -a claude-code -a pi -y </dev/null
 skills add https://github.com/anthropics/skills --skill frontend-design -g -a claude-code -a pi -y </dev/null
+skills add https://github.com/dietrichgebert/ponytail --skill ponytail -g -a claude-code -a pi -y </dev/null
+skills add https://github.com/obra/superpowers --skill using-superpowers -g -a claude-code -a pi -y </dev/null
 
 # Connect pi to Ollama
 mkdir -p /home/thorny/.pi/agent
