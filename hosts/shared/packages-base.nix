@@ -21,6 +21,8 @@ pkgs: with pkgs; [
   jq
   keychain
   lazydocker
+  restic
+  usbutils
   docker-buildx
   lazygit
   moreutils
@@ -31,6 +33,7 @@ pkgs: with pkgs; [
   unstable.lf
   unstable.nodejs
   rclone
+  sqlite
   neofetch
   nixos-rebuild
   tailscale
@@ -40,7 +43,9 @@ pkgs: with pkgs; [
   zip
   # wanted at least v1.1.0 for recent config format
   unstable.himalaya
+  # PX related
   google-cloud-sdk
   gh-dash
   unstable.jjui
+  awscli2
 ]

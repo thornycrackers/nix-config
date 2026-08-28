@@ -80,12 +80,14 @@ in
   sox
   # Offline speech-to-text; ships `nerd-dictation` and `nerd-dictation-toggle`.
   (pkgs.callPackage ../../src/nerd-dictation { inherit pkgs; })
+  vlc
   xdotool
   xsel
   zbar
   warpd
   zathura
   zoom-us
+  unstable.openscreen
   (retroarch.withCores (
     cores: with cores; [
       snes9x
