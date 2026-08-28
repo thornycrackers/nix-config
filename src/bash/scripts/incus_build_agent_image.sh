@@ -110,6 +110,13 @@ cat > /home/thorny/.pi/agent/models.json <<'EOF'
   }
 }
 EOF
+cat > /home/thorny/.pi/agent/settings.json <<'EOF'
+{
+  "hideThinkingBlock": true,
+  "quietStartup": true,
+  "collapseChangelog": true
+}
+EOF
 
 cat >> /home/thorny/.bashrc <<'BASHRC'
 export PATH=$HOME/.npm-global/bin:$PATH
