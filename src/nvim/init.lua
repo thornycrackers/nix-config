@@ -649,9 +649,8 @@ kmap('n', '<leader>n', '<cmd>LfWorkingDirectory<cr>', {noremap = true});
 require("flash").setup({
     modes = {search = {enabled = false}, char = {enabled = false}}
 })
-vim.keymap.set('', '<leader>s', function()
-  require("flash").jump()
-end, { desc = "Flash jump" })
+vim.keymap.set('', '<leader>s', function() require("flash").jump() end,
+               {desc = "Flash jump"})
 vim.api.nvim_set_hl(0, "FlashLabel",
                     {fg = "#000000", bg = "#00ff00", bold = true})
 vim.api.nvim_set_hl(0, "FlashMatch", {link = "Search"})
