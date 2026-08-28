@@ -11,6 +11,8 @@ PROJECT_PATH=$(realpath .)
 RAW_NAME=$(basename "$PROJECT_PATH")
 # Strip out leading .'s, if they exist (for dot directories)
 NAME=${RAW_NAME#.}
+# Remove underscores
+NAME="${NAME//_/}"
 CONTAINER="${NAME}-sandbox"
 
 # 'agent-sandbox' is located in nix config under incus profiles

@@ -1076,6 +1076,7 @@ iex() {
     raw_name=$(basename "$project_path")
     # Strip out leading .'s, if they exist
     name=${raw_name#.}
+    name="${name//_/}"
     container="${name}-sandbox"
     res=$(incus ls | grep "$container")
     if [[ -z "$res" ]]; then
