@@ -409,6 +409,10 @@ ghcloneall() {
 
 }
 
+merge() {
+    gh pr edit "$1" --add-label "merge"
+}
+
 # Utilities for dealing with nix symlinks
 rwh() {
     readlink "$(which "$1")"
