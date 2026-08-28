@@ -102,6 +102,12 @@
     # "No GSettings schemas are installed on the system"
     # So I believe the above pull request is what resolves that issue.
     package = pkgs.unstable.flameshot;
+    settings = {
+      # https://github.com/nix-community/home-manager/issues/9201
+      # Need this for screenshot to work or else it complains it can't find
+      # `org.freedesktop.portal.Desktop`
+      General.useX11LegacyScreenshot = true;
+    };
   };
 
   # This value determines the Home Manager release that your
