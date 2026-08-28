@@ -29,5 +29,7 @@ for CONTAINER in $containers; do
         fi
     done
     incus exec "$CONTAINER" -- chown -R thorny:thorny /home/thorny/.claude /home/thorny/.claude.json
+    # Add my custom script
+    incus file push --create-dirs "$HOME/.claude/myscript.sh" "$CONTAINER/etc/profile.d/myscript.sh"
     echo "Refreshed $CONTAINER"
 done
