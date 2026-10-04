@@ -97,6 +97,7 @@
       "signal"
       "spotify"
       "screen-studio"
+      "1password"
     ];
     onActivation.cleanup = "zap";
   };

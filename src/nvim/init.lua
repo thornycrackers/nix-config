@@ -796,3 +796,16 @@ require("telescope").setup({
 require("telescope").load_extension("ui-select")
 require("octo").setup({picker = "telescope", enable_builtin = true})
 kmap('n', '<leader>o', '<cmd>Octo<cr>', {noremap = true})
+
+-- refactoring nvim
+require("refactoring").setup()
+kmap('n', '<leader>rs', '', {
+    noremap = true,
+    silent = false,
+    callback = function() require('refactoring').select_refactor() end
+})
+kmap('x', '<leader>rs', '', {
+    noremap = true,
+    silent = false,
+    callback = function() require('refactoring').select_refactor() end
+})

@@ -62,6 +62,7 @@ let
           nvim-luadev
           mini-nvim
           (pkgs.callPackage ./nix/obsidian-nvim.nix { })
+          refactoring-nvim
           # Octo and Deps
           octo-nvim
           nvim-web-devicons
