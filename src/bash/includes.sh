@@ -1058,6 +1058,12 @@ awsecrlogin() {
     aws ecr get-login-password | docker login --username AWS --password-stdin "$ecr_url"
 }
 
+aws_watch() {
+    watch -n 30 -x aws ec2 describe-instances \
+        --query 'Reservations[].Instances[].[InstanceId, Tags[?Key==`Name`]|[0].Value, InstanceType, State.Name, Placement.AvailabilityZone, PrivateIpAddress, PublicIpAddress]' \
+        --output table
+}
+
 ########
 # !glcoud
 ########
