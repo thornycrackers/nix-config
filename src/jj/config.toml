@@ -12,3 +12,6 @@ git_push_bookmark = '"ch/" ++ change_id.short()'
 [merge-tools.delta]
 diff-args=["--side-by-side", "$left", "$right", "--width=$width"]
 diff-expected-exit-codes = [0, 1]
+
+[remotes.origin]
+auto-track-bookmarks = "glob:*"
