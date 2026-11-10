@@ -87,7 +87,6 @@ in
   warpd
   zathura
   zoom-us
-  unstable.openscreen
   (retroarch.withCores (
     cores: with cores; [
       snes9x
