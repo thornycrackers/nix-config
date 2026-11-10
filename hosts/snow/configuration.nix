@@ -49,7 +49,8 @@
   ];
 
   # Set your time zone.
-  time.timeZone = "America/Edmonton";
+  # Edmonton's timezone not working with the latest switch
+  time.timeZone = "Etc/GMT+6";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
