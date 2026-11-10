@@ -1097,6 +1097,8 @@ tlo() {
     proj_dir=$(find "$HOME/Work" -mindepth 2 -maxdepth 2 -type d -name "$desired_proj_name")
     if [[ -d "$proj_dir" ]]; then
         proj_name=$(basename "$proj_dir")
+        # Replace periods with underscores
+        proj_name="${proj_name//./_}"
         tmux new-session -d -c "$proj_dir" -s "$proj_name"
         tmux split-window -v -c "$proj_dir" -t "$proj_name"
         tmux resize-pane -t "$proj_name":1.1 -y 30%

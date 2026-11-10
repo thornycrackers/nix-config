@@ -8,10 +8,8 @@
 set -euo pipefail
 
 claude_files=(
-    ".claude/.credentials.json"
     ".claude/settings.json"
     ".claude/CLAUDE.md"
-    ".claude.json"
 )
 
 # Get all running containers matching *-sandbox
