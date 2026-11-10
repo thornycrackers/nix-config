@@ -399,6 +399,11 @@ ghprr() {
     done
 }
 
+# Get the title for a PR
+ght() {
+    gh pr view "$1" --json title,number --jq '"\(.title) PR #\(.number)"'
+}
+
 # Clone all repositories for a given organization. (E.g ghcloneall thornycrackers)
 ghcloneall() {
     org_name="$1"
@@ -544,6 +549,16 @@ tfd() {
 # !jj
 ########
 
+# Print trunk's branch name
+trunk_branch_name() {
+    jj log -r 'trunk()' --no-graph -T 'remote_bookmarks.map(|b| b.name()).join("\n")' | head -n1
+}
+
+# Get the parents of a commit
+commit_parents() {
+    jj log -r "$1"- --no-graph -T 'commit_id ++ "\n"'
+}
+
 # Try to figure out which branch I'm talking about when looking at a revision,
 # based on my assumptions.
 branch_at() {
@@ -601,10 +616,22 @@ jpr() {
         --base "$(branch_at @--)"
 }
 
+# Create the PR draft first, then pass it into the command.
+# If you write a draft message and the `gh pr create` fails, she gone.
 jprr() {
+    draft_file=~/pr-draft.md
+    if [[ -e "$draft_file" ]]; then
+        echo "overwrite draft? [N/y]"
+        read -r -n 1 ans
+        if [[ "$ans" = "y" ]]; then
+            cp .github/PULL_REQUEST_TEMPLATE.md "$draft_file"
+        fi
+    fi
+    nvim "$draft_file"
     gh pr create \
         --head "$(branch_at @)" \
-        --base "$(branch_at @-)"
+        --base "$(branch_at @-)" \
+        --body-file "$draft_file"
 }
 
 # Get my remote branch's name. In line with jj config
@@ -615,7 +642,11 @@ jrb() {
 
 # Update remote branch
 jfb() {
-    jj git fetch --branch "$(jrb)"
+    if [[ -n "$1" ]]; then
+        jj git fetch --branch "$1"
+    else
+        jj git fetch --branch "$(jrb)"
+    fi
 }
 
 # Delete a bookmark that was accidentally pushed both locally and remotely
@@ -640,6 +671,21 @@ jwr() {
     bookmark="$1"
     jj git fetch --bookmark "$bookmark"
     jj bookmark set "$bookmark" -r "$bookmark"@origin --allow-backwards
+}
+
+# Fetch the trunk branch of a project
+jfm() {
+    jj git fetch --branch "$(trunk_branch_name)"
+}
+
+# Add a new parent to an existing commit
+jpa() {
+    jj rebase -s "$1" -d "$1"- -d "$2"
+}
+
+# Delete a parent from an existing commit
+jpd() {
+    jj rebase -s "$1" -d "$1""- ~$2"
 }
 
 ########
