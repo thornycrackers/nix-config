@@ -666,6 +666,18 @@ gwd() {
     fi
 }
 
+vgwd() {
+    if [ -d .jj ]; then
+        # Run viddy with -2 width to correct the delta sid-by-side that pushes
+        # to newline otherwise.
+        if [[ -n "$1" ]]; then
+            viddy "COLUMNS=$(($(tput cols) - 2)) jj diff --revision $1"
+        else
+            viddy "COLUMNS=$(($(tput cols) - 2)) jj diff"
+        fi
+    fi
+}
+
 gp() {
     if [ -d .jj ]; then
         jj git push

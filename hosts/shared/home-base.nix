@@ -88,4 +88,7 @@
 
   # jjui config
   xdg.configFile."jjui/config.toml".source = ../../src/jjui/config.toml;
+
+  # viddy config
+  xdg.configFile."viddy/config.toml".source = ../../src/viddy/config.toml;
 }

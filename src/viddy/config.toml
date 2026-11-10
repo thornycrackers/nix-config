@@ -1,0 +1,9 @@
+# Viddy >= 1.0 config. Note: binding an action here replaces *all* of its
+# default bindings, so the defaults we still want are repeated below.
+[keybindings.All]
+"<Ctrl-e>" = "ResultScrollDown"   # vim: one line down
+"<Ctrl-y>" = "ResultScrollUp"     # vim: one line up
+"<j>" = "ResultScrollDown"
+"<k>" = "ResultScrollUp"
+"<Down>" = "ResultScrollDown"
+"<Up>" = "ResultScrollUp"

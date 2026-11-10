@@ -48,4 +48,5 @@ pkgs: with pkgs; [
   gh-dash
   unstable.jjui
   awscli2
+  viddy
 ]
