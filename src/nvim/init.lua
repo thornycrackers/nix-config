@@ -24,11 +24,11 @@ function _G.print_table(mytable)
 end
 
 -- Shorcut for the function to save space
-kmap = vim.api.nvim_set_keymap
-
--- Set up spacebar as leader
--- https://icyphox.sh/blog/nvim-lua/
-kmap('n', '<Space>', '', {})
+kmap = vim.keymap.set
+silent = {silent = true}
+-- Disable space from moving one character to the right
+kmap('n', '<Space>', '<Nop>', silent)
+-- Set mapleader to space
 vim.g.mapleader = ' '
 -- Set spaces > tabs, 4 as default
 vim.o.expandtab = true
@@ -164,68 +164,68 @@ local function split_paragraph()
 end
 
 -- Keymaps
-noremap = {noremap = true}
-noremap_silent = {noremap = true, silent = true}
 -- noh gets rid of highlighted search results
-kmap('n', '<leader><leader>', ':noh<cr>', noremap)
+kmap('n', '<leader><leader>', ':noh<cr>')
 -- `ctrl + j` for quick escapes
-kmap('i', '<c-j>', '<esc>', noremap)
+kmap('i', '<c-j>', '<esc>')
 -- Visually select last copied text
-kmap('n', 'gp', "`[v`]", noremap)
+kmap('n', 'gp', "`[v`]")
+-- Make backspace work similar to delete in normal mode.
+-- I don't use backspace in normal mode
+kmap('n', '<BS>', function() return vim.v.count > 0 and '<Del>' or '' end,
+     {expr = true})
 -- Changelist navigation
-kmap('n', '<leader>co', '<cmd>copen<cr>', noremap)
-kmap('n', '<leader>cc', '<cmd>cclose<cr>', noremap)
-kmap('n', '<c-p>', "<cmd>cprev<cr>", noremap)
-kmap('n', '<c-n>', "<cmd>cnext<cr>", noremap)
-kmap('n', '<leader>lp', "<cmd>lprev<cr>", noremap)
-kmap('n', '<leader>ln', "<cmd>lnext<cr>", noremap)
-kmap('n', '<leader>lo', "<cmd>lopen<cr>", noremap)
-kmap('n', '<leader>lc', "<cmd>lclose<cr>", noremap)
-kmap('n', '<leader>ll', "<Plug>(Luadev-Run)", noremap)
+kmap('n', '<leader>co', '<cmd>copen<cr>')
+kmap('n', '<leader>cc', '<cmd>cclose<cr>')
+kmap('n', '<c-p>', "<cmd>cprev<cr>")
+kmap('n', '<c-n>', "<cmd>cnext<cr>")
+kmap('n', '<leader>lp', "<cmd>lprev<cr>")
+kmap('n', '<leader>ln', "<cmd>lnext<cr>")
+kmap('n', '<leader>lo', "<cmd>lopen<cr>")
+kmap('n', '<leader>lc', "<cmd>lclose<cr>")
+kmap('n', '<leader>ll', "<Plug>(Luadev-Run)")
 -- Shorcut to insert pudb statements for python
-kmap('n', '<leader>epu', 'ofrom pudb import set_trace; set_trace()<esc>',
-     noremap)
+kmap('n', '<leader>epu', 'ofrom pudb import set_trace; set_trace()<esc>')
 -- Shorcut to embed ipython
 kmap('n', '<leader>epi',
-     'ofrom IPython import embed<cr>from traitlets.config import get_config<cr>c = get_config()<cr>c.InteractiveShellEmbed.colors = "Linux"<cr>embed(config=c)<esc>',
-     noremap)
+     'ofrom IPython import embed<cr>from traitlets.config import get_config<cr>c = get_config()<cr>c.InteractiveShellEmbed.colors = "Linux"<cr>embed(config=c)<esc>')
 -- yank current word and make print statement on next line
-kmap('n', '<leader>epp', 'yiwoprint("<esc>pa: ", <esc>pa)<esc>V=', noremap)
-kmap('n', '<leader>epf', '<cmd>silent !mdformat --wrap=no %<cr>', noremap)
+kmap('n', '<leader>epp', 'yiwoprint("<esc>pa: ", <esc>pa)<esc>V=')
+kmap('n', '<leader>epf', '<cmd>silent !mdformat --wrap=no %<cr>')
 -- Easy new tab creation
-kmap('n', '<c-w>t', "<cmd>tabnew<cr>", noremap)
-kmap('n', '<c-w><c-f>', '<c-w>f<c-w>T', noremap)
-kmap('n', '<c-w><c-]>', '<c-w>v<c-]><c-w>T', noremap)
-kmap('n', '<c-w><c-t>', '<c-w>v<c-w>T', noremap)
-kmap('n', '<c-w><c-w>', '<cmd>w<cr>', noremap)
-kmap('n', '<c-w><c-a>', '<cmd>wa<cr>', noremap)
-kmap('n', '<c-w><c-q>', '<cmd>wq<cr>', noremap)
-kmap('n', '<c-q><c-q>', '<cmd>qa!<cr>', noremap)
-kmap('n', '<c-q><c-w>', '<cmd>q!<cr>', noremap)
-kmap('n', '<leader>ee', '<cmd>e!<cr>', noremap)
-kmap('n', '<expr> k', [[(v:count > 1 ? "m'" . v:count : '') . 'k']], noremap)
-kmap('n', '<expr> j', [[(v:count > 1 ? "m'" . v:count : '') . 'j']], noremap)
+kmap('n', '<c-w>t', "<cmd>tabnew<cr>")
+kmap('n', '<c-w><c-f>', '<c-w>f<c-w>T')
+kmap('n', '<c-w><c-]>', '<c-w>v<c-]><c-w>T')
+kmap('n', '<c-w><c-t>', '<c-w>v<c-w>T')
+kmap('n', '<c-w><c-w>', '<cmd>w<cr>')
+kmap('n', '<c-w><c-a>', '<cmd>wa<cr>')
+kmap('n', '<c-w><c-q>', '<cmd>wq<cr>')
+kmap('n', '<c-q><c-q>', '<cmd>qa!<cr>')
+kmap('n', '<c-q><c-w>', '<cmd>q!<cr>')
+kmap('n', '<leader>ee', '<cmd>e!<cr>')
+kmap('n', '<expr> k', [[(v:count > 1 ? "m'" . v:count : '') . 'k']])
+kmap('n', '<expr> j', [[(v:count > 1 ? "m'" . v:count : '') . 'j']])
 -- Call Ale Fix
-kmap('n', '<leader>ef', '<cmd>ALEFix<cr>', noremap)
-kmap('n', '<leader>el', '<cmd>ALELint<cr>', noremap)
-kmap('n', '<leader>et', '<cmd>lua toggle_ale_linting()<cr>', noremap)
-kmap('n', '<leader>ei', '<cmd>lua toggle_vale_info_statements()<cr>', noremap)
+kmap('n', '<leader>ef', '<cmd>ALEFix<cr>')
+kmap('n', '<leader>el', '<cmd>ALELint<cr>')
+kmap('n', '<leader>et', '<cmd>lua toggle_ale_linting()<cr>')
+kmap('n', '<leader>ei', '<cmd>lua toggle_vale_info_statements()<cr>')
 -- Markdown functions
 kmap('n', '<leader>po',
-     '<cmd>AngryReviewer<cr><c-w>k<cmd>ALELint<cr><cmd>lopen<cr><c-w>k', noremap)
-kmap('n', '<leader>pse', '<cmd>LanguageToolSetUp<cr>', noremap)
-kmap('n', '<leader>psc', '<cmd>LanguageToolCheck<cr>', noremap)
-kmap('n', '<leader>psu', '<cmd>LanguageToolSummary<cr>', noremap)
-kmap('n', '<leader>psl', '<cmd>LanguageToolClear<cr>', noremap)
-kmap('n', '<leader>pc', '<cmd>cclose<cr><cmd>lclose<cr>', noremap)
-kmap('n', '<leader>pg', '<cmd>Goyo<cr>', noremap)
-kmap('n', '<leader>pp', 'vipJVgq', noremap)
-vim.keymap.set('n', '<leader>pl', split_paragraph, noremap)
+     '<cmd>AngryReviewer<cr><c-w>k<cmd>ALELint<cr><cmd>lopen<cr><c-w>k')
+kmap('n', '<leader>pse', '<cmd>LanguageToolSetUp<cr>')
+kmap('n', '<leader>psc', '<cmd>LanguageToolCheck<cr>')
+kmap('n', '<leader>psu', '<cmd>LanguageToolSummary<cr>')
+kmap('n', '<leader>psl', '<cmd>LanguageToolClear<cr>')
+kmap('n', '<leader>pc', '<cmd>cclose<cr><cmd>lclose<cr>')
+kmap('n', '<leader>pg', '<cmd>Goyo 120<cr>')
+kmap('n', '<leader>pp', 'vipJVgq')
+kmap('n', '<leader>pl', split_paragraph)
 
 -- Add "il" text object to mean "in line"
-kmap('x', 'il', 'g_o^', noremap)
-kmap('o', 'il', '<cmd>normal vil<cr>', noremap)
-kmap('n', '<leader>v', '^vg_o^', noremap)
+kmap('x', 'il', 'g_o^')
+kmap('o', 'il', '<cmd>normal vil<cr>')
+kmap('n', '<leader>v', '^vg_o^')
 -- Function to get project-specific notes path within Obsidian vault
 local function get_project_notes_path()
     local cwd = vim.fn.getcwd()
@@ -279,18 +279,15 @@ end
 
 -- Shortcuts to help take notes
 -- Print current filepath with line number to reference
-kmap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>',
-     noremap);
+kmap('n', '<leader>,p', '<cmd>put =expand(\'%:p\') . \':\' . line(\'.\')<cr>');
 kmap('n', '<leader>,i',
-     '<Cmd>edit ' .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>',
-     noremap);
-vim.keymap.set('n', '<leader>,n',
-               function() vim.cmd('edit ' .. get_project_notes_path()) end,
-               noremap);
+     '<Cmd>edit ' .. vim.fn.expand('~') .. '/Obsidian/MyVault/index.md<CR>');
+kmap('n', '<leader>,n',
+     function() vim.cmd('edit ' .. get_project_notes_path()) end);
 -- Search and replace word under cursor
-kmap('n', '<Leader>r', ':%s/<c-r><c-w>/', noremap_silent)
+kmap('n', '<Leader>r', ':%s/<c-r><c-w>/', silent)
 -- In insert mode, insert a timestamp with the current time
-kmap('i', '<F5>', '<c-r>=strftime("%x %H:%M:%S")<cr>', noremap)
+kmap('i', '<F5>', '<c-r>=strftime("%x %H:%M:%S")<cr>')
 
 -- Build a custom status line
 local status_line = {
@@ -382,28 +379,26 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local bufnr = args.buf
         local opts = {buffer = bufnr, silent = true}
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-        vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-        vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder,
-                       opts)
-        vim.keymap.set('n', '<space>wl', function()
+        kmap('n', 'gD', vim.lsp.buf.declaration, opts)
+        kmap('n', 'gd', vim.lsp.buf.definition, opts)
+        kmap('n', 'K', vim.lsp.buf.hover, opts)
+        kmap('n', 'gi', vim.lsp.buf.implementation, opts)
+        kmap('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+        kmap('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+        kmap('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+        kmap('n', '<space>wl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, opts)
-        vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-        vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-        vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, opts)
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-        vim.keymap.set('n', '<leader>ed', vim.diagnostic.open_float, opts)
-        vim.keymap.set('n', '<leader>er', vim.diagnostic.setqflist, opts)
-        vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-        vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-        vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-        vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format() end,
-                       opts)
+        kmap('n', '<space>D', vim.lsp.buf.type_definition, opts)
+        kmap('n', '<space>rn', vim.lsp.buf.rename, opts)
+        kmap('n', '<space>ca', vim.lsp.buf.code_action, opts)
+        kmap('n', 'gr', vim.lsp.buf.references, opts)
+        kmap('n', '<leader>ed', vim.diagnostic.open_float, opts)
+        kmap('n', '<leader>er', vim.diagnostic.setqflist, opts)
+        kmap('n', '[d', vim.diagnostic.goto_prev, opts)
+        kmap('n', ']d', vim.diagnostic.goto_next, opts)
+        kmap('n', '<space>q', vim.diagnostic.setloclist, opts)
+        kmap('n', '<space>f', function() vim.lsp.buf.format() end, opts)
         vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
     end
 })
@@ -459,11 +454,10 @@ cmp.setup {
 }
 
 -- nvim-fzf
-kmap('n', '<leader>fb', "<cmd>let g:fzf_buffers_jump = 0<cr><cmd>Buffers<cr>",
-     {noremap = true})
-kmap('n', '<leader>ft', "<cmd>Tags<cr>", {noremap = true})
-kmap('n', '<leader>fm', "<cmd>Marks<cr>", {noremap = true})
-kmap('n', '<leader>fd', "<cmd>call GitFilesDiff()<cr>", {noremap = true})
+kmap('n', '<leader>fb', "<cmd>let g:fzf_buffers_jump = 0<cr><cmd>Buffers<cr>")
+kmap('n', '<leader>ft', "<cmd>Tags<cr>")
+kmap('n', '<leader>fm', "<cmd>Marks<cr>")
+kmap('n', '<leader>fd', "<cmd>call GitFilesDiff()<cr>")
 vim.cmd(
     [[let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/\.pytest_cache/*" -not -path "*/\__pycache__/*" -not -path "*/\.ruff_cache/*" -not -path "*/\.cache/uv/*" -not -path "*/\.git/*" -not -path "*/\.jj/*" -not -path "*/\.mypy_cache/*" -not -path "*/\.venv/*" -not -path "*/\node_modules/*" ']])
 vim.cmd([[
@@ -515,7 +509,7 @@ endfunction
 ]])
 
 -- vim-argwrap
-kmap('n', '<leader>ew', '<cmd>ArgWrap<cr>', {noremap = true})
+kmap('n', '<leader>ew', '<cmd>ArgWrap<cr>')
 
 -- Git diff mode for easier diffing
 local git_diff_mode_active = false
@@ -576,15 +570,12 @@ function _G.enter_git_diff_mode()
     end
 
     for key, func in pairs(keymaps) do
-        vim.keymap.set('n', key, func, {
-            buffer = true,
-            nowait = true,
-            desc = 'Git diff: ' .. key
-        })
+        kmap('n', key, func,
+             {buffer = true, nowait = true, desc = 'Git diff: ' .. key})
     end
 
-    vim.keymap.set('n', '<Esc>', exit_diff_mode,
-                   {buffer = true, desc = 'Exit git diff mode'})
+    kmap('n', '<Esc>', exit_diff_mode,
+         {buffer = true, desc = 'Exit git diff mode'})
     vim.notify(
         "Git Diff Mode: d=get f=put n=next p=prev u=update 1=commit w=save/quit q=save/quitall ESC=exit")
 end
@@ -613,9 +604,9 @@ vim.api.nvim_create_autocmd("OptionSet", {
 })
 
 -- Manual trigger
-kmap('n', '<leader>gm', '<cmd>lua enter_git_diff_mode()<cr>', {noremap = true})
-kmap('n', '<leader>gs', '<cmd>Git<cr>', {noremap = true})
-kmap('n', '<leader>gc', '<cmd>:tab Git commit --verbose<cr>', {noremap = true})
+kmap('n', '<leader>gm', '<cmd>lua enter_git_diff_mode()<cr>')
+kmap('n', '<leader>gs', '<cmd>Git<cr>')
+kmap('n', '<leader>gc', '<cmd>:tab Git commit --verbose<cr>')
 vim.cmd([[
   function! ToggleGStatus()
     if buflisted(bufname('.git/index'))
@@ -627,12 +618,11 @@ vim.cmd([[
   endfunction
   nnoremap <leader>gs :call ToggleGStatus()<CR>
 ]])
-kmap('n', '<leader>gb', '<cmd>Git blame<cr>', {noremap = true})
-kmap('n', '<leader>ga', '<cmd>Git add %<cr>', {noremap = true})
-kmap('n', '<leader>df', "<cmd>GF?<cr>", {noremap = true})
+kmap('n', '<leader>gb', '<cmd>Git blame<cr>')
+kmap('n', '<leader>ga', '<cmd>Git add %<cr>')
+kmap('n', '<leader>df', "<cmd>GF?<cr>")
 kmap('n', '<leader>dd',
-     '<cmd>Gdiffsplit<cr><cmd>lua vim.defer_fn(function() enter_git_diff_mode() end, 400)<cr>',
-     {noremap = true})
+     '<cmd>Gdiffsplit<cr><cmd>lua vim.defer_fn(function() enter_git_diff_mode() end, 400)<cr>')
 
 -- indent-blankline-nvim
 require("ibl").setup()
@@ -642,15 +632,15 @@ require("ibl").setup()
 vim.g.floaterm_opener = "edit"
 vim.g.floaterm_width = 0.99
 vim.g.floaterm_height = 0.99
-kmap('n', '<leader>m', '<cmd>Lf<cr>', {noremap = true});
-kmap('n', '<leader>n', '<cmd>LfWorkingDirectory<cr>', {noremap = true});
+kmap('n', '<leader>m', '<cmd>Lf<cr>');
+kmap('n', '<leader>n', '<cmd>LfWorkingDirectory<cr>');
 
 -- flash-nvim
 require("flash").setup({
     modes = {search = {enabled = false}, char = {enabled = false}}
 })
-vim.keymap.set('', '<leader>s', function() require("flash").jump() end,
-               {desc = "Flash jump"})
+kmap('', '<leader>s', function() require("flash").jump() end,
+     {desc = "Flash jump"})
 vim.api.nvim_set_hl(0, "FlashLabel",
                     {fg = "#000000", bg = "#00ff00", bold = true})
 vim.api.nvim_set_hl(0, "FlashMatch", {link = "Search"})
@@ -720,9 +710,8 @@ end
 vim.g.ale_sh_shfmt_options = '-i 4 -ci'
 
 -- osc-yank
-kmap('n', '<leader>y', '<cmd>OSCYankRegister 0<cr>', {noremap = true})
-kmap('n', '<leader>py', '<cmd>%y<cr><cmd>OSCYankRegister 0<cr>',
-     {noremap = true})
+kmap('n', '<leader>y', '<cmd>OSCYankRegister 0<cr>')
+kmap('n', '<leader>py', '<cmd>%y<cr><cmd>OSCYankRegister 0<cr>')
 
 -- vim-angry-reviewer
 vim.g.AngryReviewerEnglish = 'american'
@@ -732,8 +721,8 @@ vim.api.nvim_create_user_command("AckFzf", function(opts)
     local fzf = require("fzf-lua")
     fzf.grep({search = opts.args, cmd = "ack --nogroup --nocolor --smart-case"})
 end, {nargs = 1})
-kmap('n', '<leader>/', ':Ack! ', {noremap = true, silent = false})
-kmap('n', '<leader>fa', 'yiw:Ack! <c-r>0<cr>', {noremap = true})
+kmap('n', '<leader>/', ':Ack! ', silent)
+kmap('n', '<leader>fa', 'yiw:Ack! <c-r>0<cr>')
 
 -- vim-oscyank
 -- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1145673058
@@ -743,7 +732,7 @@ let g:oscyank_term = 'default'
 ]])
 
 -- vim-bufkill
-kmap('n', '<leader>bd', '<cmd>BD<cr>', {noremap = true})
+kmap('n', '<leader>bd', '<cmd>BD<cr>')
 
 -- vim-markdown
 vim.g.vim_markdown_folding_disabled = 1
@@ -779,7 +768,7 @@ set_desc('n', '<leader>pp', 'Word-wrap paragraph')
 -- conceal for pretty stuff (only in markdown)
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "markdown",
-    callback = function() vim.opt_local.conceallevel = 2 end
+    callback = function() vim.opt_local.conceallevel = 0 end
 })
 require("obsidian").setup({
     workspaces = {{name = "MyVault", path = "~/Obsidian/MyVault"}},
@@ -795,17 +784,11 @@ require("telescope").setup({
 })
 require("telescope").load_extension("ui-select")
 require("octo").setup({picker = "telescope", enable_builtin = true})
-kmap('n', '<leader>o', '<cmd>Octo<cr>', {noremap = true})
+kmap('n', '<leader>o', '<cmd>Octo<cr>')
 
 -- refactoring nvim
 require("refactoring").setup()
-kmap('n', '<leader>rs', '', {
-    noremap = true,
-    silent = false,
-    callback = function() require('refactoring').select_refactor() end
-})
-kmap('x', '<leader>rs', '', {
-    noremap = true,
-    silent = false,
-    callback = function() require('refactoring').select_refactor() end
-})
+kmap('n', '<leader>rs', '',
+     {callback = function() require('refactoring').select_refactor() end})
+kmap('x', '<leader>rs', '',
+     {callback = function() require('refactoring').select_refactor() end})
