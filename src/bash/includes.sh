@@ -175,7 +175,7 @@ rmresult() {
 }
 
 nrs() {
-    if [[ $(uname -s) == "Linux" ]]; then
+    if command -v nixos-rebuild >/dev/null; then
         sudo -i nixos-rebuild switch
     elif [[ $(uname -s) == "Darwin" ]]; then
         sudo darwin-rebuild switch --flake ~/.nixpkgs
