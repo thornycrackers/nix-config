@@ -14,5 +14,21 @@ action = "new_before"
 key = ["n"]
 scope = "revisions"
 
+# --- New revision after the selected one ---
+[[actions]]
+name = "new_after"
+desc = "new rev after selected"
+lua = '''
+local target = context.change_id()
+jj("new", "--no-edit", "--insert-after", target)
+-- the new revision is now the only child of `target`
+revisions.refresh({selected_revision = target .. "+"})
+'''
+
+[[bindings]]
+action = "new_after"
+key = ["N"]
+scope = "revisions"
+
 [revset-aliases]
 "immutable_heads()" = "builtin_immutable_heads() | remote_bookmarks()"
