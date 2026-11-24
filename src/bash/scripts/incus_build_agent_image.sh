@@ -25,7 +25,7 @@ apt-get update
 apt-get install -y --no-install-recommends \
   curl git ca-certificates ripgrep jq \
   build-essential python3 python3-pip \
-  sudo vim less
+  sudo vim less rsync
 
 # Setup jj
 VERSION=v0.39.0
@@ -74,6 +74,9 @@ incus exec "$BUILDER" --user 1000 --group 1000 --cwd /home/thorny --env HOME=/ho
 mkdir -p "$HOME/.npm-global" "$home/.cache" "$HOME/.config"
 npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
+
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 npm install -g agent-browser skills @anthropic-ai/claude-code
 agent-browser install --with-deps
