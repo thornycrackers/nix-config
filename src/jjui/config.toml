@@ -29,6 +29,3 @@ revisions.refresh({selected_revision = target .. "+"})
 action = "new_after"
 key = ["N"]
 scope = "revisions"
-
-[revset-aliases]
-"immutable_heads()" = "builtin_immutable_heads() | remote_bookmarks()"

@@ -6,6 +6,11 @@ email = "cody@hiar.ca"
 pager = ["less", "-FRX"]
 diff-formatter="delta"
 
+# Anything that's been pushed (tracked remote bookmarks) becomes immutable.
+# builtin_immutable_heads() already covers trunk(), tags() and untracked remotes.
+[revset-aliases]
+"immutable_heads()" = "builtin_immutable_heads() | remote_bookmarks()"
+
 [templates]
 git_push_bookmark = '"ch/" ++ change_id.short()'
 
