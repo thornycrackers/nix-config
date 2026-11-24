@@ -179,6 +179,8 @@ nrs() {
         sudo -i nixos-rebuild switch
     elif [[ $(uname -s) == "Darwin" ]]; then
         sudo darwin-rebuild switch --flake ~/.nixpkgs
+    elif command -v home-manager >/dev/null; then
+        home-manager switch --flake ~/.nixpkgs#"ubuntu-$(uname -m)-linux"
     else
         echo "unknown platform"
     fi
