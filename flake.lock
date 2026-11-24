@@ -88,16 +88,17 @@
       },
       "locked": {
         "lastModified": 1691515884,
-        "narHash": "sha256-NZfOc+wgxU9vxaKLYD6c45KFtAvqxRkXVgeIXNaCGY0",
-        "owner": "viperML",
-        "repo": "wrapper-manager",
+        "narHash": "sha256-NZfOc+wgxU9vxaKLYD6c45KFtAvqxRkXVgeIXNaCGY0=",
+        "ref": "refs/heads/master",
         "rev": "751e1c318df20bbd4c1b74263ceac75b4b5e597d",
-        "type": "github"
+        "revCount": 30,
+        "type": "git",
+        "url": "https://codeberg.org/viperML/wrapper-manager"
       },
       "original": {
-        "owner": "viperML",
-        "repo": "wrapper-manager",
-        "type": "github"
+        "rev": "751e1c318df20bbd4c1b74263ceac75b4b5e597d",
+        "type": "git",
+        "url": "https://codeberg.org/viperML/wrapper-manager"
       }
     }
   },
