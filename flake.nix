@@ -363,7 +363,10 @@
                 { pkgs, ... }:
                 {
                   targets.genericLinux.enable = true;
-                  home.packages = import ./hosts/shared/packages-base.nix pkgs;
+                  # tmux already comes from the wrapper-manager build in home-linux.nix
+                  home.packages = import ./hosts/shared/packages-base.nix pkgs ++ [
+                    self.packages.${system}.myneovim
+                  ];
                 }
               )
             ];
