@@ -12,7 +12,7 @@
     };
     # Wrapper manager for wrapping applications (careful updating)
     wrapper-manager = {
-      url = "github:viperML/wrapper-manager";
+      url = "git+https://codeberg.org/viperML/wrapper-manager?rev=751e1c318df20bbd4c1b74263ceac75b4b5e597d";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
