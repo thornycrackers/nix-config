@@ -678,6 +678,16 @@ jfm() {
     jj git fetch --branch "$(trunk_branch_name)"
 }
 
+# Create a new branch off the trunk branch
+jnm() {
+    jj new "$(trunk_branch_name)" -m "wip"
+}
+
+# Print the git commit ID for the current revset
+jjc() {
+    jj log -r @ --no-graph -T 'commit_id ++ "\n"'
+}
+
 # Add a new parent to an existing commit
 jpa() {
     jj rebase -s "$1" -d "$1"- -d "$2"
