@@ -143,7 +143,7 @@ export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
 export LIBVIRT_DEFAULT_URI="qemu:///system"
 
 # Load keychain on startup
-command -v keychain >/dev/null && eval "$(keychain --eval --quiet id_rsa)"
+command -v keychain >/dev/null && [[ -f ~/.ssh/id_rsa ]] && eval "$(keychain --eval --quiet id_rsa)"
 
 # Wrappers for bin stuff that more frequently are used for copying to clipboard than in a pipe
 # This saves key strokes since I can press "up arrow" then backwards delete the
