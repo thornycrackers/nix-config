@@ -26,6 +26,7 @@ end
 -- Shorcut for the function to save space
 kmap = vim.keymap.set
 silent = {silent = true}
+expr_and_silent = {expr = true, silent = true}
 -- Disable space from moving one character to the right
 kmap('n', '<Space>', '<Nop>', silent)
 -- Set mapleader to space
@@ -174,6 +175,9 @@ kmap('n', 'gp', "`[v`]")
 -- I don't use backspace in normal mode
 kmap('n', '<BS>', function() return vim.v.count > 0 and '<Del>' or '' end,
      {expr = true})
+-- Allow j/k to move logical lines and display lines when wrap is on
+kmap({"n", "x"}, "j", "v:count == 0 ? 'gj' : 'j'", expr_and_silent)
+kmap({"n", "x"}, "k", "v:count == 0 ? 'gk' : 'k'", expr_and_silent)
 -- Changelist navigation
 kmap('n', '<leader>co', '<cmd>copen<cr>')
 kmap('n', '<leader>cc', '<cmd>cclose<cr>')
