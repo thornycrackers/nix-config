@@ -1169,6 +1169,46 @@ irm() {
     done
 }
 
+# Inject agent specific creds into box
+icreds() {
+    local profile="${1:-${AWS_PROFILE:?set AWS_PROFILE or pass a profile}}"
+    local project_path raw_name name container res creds region script
+
+    project_path=$(realpath .)
+    raw_name=$(basename "$project_path")
+    name=${raw_name#.}
+    name="${name//_/}"
+    container="${name}-sandbox"
+    res=$(incus ls | grep "$container")
+    if [[ -z "$res" ]]; then
+        container=$(incus list --format csv -c n status=running | grep -- '-sandbox' | fzf) || return 1
+    fi
+
+    creds=$(aws configure export-credentials --profile "$profile") || return 1
+    region=$(aws configure get region --profile "$profile" 2>/dev/null) || region=us-east-2
+
+    # shellcheck disable=SC2016  # expanded inside the container, not here
+    script='
+set -e
+mkdir -p ~/.aws && chmod 700 ~/.aws
+f=~/.aws/credentials; touch "$f"; chmod 600 "$f"
+awk -v s="[$p]" '\''/^\[/ {skip = ($0 == s)} !skip'\'' "$f" > "$f.tmp"
+cat "$f.tmp" - > "$f"; rm -f "$f.tmp"
+c=~/.aws/config; touch "$c"
+grep -qxF "[profile $p]" "$c" || printf "[profile %s]\nregion = %s\n\n" "$p" "$r" >> "$c"
+'
+
+    incus exec "$container" -- su - thorny \
+        -c "p=$(printf %q "$profile") r=$(printf %q "$region"); $script" <<EOF || return 1
+[${profile}]
+aws_access_key_id = $(jq -r '.AccessKeyId' <<<"$creds")
+aws_secret_access_key = $(jq -r '.SecretAccessKey' <<<"$creds")
+aws_session_token = $(jq -r '.SessionToken' <<<"$creds")
+EOF
+
+    echo "$profile -> $container (expires $(jq -r '.Expiration' <<<"$creds"))"
+}
+
 ############
 # !completions
 ############
