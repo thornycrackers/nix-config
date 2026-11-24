@@ -774,12 +774,15 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = "markdown",
     callback = function() vim.opt_local.conceallevel = 0 end
 })
-require("obsidian").setup({
-    workspaces = {{name = "MyVault", path = "~/Obsidian/MyVault"}},
-    ui = {enable = true, ignore_conceal_warn = true},
-    legacy_commands = false,
-    frontmatter = {enabled = false}
-})
+-- Only set up obsidian when the vault exists (e.g. not on throwaway VMs)
+if vim.fn.isdirectory(vim.fn.expand("~/Obsidian/MyVault")) == 1 then
+    require("obsidian").setup({
+        workspaces = {{name = "MyVault", path = "~/Obsidian/MyVault"}},
+        ui = {enable = true, ignore_conceal_warn = true},
+        legacy_commands = false,
+        frontmatter = {enabled = false}
+    })
+end
 
 -- octo nvim
 require("telescope").setup({
