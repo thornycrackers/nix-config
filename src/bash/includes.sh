@@ -11,7 +11,7 @@ if [[ $(uname -s) == "Darwin" ]]; then
 fi
 
 # shellcheck disable=SC1091
-[[ $- == *i* ]] && source -- "$(blesh-share)"/ble.sh --attach=none
+[[ $- == *i* ]] && command -v blesh-share >/dev/null && source -- "$(blesh-share)"/ble.sh --attach=none
 
 # Git log formats
 _git_log_medium_format='%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%w(80,1,2)%+B'
@@ -143,7 +143,7 @@ export COOKIECUTTER_CONFIG="$HOME/.config/cookiecutter/config.yml"
 export LIBVIRT_DEFAULT_URI="qemu:///system"
 
 # Load keychain on startup
-eval "$(keychain --eval --quiet id_rsa)"
+command -v keychain >/dev/null && eval "$(keychain --eval --quiet id_rsa)"
 
 # Wrappers for bin stuff that more frequently are used for copying to clipboard than in a pipe
 # This saves key strokes since I can press "up arrow" then backwards delete the
