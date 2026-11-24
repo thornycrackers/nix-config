@@ -351,6 +351,31 @@
         ];
       };
 
+      # Standalone home-manager for non-NixOS machines (ubuntu vms)
+      homeConfigurations = nixpkgs.lib.genAttrs' [ "x86_64-linux" "aarch64-linux" ] (
+        system:
+        nixpkgs.lib.nameValuePair "ubuntu-${system}" (
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgsFor.${system};
+            modules = [
+              ./hosts/shared/home-linux.nix
+              (
+                { pkgs, ... }:
+                {
+                  targets.genericLinux.enable = true;
+                  home.packages = import ./hosts/shared/packages-base.nix pkgs;
+                }
+              )
+            ];
+            extraSpecialArgs = {
+              inherit inputs;
+              username = "ubuntu";
+              homedirectory = "/home/ubuntu";
+            };
+          }
+        )
+      );
+
       # Darwin config for macbook
       darwinConfigurations."Codys-MacBook-Pro" =
         let
